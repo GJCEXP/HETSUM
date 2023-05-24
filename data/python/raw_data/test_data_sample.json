@@ -1,0 +1,502 @@
+[
+    {
+        "text": "patch a resource .",
+        "code": "def resource_patch(context, data_dict):\n _check_access('resource_patch', context, data_dict)\n show_context = {'model': context['model'], 'session': context['session'], 'user': context['user'], 'auth_user_obj': context['auth_user_obj']}\n resource_dict = _get_action('resource_show')(show_context, {'id': _get_or_bust(data_dict, 'id')})\n patched = dict(resource_dict)\n patched.update(data_dict)\n return _update.resource_update(context, patched)\n",
+        "id": 0
+    },
+    {
+        "text": "yield images of the laplacian pyramid formed by the input image .",
+        "code": "def pyramid_laplacian(image, max_layer=(-1), downscale=2, sigma=None, order=1, mode='reflect', cval=0):\n _check_factor(downscale)\n image = img_as_float(image)\n if (sigma is None):\n  sigma = ((2 * downscale) / 6.0)\n layer = 0\n rows = image.shape[0]\n cols = image.shape[1]\n smoothed_image = _smooth(image, sigma, mode, cval)\n (yield (image - smoothed_image))\n while (layer != max_layer):\n  layer += 1\n  out_rows = math.ceil((rows / float(downscale)))\n  out_cols = math.ceil((cols / float(downscale)))\n  resized_image = resize(smoothed_image, (out_rows, out_cols), order=order, mode=mode, cval=cval)\n  smoothed_image = _smooth(resized_image, sigma, mode, cval)\n  prev_rows = rows\n  prev_cols = cols\n  rows = resized_image.shape[0]\n  cols = resized_image.shape[1]\n  if ((prev_rows == rows) and (prev_cols == cols)):\n   break\n  (yield (resized_image - smoothed_image))\n",
+        "id": 1
+    },
+    {
+        "text": "return a dict of the last function called for all minions .",
+        "code": "def get_fun(fun):\n with _get_serv(ret=None, commit=True) as cur:\n  sql = 'SELECT s.id,s.jid, s.full_ret\\n                FROM salt_returns s\\n                JOIN ( SELECT MAX(`jid`) as jid\\n                    from salt_returns GROUP BY fun, id) max\\n                ON s.jid = max.jid\\n                WHERE s.fun = %s\\n                '\n  cur.execute(sql, (fun,))\n  data = cur.fetchall()\n  ret = {}\n  if data:\n   for (minion, _, full_ret) in data:\n    ret[minion] = full_ret\n  return ret\n",
+        "id": 2
+    },
+    {
+        "text": "return list of paths that may contain available services .",
+        "code": "def get_svc_avail_path():\n return AVAIL_SVR_DIRS\n",
+        "id": 3
+    },
+    {
+        "text": "store a temporary file .",
+        "code": "def store_temp_file(filedata, filename, path=None):\n filename = get_filename_from_path(filename)\n filename = filename[:100]\n options = Config()\n if path:\n  target_path = path\n else:\n  tmp_path = options.cuckoo.get('tmppath', '/tmp')\n  target_path = os.path.join(tmp_path, 'cuckoo-tmp')\n if (not os.path.exists(target_path)):\n  os.mkdir(target_path)\n tmp_dir = tempfile.mkdtemp(prefix='upload_', dir=target_path)\n tmp_file_path = os.path.join(tmp_dir, filename)\n with open(tmp_file_path, 'wb') as tmp_file:\n  if hasattr(filedata, 'read'):\n   chunk = filedata.read(1024)\n   while chunk:\n    tmp_file.write(chunk)\n    chunk = filedata.read(1024)\n  else:\n   tmp_file.write(filedata)\n return tmp_file_path\n",
+        "id": 4
+    },
+    {
+        "text": "create the output directory .",
+        "code": "def _createTargetDirs():\n if (not os.path.isdir(paths.POCSUITE_OUTPUT_PATH)):\n  try:\n   if (not os.path.isdir(paths.POCSUITE_OUTPUT_PATH)):\n    os.makedirs(paths.POCSUITE_OUTPUT_PATH, 493)\n   warnMsg = (\"using '%s' as the output directory\" % paths.POCSUITE_OUTPUT_PATH)\n   logger.log(CUSTOM_LOGGING.WARNING, warnMsg)\n  except (OSError, IOError) as ex:\n   try:\n    tempDir = tempfile.mkdtemp(prefix='pocsuiteoutput')\n   except Exception as _:\n    errMsg = (\"unable to write to the temporary directory ('%s'). \" % _)\n    errMsg += 'Please make sure that your disk is not full and '\n    errMsg += 'that you have sufficient write permissions to '\n    errMsg += 'create temporary files and/or directories'\n    raise PocsuiteSystemException(errMsg)\n   warnMsg = 'unable to create regular output directory '\n   warnMsg += (\"'%s' (%s). \" % (paths.POCSUITE_OUTPUT_PATH, getUnicode(ex)))\n   warnMsg += (\"Using temporary directory '%s' instead\" % getUnicode(tempDir))\n   logger.log(CUSTOM_LOGGING.WARNING, warnMsg)\n   paths.POCUSITE_OUTPUT_PATH = tempDir\n",
+        "id": 5
+    },
+    {
+        "text": "get the integer value of a hexadecimal number .",
+        "code": "def unhex(s):\n bits = 0\n for c in s:\n  c = bytes((c,))\n  if ('0' <= c <= '9'):\n   i = ord('0')\n  elif ('a' <= c <= 'f'):\n   i = (ord('a') - 10)\n  elif ('A' <= c <= 'F'):\n   i = (ord('A') - 10)\n  else:\n   assert False, ('non-hex digit ' + repr(c))\n  bits = ((bits * 16) + (ord(c) - i))\n return bits\n",
+        "id": 6
+    },
+    {
+        "text": "set the size of a finder window for folder to .",
+        "code": "def _setwindowposition(folder_alias, (x, y)):\n finder = _getfinder()\n args = {}\n attrs = {}\n aeobj_0 = aetypes.ObjectSpecifier(want=aetypes.Type('cfol'), form='alis', seld=folder_alias, fr=None)\n aeobj_1 = aetypes.ObjectSpecifier(want=aetypes.Type('prop'), form='prop', seld=aetypes.Type('cwnd'), fr=aeobj_0)\n aeobj_2 = aetypes.ObjectSpecifier(want=aetypes.Type('prop'), form='prop', seld=aetypes.Type('posn'), fr=aeobj_1)\n args['----'] = aeobj_2\n args['data'] = [x, y]\n (_reply, args, attrs) = finder.send('core', 'setd', args, attrs)\n if args.has_key('errn'):\n  raise Error, aetools.decodeerror(args)\n if args.has_key('----'):\n  return args['----']\n",
+        "id": 7
+    },
+    {
+        "text": "backport of os .",
+        "code": "def walk(top, topdown=True, followlinks=False):\n names = os.listdir(top)\n (dirs, nondirs) = ([], [])\n for name in names:\n  if path.isdir(path.join(top, name)):\n   dirs.append(name)\n  else:\n   nondirs.append(name)\n if topdown:\n  (yield (top, dirs, nondirs))\n for name in dirs:\n  fullpath = path.join(top, name)\n  if (followlinks or (not path.islink(fullpath))):\n   for x in walk(fullpath, topdown, followlinks):\n    (yield x)\n if (not topdown):\n  (yield (top, dirs, nondirs))\n",
+        "id": 8
+    },
+    {
+        "text": "extract the filename if a url is an uploaded file .",
+        "code": "def url_filename(url):\n match = upload_title_re.match(url)\n if match:\n  return match.group('filename')\n else:\n  return url\n",
+        "id": 9
+    },
+    {
+        "text": "test setting up other volume source spaces .",
+        "code": "@testing.requires_testing_data\n@requires_mne\ndef test_other_volume_source_spaces():\n tempdir = _TempDir()\n temp_name = op.join(tempdir, 'temp-src.fif')\n run_subprocess(['mne_volume_source_space', '--grid', '7.0', '--src', temp_name, '--mri', fname_mri])\n src = read_source_spaces(temp_name)\n src_new = setup_volume_source_space(None, pos=7.0, mri=fname_mri, subjects_dir=subjects_dir)\n _compare_source_spaces(src, src_new, mode='approx')\n assert_true(('volume, shape' in repr(src)))\n del src\n del src_new\n assert_raises(ValueError, setup_volume_source_space, 'sample', temp_name, pos=7.0, sphere=[1.0, 1.0], mri=fname_mri, subjects_dir=subjects_dir)\n run_subprocess(['mne_volume_source_space', '--grid', '7.0', '--src', temp_name])\n assert_raises(ValueError, read_source_spaces, temp_name)\n",
+        "id": 10
+    },
+    {
+        "text": "get latex preamble from rc .",
+        "code": "def get_preamble():\n latex_preamble = rcParams.get(u'pgf.preamble', u'')\n if (type(latex_preamble) == list):\n  latex_preamble = u'\\n'.join(latex_preamble)\n return latex_preamble\n",
+        "id": 11
+    },
+    {
+        "text": "compute the generalized s-polynomial of f and g .",
+        "code": "def sdm_spoly(f, g, O, K, phantom=None):\n if ((not f) or (not g)):\n  return sdm_zero()\n LM1 = sdm_LM(f)\n LM2 = sdm_LM(g)\n if (LM1[0] != LM2[0]):\n  return sdm_zero()\n LM1 = LM1[1:]\n LM2 = LM2[1:]\n lcm = monomial_lcm(LM1, LM2)\n m1 = monomial_div(lcm, LM1)\n m2 = monomial_div(lcm, LM2)\n c = K.quo((- sdm_LC(f, K)), sdm_LC(g, K))\n r1 = sdm_add(sdm_mul_term(f, (m1, K.one), O, K), sdm_mul_term(g, (m2, c), O, K), O, K)\n if (phantom is None):\n  return r1\n r2 = sdm_add(sdm_mul_term(phantom[0], (m1, K.one), O, K), sdm_mul_term(phantom[1], (m2, c), O, K), O, K)\n return (r1, r2)\n",
+        "id": 12
+    },
+    {
+        "text": "deleted col of volume_type_projects converted .",
+        "code": "def upgrade(migrate_engine):\n meta = MetaData()\n meta.bind = migrate_engine\n volume_type_projects = Table('volume_type_projects', meta, autoload=True)\n if (migrate_engine.name == 'postgresql'):\n  sql = ('ALTER TABLE volume_type_projects ALTER COLUMN deleted ' + 'TYPE INTEGER USING deleted::integer')\n  migrate_engine.execute(sql)\n else:\n  volume_type_projects.c.deleted.alter(Integer)\n",
+        "id": 13
+    },
+    {
+        "text": "perform static object analysis on all python files in the project note that this might be really time consuming .",
+        "code": "def analyze_modules(project, task_handle=taskhandle.NullTaskHandle()):\n resources = project.get_python_files()\n job_set = task_handle.create_jobset('Analyzing Modules', len(resources))\n for resource in resources:\n  job_set.started_job(resource.path)\n  analyze_module(project, resource)\n  job_set.finished_job()\n",
+        "id": 14
+    },
+    {
+        "text": "return a shortened version string .",
+        "code": "def get_sw_login_version():\n return '-'.join(get_sw_version(strip_build_num=True).split('-')[1:(-2)])\n",
+        "id": 15
+    },
+    {
+        "text": "modifies the main help menu to handle all registered help files .",
+        "code": "def SetHelpMenuOtherHelp(mainMenu):\n global helpIDMap\n if (helpIDMap is None):\n  helpIDMap = {}\n  cmdID = win32ui.ID_HELP_OTHER\n  excludeList = ['Main Python Documentation', 'Pythonwin Reference']\n  firstList = ListAllHelpFiles()\n  excludeFnames = []\n  for (desc, fname) in firstList:\n   if (desc in excludeList):\n    excludeFnames.append(fname)\n  helpDescs = []\n  for (desc, fname) in firstList:\n   if (fname not in excludeFnames):\n    helpIDMap[cmdID] = (desc, fname)\n    win32ui.GetMainFrame().HookCommand(HandleHelpOtherCommand, cmdID)\n    cmdID = (cmdID + 1)\n helpMenu = mainMenu.GetSubMenu((mainMenu.GetMenuItemCount() - 1))\n otherHelpMenuPos = 2\n otherMenu = helpMenu.GetSubMenu(otherHelpMenuPos)\n while otherMenu.GetMenuItemCount():\n  otherMenu.DeleteMenu(0, win32con.MF_BYPOSITION)\n if helpIDMap:\n  for (id, (desc, fname)) in helpIDMap.iteritems():\n   otherMenu.AppendMenu((win32con.MF_ENABLED | win32con.MF_STRING), id, desc)\n else:\n  helpMenu.EnableMenuItem(otherHelpMenuPos, (win32con.MF_BYPOSITION | win32con.MF_GRAYED))\n",
+        "id": 16
+    },
+    {
+        "text": "redirects to the specified location using the provided http_code .",
+        "code": "def to(location, code=falcon.HTTP_302):\n raise falcon.http_status.HTTPStatus(code, {'location': location})\n",
+        "id": 17
+    },
+    {
+        "text": "returns: - the first command when confirmation disabled; - none when ctrl+c pressed; - selected command .",
+        "code": "def select_command(corrected_commands):\n try:\n  selector = CommandSelector(corrected_commands)\n except NoRuleMatched:\n  logs.failed('No fucks given')\n  return\n if (not settings.require_confirmation):\n  logs.show_corrected_command(selector.value)\n  return selector.value\n logs.confirm_text(selector.value)\n for action in read_actions():\n  if (action == const.ACTION_SELECT):\n   sys.stderr.write('\\n')\n   return selector.value\n  elif (action == const.ACTION_ABORT):\n   logs.failed('\\nAborted')\n   return\n  elif (action == const.ACTION_PREVIOUS):\n   selector.previous()\n   logs.confirm_text(selector.value)\n  elif (action == const.ACTION_NEXT):\n   selector.next()\n   logs.confirm_text(selector.value)\n",
+        "id": 18
+    },
+    {
+        "text": "helper function to get linear projection or partialling out of variables endog variables are projected on exog variables parameters endog : ndarray array of variables where the effect of exog is partialled out .",
+        "code": "def partial_project(endog, exog):\n (x1, x2) = (endog, exog)\n params = np.linalg.pinv(x2).dot(x1)\n predicted = x2.dot(params)\n residual = (x1 - predicted)\n res = Bunch(params=params, fittedvalues=predicted, resid=residual)\n return res\n",
+        "id": 19
+    },
+    {
+        "text": "update composer dependencies for a directory .",
+        "code": "def update(directory, composer=None, php=None, runas=None, prefer_source=None, prefer_dist=None, no_scripts=None, no_plugins=None, optimize=None, no_dev=None, quiet=False, composer_home='/root'):\n result = _run_composer('update', directory=directory, extra_flags='--no-progress', composer=composer, php=php, runas=runas, prefer_source=prefer_source, prefer_dist=prefer_dist, no_scripts=no_scripts, no_plugins=no_plugins, optimize=optimize, no_dev=no_dev, quiet=quiet, composer_home=composer_home)\n return result\n",
+        "id": 20
+    },
+    {
+        "text": "fetch targets and calculate the modules output on dataset .",
+        "code": "def testOnSequenceData(module, dataset):\n target = dataset.getField('target')\n output = ModuleValidator.calculateModuleOutput(module, dataset)\n ends = SequenceHelper.getSequenceEnds(dataset)\n summed_output = zeros(dataset.outdim)\n class_output = []\n class_target = []\n for j in range(len(output)):\n  summed_output += output[j]\n  if (j in ends):\n   class_output.append(argmax(summed_output))\n   class_target.append(argmax(target[j]))\n   summed_output = zeros(dataset.outdim)\n class_output = array(class_output)\n class_target = array(class_target)\n return Validator.classificationPerformance(class_output, class_target)\n",
+        "id": 21
+    },
+    {
+        "text": "tests socket .",
+        "code": "@retry_on_failure\ndef test_inet_pton():\n if (not is_cli):\n  return\n socket.inet_pton(socket.AF_INET, '127.0.0.1')\n AssertError(socket.error, socket.inet_pton, socket.AF_INET, 'garbage dkfjdkfjdkfj')\n",
+        "id": 22
+    },
+    {
+        "text": "get the path from the edge intersections .",
+        "code": "def getPath(edges, pathIndexes, loop, z):\n path = []\n for pathIndexIndex in xrange(len(pathIndexes)):\n  pathIndex = pathIndexes[pathIndexIndex]\n  edge = edges[pathIndex]\n  carveIntersection = getCarveIntersectionFromEdge(edge, loop, z)\n  path.append(carveIntersection)\n return path\n",
+        "id": 23
+    },
+    {
+        "text": "show a modeljob returns json when requested: {id .",
+        "code": "@blueprint.route('/<job_id>.json', methods=['GET'])\n@blueprint.route('/<job_id>', methods=['GET'])\ndef show(job_id):\n job = scheduler.get_job(job_id)\n if (job is None):\n  raise werkzeug.exceptions.NotFound('Job not found')\n related_jobs = scheduler.get_related_jobs(job)\n if request_wants_json():\n  return flask.jsonify(job.json_dict(True))\n elif isinstance(job, model_images.ImageClassificationModelJob):\n  return model_images.classification.views.show(job, related_jobs=related_jobs)\n elif isinstance(job, model_images.GenericImageModelJob):\n  return model_images.generic.views.show(job, related_jobs=related_jobs)\n else:\n  raise werkzeug.exceptions.BadRequest('Invalid job type')\n",
+        "id": 24
+    },
+    {
+        "text": "implements the c expression: condition ? true : false required to correctly interpret plural forms .",
+        "code": "def test(condition, true, false):\n if condition:\n  return true\n else:\n  return false\n",
+        "id": 25
+    },
+    {
+        "text": "returns true/false boolean depending on if botocore supports usage plan .",
+        "code": "def _has_required_botocore():\n if (not HAS_BOTO):\n  return False\n elif (LooseVersion(botocore.__version__) < LooseVersion(required_botocore_version)):\n  return False\n else:\n  return True\n",
+        "id": 26
+    },
+    {
+        "text": "return the load data that marks a specified jid .",
+        "code": "def get_load(jid):\n serv = _get_serv(ret=None)\n data = serv.get('load:{0}'.format(jid))\n if data:\n  return json.loads(data)\n return {}\n",
+        "id": 27
+    },
+    {
+        "text": "show runtime-editable configuration option .",
+        "code": "def config_option_show(context, data_dict):\n return {'success': False}\n",
+        "id": 28
+    },
+    {
+        "text": "decorator to add a default structuring element to morphology functions .",
+        "code": "def _default_selem(func):\n @functools.wraps(func)\n def func_out(image, selem=None, *args, **kwargs):\n  if (selem is None):\n   selem = ndi.generate_binary_structure(image.ndim, image.ndim)\n  return func(image, selem=selem, *args, **kwargs)\n return func_out\n",
+        "id": 29
+    },
+    {
+        "text": "helper function to load a module while setting sys .",
+        "code": "@preserve_value(sys, 'dont_write_bytecode')\ndef _load_module_no_bytecode(filename, module_file, module_file_path, py_source_description):\n sys.dont_write_bytecode = 1\n new_module = imp.load_module(os.path.splitext(filename)[0].replace('-', '_'), module_file, module_file_path, py_source_description)\n return new_module\n",
+        "id": 30
+    },
+    {
+        "text": "move prepared osm data from temporary to permanent tables .",
+        "code": "def populate_tables(db, prefix, tmp_prefix, bounds):\n bbox = ('ST_SetSRID(ST_MakeBox2D(ST_MakePoint(%.6f, %.6f), ST_MakePoint(%.6f, %.6f)), 900913)' % bounds)\n db.execute('BEGIN')\n for table in ('point', 'line', 'roads', 'polygon'):\n  db.execute(('DELETE FROM %(prefix)s_%(table)s WHERE ST_Intersects(way, %(bbox)s)' % locals()))\n  db.execute(('INSERT INTO %(prefix)s_%(table)s\\n                      SELECT * FROM %(tmp_prefix)s_%(table)s\\n                      WHERE ST_Intersects(way, %(bbox)s)' % locals()))\n db.execute('COMMIT')\n",
+        "id": 31
+    },
+    {
+        "text": "returns object if t is of the form (1+exp(x)) .",
+        "code": "def is_1pexp(t, only_process_constants=True):\n if (t.owner and (t.owner.op == tensor.add)):\n  (scalars, scalar_inputs, nonconsts) = opt.scalarconsts_rest(t.owner.inputs, only_process_constants=only_process_constants)\n  if (len(nonconsts) == 1):\n   maybe_exp = nonconsts[0]\n   if (maybe_exp.owner and (maybe_exp.owner.op == tensor.exp)):\n    if scalars:\n     scal_sum = scalars[0]\n     for s in scalars[1:]:\n      scal_sum = (scal_sum + s)\n     if numpy.allclose(scal_sum, 1):\n      return (False, maybe_exp.owner.inputs[0])\n    if config.warn.identify_1pexp_bug:\n     warnings.warn(\"Although your current code is fine, please note that Theano versions prior to 0.5 (more specifically, prior to commit 7987b51 on 2011-12-18) may have yielded an incorrect result. To remove this warning, either set the `warn.identify_1pexp_bug` config option to False, or `warn.ignore_bug_before` to at least '0.4.1'.\")\n return None\n",
+        "id": 32
+    },
+    {
+        "text": "round a to the nearest integer if that integer is within an epsilon of a .",
+        "code": "def round_if_near_integer(a, epsilon=0.0001):\n if (abs((a - round(a))) <= epsilon):\n  return round(a)\n else:\n  return a\n",
+        "id": 33
+    },
+    {
+        "text": "returns a string suitable for rfc 2822 compliant message-id .",
+        "code": "def make_msgid(idstring=None):\n timeval = time.time()\n utcdate = time.strftime(u'%Y%m%d%H%M%S', time.gmtime(timeval))\n try:\n  pid = os.getpid()\n except AttributeError:\n  pid = 1\n randint = random.randrange(100000)\n if (idstring is None):\n  idstring = u''\n else:\n  idstring = (u'.' + idstring)\n idhost = DNS_NAME\n msgid = (u'<%s.%s.%s%s@%s>' % (utcdate, pid, randint, idstring, idhost))\n return msgid\n",
+        "id": 34
+    },
+    {
+        "text": "returns the linode id for a vm from the provided name .",
+        "code": "def get_linode_id_from_name(name):\n nodes = _query('linode', 'list')['DATA']\n linode_id = ''\n for node in nodes:\n  if (name == node['LABEL']):\n   linode_id = node['LINODEID']\n   return linode_id\n if (not linode_id):\n  raise SaltCloudNotFound('The specified name, {0}, could not be found.'.format(name))\n",
+        "id": 35
+    },
+    {
+        "text": "a wrapper around astropy .",
+        "code": "def did_you_mean_units(s, all_units, deprecated_units, format_decomposed):\n def fix_deprecated(x):\n  if (x in deprecated_units):\n   results = [(x + u' (deprecated)')]\n   decomposed = _try_decomposed(all_units[x], format_decomposed)\n   if (decomposed is not None):\n    results.append(decomposed)\n   return results\n  return (x,)\n return did_you_mean(s, all_units, fix=fix_deprecated)\n",
+        "id": 36
+    },
+    {
+        "text": "generate a csv file containing a summary of the xblock usage arguments: course_data : a list of course_data objects returns: nothing .",
+        "code": "def write_block_summary_report(course_data):\n (block_summary_counts, unique_course_counts) = _get_block_summary_totals(course_data)\n with open('xblock_summary_counts.csv', 'wb') as csvfile:\n  summary_writer = csv.writer(csvfile, delimiter=',', quotechar='\"', quoting=csv.QUOTE_MINIMAL)\n  summary_writer.writerow(['XBLOCK_NAME', 'UNIQUE_COURSES', 'NUM_TOTAL_INSTANCES'])\n  for block_type in sorted(block_summary_counts):\n   block_count = block_summary_counts.get(block_type)\n   summary_writer.writerow([block_type, str(unique_course_counts[block_type]), str(block_count)])\n  csvfile.close()\n",
+        "id": 37
+    },
+    {
+        "text": "regression test .",
+        "code": "def test_semisuper_succeeds():\n with helpers.tempdir() as temp:\n  env = gym.make('SemisuperPendulumDecay-v0')\n  env = Monitor(env, temp)\n  env.reset()\n  env.step(env.action_space.sample())\n  env.close()\n",
+        "id": 38
+    },
+    {
+        "text": "returns true if the given estimator is a classifier .",
+        "code": "def is_classifier(estimator):\n return (getattr(estimator, '_estimator_type', None) == 'classifier')\n",
+        "id": 39
+    },
+    {
+        "text": "uses heuristics to guess whether the given file is text or binary .",
+        "code": "def istextfile(fp_, blocksize=512):\n int2byte = ((lambda x: bytes((x,))) if six.PY3 else chr)\n text_characters = (''.join((int2byte(i) for i in range(32, 127))) + '\\n\\r DCTB \\x0c\\x08')\n try:\n  block = fp_.read(blocksize)\n except AttributeError:\n  try:\n   with fopen(fp_, 'rb') as fp2_:\n    block = fp2_.read(blocksize)\n  except IOError:\n   return False\n if ('\\x00' in block):\n  return False\n elif (not block):\n  return True\n try:\n  block.decode('utf-8')\n  return True\n except UnicodeDecodeError:\n  pass\n nontext = block.translate(None, text_characters)\n return ((float(len(nontext)) / len(block)) <= 0.3)\n",
+        "id": 40
+    },
+    {
+        "text": "return the full url to the bootstrap css library default value: none this value is configurable .",
+        "code": "@register.simple_tag\ndef bootstrap_css_url():\n return css_url()\n",
+        "id": 41
+    },
+    {
+        "text": "get objects of the type .",
+        "code": "def _get_objects(obj_type):\n lst_objs = FakeRetrieveResult()\n for key in _db_content[obj_type]:\n  lst_objs.add_object(_db_content[obj_type][key])\n return lst_objs\n",
+        "id": 42
+    },
+    {
+        "text": "expand shell variables of form $var and ${var} .",
+        "code": "def expandvars(path):\n global _varprog\n if ('$' not in path):\n  return path\n if (not _varprog):\n  import re\n  _varprog = re.compile('\\\\$(\\\\w+|\\\\{[^}]*\\\\})')\n i = 0\n while True:\n  m = _varprog.search(path, i)\n  if (not m):\n   break\n  (i, j) = m.span(0)\n  name = m.group(1)\n  if (name.startswith('{') and name.endswith('}')):\n   name = name[1:(-1)]\n  if (name in os.environ):\n   tail = path[j:]\n   path = (path[:i] + os.environ[name])\n   i = len(path)\n   path += tail\n  else:\n   i = j\n return path\n",
+        "id": 43
+    },
+    {
+        "text": "get new repository .",
+        "code": "def getNewRepository():\n return DrillRepository()\n",
+        "id": 44
+    },
+    {
+        "text": "retrieves the block types from the provided xblock configuration json file arguments: xblock_json_file : the name of the xblock configuration file :return: set: a set of strings for all the types that are available in the configuration file .",
+        "code": "def _get_block_types_from_json_file(xblock_json_file):\n if (not os.path.isfile(xblock_json_file)):\n  print ('xBlock configuration file does not exist: %s' % xblock_json_file)\n  sys.exit(2)\n with open(xblock_json_file, 'r') as json_file:\n  type_set = set()\n  try:\n   json_data = json.loads(json_file.read())\n  except ValueError as e:\n   print ('xBlock configuration file does not match the expected layout and is missing \"data\" list: %s' % xblock_json_file)\n   sys.exit(e.message)\n  if ('data' in json_data):\n   xblock_type_list = json_data['data']\n   for xblock in xblock_type_list:\n    type_set.add(xblock['name'])\n   return type_set\n  else:\n   print ('xBlock configuration file does not match the expected layout and is missing \"data\" list: %s' % xblock_json_file)\n   sys.exit(2)\n",
+        "id": 45
+    },
+    {
+        "text": "validates the inputs to the actions in a target .",
+        "code": "def ValidateActionsInTarget(target, target_dict, build_file):\n target_name = target_dict.get('target_name')\n actions = target_dict.get('actions', [])\n for action in actions:\n  action_name = action.get('action_name')\n  if (not action_name):\n   raise GypError((\"Anonymous action in target %s.  An action must have an 'action_name' field.\" % target_name))\n  inputs = action.get('inputs', None)\n  if (inputs is None):\n   raise GypError(('Action in target %s has no inputs.' % target_name))\n  action_command = action.get('action')\n  if (action_command and (not action_command[0])):\n   raise GypError(('Empty action as command in target %s.' % target_name))\n",
+        "id": 46
+    },
+    {
+        "text": "verify that *cert  (in decoded format as returned by sslsocket .",
+        "code": "def match_hostname(cert, hostname):\n if (not cert):\n  raise ValueError(u'empty or no certificate')\n dnsnames = []\n san = cert.get(u'subjectAltName', ())\n for (key, value) in san:\n  if (key == u'DNS'):\n   if _dnsname_match(value, hostname):\n    return\n   dnsnames.append(value)\n if (not dnsnames):\n  for sub in cert.get(u'subject', ()):\n   for (key, value) in sub:\n    if (key == u'commonName'):\n     if _dnsname_match(value, hostname):\n      return\n     dnsnames.append(value)\n if (len(dnsnames) > 1):\n  raise CertificateError((u\"hostname %r doesn't match either of %s\" % (hostname, u', '.join(map(repr, dnsnames)))))\n elif (len(dnsnames) == 1):\n  if ((sys.version_info[:3] < (2, 7, 3)) and (dnsnames[0] == u'calibre-ebook.com')):\n   return\n  raise CertificateError((u\"hostname %r doesn't match %r\" % (hostname, dnsnames[0])))\n else:\n  raise CertificateError(u'no appropriate commonName or subjectAltName fields were found')\n",
+        "id": 47
+    },
+    {
+        "text": "compute f/a where f in gf(p)[x] and a in gf(p) .",
+        "code": "def gf_quo_ground(f, a, p, K):\n return gf_mul_ground(f, K.invert(a, p), p, K)\n",
+        "id": 48
+    },
+    {
+        "text": "builds connection and search arguments .",
+        "code": "def _do_search(conf):\n connargs = {}\n for name in ['server', 'port', 'tls', 'binddn', 'bindpw', 'anonymous']:\n  connargs[name] = _config(name, conf)\n if (connargs['binddn'] and connargs['bindpw']):\n  connargs['anonymous'] = False\n try:\n  _filter = conf['filter']\n except KeyError:\n  raise SaltInvocationError('missing filter')\n _dn = _config('dn', conf)\n scope = _config('scope', conf)\n _lists = (_config('lists', conf) or [])\n _attrs = (_config('attrs', conf) or [])\n attrs = (_lists + _attrs)\n if (not attrs):\n  attrs = None\n try:\n  result = __salt__['ldap.search'](_filter, _dn, scope, attrs, **connargs)['results']\n except IndexError:\n  log.debug('LDAP search returned no results for filter {0}'.format(_filter))\n  result = {}\n except Exception:\n  log.critical('Failed to retrieve pillar data from LDAP:\\n', exc_info=True)\n  return {}\n return result\n",
+        "id": 49
+    },
+    {
+        "text": "test the fitting method .",
+        "code": "def test_rus_fit():\n rus = RandomUnderSampler(random_state=RND_SEED)\n rus.fit(X, Y)\n assert_equal(rus.min_c_, 0)\n assert_equal(rus.maj_c_, 1)\n assert_equal(rus.stats_c_[0], 3)\n assert_equal(rus.stats_c_[1], 7)\n",
+        "id": 50
+    },
+    {
+        "text": "this criteria is alerted if metrics data is completely missing at a timestamp .",
+        "code": "def MissingMetricsCriteria():\n return ([], [])\n",
+        "id": 51
+    },
+    {
+        "text": "a helpful decorator which can switch the flag values temporarily .",
+        "code": "def FlagOverrider(**flag_kwargs):\n def Decorator(f):\n  'Allow a function to safely change flags, restoring them on return.'\n  def Decorated(*args, **kwargs):\n   global FLAGS\n   old_flags = copy.copy(FLAGS)\n   for (k, v) in flag_kwargs.items():\n    setattr(FLAGS, k, v)\n   try:\n    return f(*args, **kwargs)\n   finally:\n    FLAGS = old_flags\n  return Decorated\n return Decorator\n",
+        "id": 52
+    },
+    {
+        "text": "this method returns the entity of the element which link points to .",
+        "code": "def follow_link(connection, link):\n if link:\n  return connection.follow_link(link)\n else:\n  return None\n",
+        "id": 53
+    },
+    {
+        "text": "bind cli arguments to a shell .",
+        "code": "def add_arg(f, *args, **kwargs):\n if (not hasattr(f, 'arguments')):\n  f.arguments = []\n if ((args, kwargs) not in f.arguments):\n  f.arguments.insert(0, (args, kwargs))\n",
+        "id": 54
+    },
+    {
+        "text": "from pep-318 URL#examples .",
+        "code": "def singleton(cls):\n _instances = {}\n def get_instance(*args, **kwargs):\n  if (cls not in _instances):\n   _instances[cls] = cls(*args, **kwargs)\n  return _instances[cls]\n return get_instance\n",
+        "id": 55
+    },
+    {
+        "text": "checks if given contents begins with a pseudo-open-pgp-style block and .",
+        "code": "def _get_pseudo_pgp_block(remaining_contents):\n if (not remaining_contents):\n  return None\n block_match = PGP_BLOCK_START.match(remaining_contents[0])\n if block_match:\n  block_type = block_match.groups()[0]\n  block_lines = []\n  end_line = (PGP_BLOCK_END % block_type)\n  while True:\n   if (not remaining_contents):\n    raise ValueError((\"Unterminated pgp style block (looking for '%s'):\\n%s\" % (end_line, '\\n'.join(block_lines))))\n   line = remaining_contents.pop(0)\n   block_lines.append(line)\n   if (line == end_line):\n    return (block_type, '\\n'.join(block_lines))\n else:\n  return None\n",
+        "id": 56
+    },
+    {
+        "text": "the directory that we check out our bundles to .",
+        "code": "def plugin_cache_dir():\n return os.path.join(tempfile.gettempdir(), 'UltiSnips_test_vim_plugins')\n",
+        "id": 57
+    },
+    {
+        "text": "get the top 10 keywords and their frequency scores ignores blacklisted words in stopwords .",
+        "code": "def keywords(text):\n NUM_KEYWORDS = 10\n text = split_words(text)\n if text:\n  num_words = len(text)\n  text = [x for x in text if (x not in stopwords)]\n  freq = {}\n  for word in text:\n   if (word in freq):\n    freq[word] += 1\n   else:\n    freq[word] = 1\n  min_size = min(NUM_KEYWORDS, len(freq))\n  keywords = sorted(freq.items(), key=(lambda x: (x[1], x[0])), reverse=True)\n  keywords = keywords[:min_size]\n  keywords = dict(((x, y) for (x, y) in keywords))\n  for k in keywords:\n   articleScore = ((keywords[k] * 1.0) / max(num_words, 1))\n   keywords[k] = ((articleScore * 1.5) + 1)\n  return dict(keywords)\n else:\n  return dict()\n",
+        "id": 58
+    },
+    {
+        "text": "escape commas .",
+        "code": "def escape(s):\n if (s is None):\n  return ''\n assert isinstance(s, basestring), ('expected %s but got %s; value=%s' % (basestring, type(s), s))\n s = s.replace('\\\\', '\\\\\\\\')\n s = s.replace('\\n', '\\\\n')\n s = s.replace(' DCTB ', '\\\\t')\n s = s.replace(',', ' DCTB ')\n return s\n",
+        "id": 59
+    },
+    {
+        "text": "cleanup after ci_build .",
+        "code": "def after_script():\n destroy_cmd = ['terraform', 'destroy', '-force']\n logging.info('Destroying cloud provider resources')\n sys.exit(run_cmd(destroy_cmd))\n",
+        "id": 60
+    },
+    {
+        "text": "encode a string using the standard base64 alphabet .",
+        "code": "def standard_b64encode(s):\n return b64encode(s)\n",
+        "id": 61
+    },
+    {
+        "text": "import content from buf and return a python ast .",
+        "code": "def import_buffer_to_ast(buf, module_name):\n return hy_compile(import_buffer_to_hst(buf), module_name)\n",
+        "id": 62
+    },
+    {
+        "text": "merge dictionaries and apply function to combined values a key may occur in more than one dict .",
+        "code": "def merge_with(func, *dicts, **kwargs):\n if ((len(dicts) == 1) and (not isinstance(dicts[0], dict))):\n  dicts = dicts[0]\n factory = _get_factory(merge_with, kwargs)\n result = factory()\n for d in dicts:\n  for (k, v) in iteritems(d):\n   if (k not in result):\n    result[k] = [v]\n   else:\n    result[k].append(v)\n return valmap(func, result, factory)\n",
+        "id": 63
+    },
+    {
+        "text": "generates a list of colors based on a list of names .",
+        "code": "def textListToColorsSimple(names):\n uNames = list(set(names))\n uNames.sort()\n textToColor = [uNames.index(n) for n in names]\n textToColor = np.array(textToColor)\n textToColor = ((255 * (textToColor - textToColor.min())) / (textToColor.max() - textToColor.min()))\n textmaps = generateColorMap()\n colors = [textmaps[int(c)] for c in textToColor]\n return colors\n",
+        "id": 64
+    },
+    {
+        "text": "convert a multidict containing form data into a regular dict .",
+        "code": "def multidict_to_dict(multidict):\n if config.AUTO_COLLAPSE_MULTI_KEYS:\n  d = dict(multidict.lists())\n  for (key, value) in d.items():\n   if (len(value) == 1):\n    d[key] = value[0]\n  return d\n else:\n  return multidict.to_dict()\n",
+        "id": 65
+    },
+    {
+        "text": "check whether ldap authentication can be enabled .",
+        "code": "def get_can_enable_ldap():\n if has_module(u'ldap'):\n  return (True, None)\n else:\n  return (False, _(u'LDAP authentication requires the python-ldap library, which is not installed.'))\n",
+        "id": 66
+    },
+    {
+        "text": "escape html in json value .",
+        "code": "def escape_all(v, linkify=True):\n if isinstance(v, basestring):\n  v = jinja2.escape(smart_unicode(v))\n  if linkify:\n   v = bleach.linkify(v, callbacks=[bleach.callbacks.nofollow])\n  return v\n elif isinstance(v, list):\n  for (i, lv) in enumerate(v):\n   v[i] = escape_all(lv, linkify=linkify)\n elif isinstance(v, dict):\n  for (k, lv) in v.iteritems():\n   v[k] = escape_all(lv, linkify=linkify)\n elif isinstance(v, Translation):\n  v = jinja2.escape(smart_unicode(v.localized_string))\n return v\n",
+        "id": 67
+    },
+    {
+        "text": "sanitize a string .",
+        "code": "def strip_html(unclean):\n if ((not isinstance(unclean, basestring)) and (not is_iterable(unclean)) and (unclean is not None)):\n  return unclean\n return bleach.clean(unclean, strip=True, tags=[], attributes=[], styles=[])\n",
+        "id": 68
+    },
+    {
+        "text": "dummy implementation of thread .",
+        "code": "def get_ident():\n return (-1)\n",
+        "id": 69
+    },
+    {
+        "text": "get summarize health this provides a summary of the health of the managed system .",
+        "code": "def get_health(**kwargs):\n with _IpmiCommand(**kwargs) as s:\n  return s.get_health()\n",
+        "id": 70
+    },
+    {
+        "text": "checks to see if the function is marked as not requiring authentication with the @unauthenticated decorator .",
+        "code": "def isunauthenticated(f):\n return getattr(f, 'unauthenticated', False)\n",
+        "id": 71
+    },
+    {
+        "text": "used to instruct the agent to force a node into the left state .",
+        "code": "def agent_leave(consul_url=None, node=None):\n ret = {}\n query_params = {}\n if (not consul_url):\n  consul_url = _get_config()\n  if (not consul_url):\n   log.error('No Consul URL found.')\n   ret['message'] = 'No Consul URL found.'\n   ret['res'] = False\n   return ret\n if (not node):\n  raise SaltInvocationError('Required argument \"node\" is missing.')\n function = 'agent/force-leave/{0}'.format(node)\n res = _query(consul_url=consul_url, function=function, method='GET', query_params=query_params)\n if res['res']:\n  ret['res'] = True\n  ret['message'] = 'Node {0} put in leave state.'.format(node)\n else:\n  ret['res'] = False\n  ret['message'] = 'Unable to change state for {0}.'.format(node)\n return ret\n",
+        "id": 72
+    },
+    {
+        "text": "a convenience method for making a dist given just a name and version .",
+        "code": "def make_dist(name, version, **kwargs):\n summary = kwargs.pop(u'summary', u'Placeholder for summary')\n md = Metadata(**kwargs)\n md.name = name\n md.version = version\n md.summary = (summary or u'Plaeholder for summary')\n return Distribution(md)\n",
+        "id": 73
+    },
+    {
+        "text": "install the pre-requisites for pip installation of the flocker client .",
+        "code": "def task_cli_pip_prereqs(package_manager):\n if (package_manager in ('dnf', 'yum')):\n  return yum_install(PIP_CLI_PREREQ_YUM, package_manager=package_manager, sudo=True)\n elif (package_manager == 'apt'):\n  return sequence([apt_get_update(sudo=True), apt_get_install(PIP_CLI_PREREQ_APT, sudo=True)])\n else:\n  raise UnsupportedDistribution()\n",
+        "id": 74
+    },
+    {
+        "text": "compute polynomial pseudo-division of f and g .",
+        "code": "@public\ndef pdiv(f, g, *gens, **args):\n options.allowed_flags(args, ['polys'])\n try:\n  ((F, G), opt) = parallel_poly_from_expr((f, g), *gens, **args)\n except PolificationFailed as exc:\n  raise ComputationFailed('pdiv', 2, exc)\n (q, r) = F.pdiv(G)\n if (not opt.polys):\n  return (q.as_expr(), r.as_expr())\n else:\n  return (q, r)\n",
+        "id": 75
+    },
+    {
+        "text": "count occurrences of elements in this column sort by counts by default add sort=false keyword to avoid this behavior .",
+        "code": "def count_values(expr, sort=True):\n result = by(expr, count=expr.count())\n if sort:\n  result = result.sort('count', ascending=False)\n return result\n",
+        "id": 76
+    },
+    {
+        "text": "return a list of tuples where s is the largest subset of elements that appear in pairs of sets given by sets and l is a list of tuples giving the indices of the pairs of sets in which those elements appeared .",
+        "code": "def pairwise_most_common(sets):\n from sympy.utilities.iterables import subsets\n from collections import defaultdict\n most = (-1)\n for (i, j) in subsets(list(range(len(sets))), 2):\n  com = (sets[i] & sets[j])\n  if (com and (len(com) > most)):\n   best = defaultdict(list)\n   best_keys = []\n   most = len(com)\n  if (len(com) == most):\n   if (com not in best_keys):\n    best_keys.append(com)\n   best[best_keys.index(com)].append((i, j))\n if (most == (-1)):\n  return []\n for k in range(len(best)):\n  best_keys[k] = (best_keys[k], best[k])\n best_keys.sort(key=(lambda x: len(x[1])))\n return best_keys\n",
+        "id": 77
+    },
+    {
+        "text": "dump object to string .",
+        "code": "def yaml_dump(object):\n yaml = get_yaml()\n return yaml.dump(object, Dumper=yaml.RoundTripDumper, block_seq_indent=2, default_flow_style=False, indent=2)\n",
+        "id": 78
+    },
+    {
+        "text": "return a chunk from a file based on the data received .",
+        "code": "def serve_file(load, fnd):\n if ('env' in load):\n  salt.utils.warn_until('Oxygen', \"Parameter 'env' has been detected in the argument list.  This parameter is no longer used and has been replaced by 'saltenv' as of Salt 2016.11.0.  This warning will be removed in Salt Oxygen.\")\n  load.pop('env')\n ret = {'data': '', 'dest': ''}\n if (('path' not in load) or ('loc' not in load) or ('saltenv' not in load)):\n  return ret\n if (not fnd['path']):\n  return ret\n ret['dest'] = fnd['rel']\n gzip = load.get('gzip', None)\n with salt.utils.fopen(os.path.normpath(fnd['path']), 'rb') as fp_:\n  fp_.seek(load['loc'])\n  data = fp_.read(__opts__['file_buffer_size'])\n  if (gzip and data):\n   data = salt.utils.gzip_util.compress(data, gzip)\n   ret['gzip'] = gzip\n  ret['data'] = data\n return ret\n",
+        "id": 79
+    },
+    {
+        "text": "unconditionally skip a test .",
+        "code": "def skip(reason):\n def decorator(test_item):\n  if (not isinstance(test_item, (type, types.ClassType))):\n   @functools.wraps(test_item)\n   def skip_wrapper(*args, **kwargs):\n    raise SkipTest(reason)\n   test_item = skip_wrapper\n  test_item.__unittest_skip__ = True\n  test_item.__unittest_skip_why__ = reason\n  return test_item\n return decorator\n",
+        "id": 80
+    },
+    {
+        "text": "setup x10 switches over a mochad controller .",
+        "code": "def setup_platform(hass, config, add_devices, discovery_info=None):\n devs = config.get(CONF_DEVICES)\n add_devices([MochadSwitch(hass, mochad.CONTROLLER.ctrl, dev) for dev in devs])\n return True\n",
+        "id": 81
+    },
+    {
+        "text": "test to ensure the custom boolean type correctly supports boolean conversion .",
+        "code": "def test_boolean():\n assert hug.types.boolean('1')\n assert hug.types.boolean('T')\n assert (not hug.types.boolean(''))\n assert hug.types.boolean('False')\n assert (not hug.types.boolean(False))\n",
+        "id": 82
+    },
+    {
+        "text": "set the default colormap to jet and apply to current image if any .",
+        "code": "def jet():\n rc('image', cmap='jet')\n im = gci()\n if (im is not None):\n  im.set_cmap(cm.jet)\n draw_if_interactive()\n",
+        "id": 83
+    },
+    {
+        "text": "the basic permission-checker only for player objects .",
+        "code": "def pperm(accessing_obj, accessed_obj, *args, **kwargs):\n return perm(_to_player(accessing_obj), accessed_obj, *args, **kwargs)\n",
+        "id": 84
+    },
+    {
+        "text": "unregister a previously registered hosting service .",
+        "code": "def unregister_hosting_service(name):\n try:\n  _hosting_service_registry.unregister_by_attr(u'hosting_service_id', name)\n except ItemLookupError as e:\n  logging.error((u'Failed to unregister unknown hosting service \"%s\"' % name))\n  raise e\n",
+        "id": 85
+    },
+    {
+        "text": "notice when hangup or timeout .",
+        "code": "def reconn_notice():\n guide = ((light_magenta('You can use ') + light_green('switch')) + light_magenta(' command to return to your stream.\\n'))\n guide += ((light_magenta('Type ') + light_green('h stream')) + light_magenta(' for more details.'))\n printNicely(guide)\n sys.stdout.write(g['decorated_name'](g['PREFIX']))\n sys.stdout.flush()\n",
+        "id": 86
+    },
+    {
+        "text": "convenience method for executing operating system commands .",
+        "code": "def runproc(cmd):\n proc = Popen([cmd], shell=True, stdin=PIPE, stdout=PIPE, stderr=PIPE, close_fds=True)\n (stdoutdata, stderrdata) = proc.communicate()\n return (stdoutdata, stderrdata)\n",
+        "id": 87
+    },
+    {
+        "text": "converts an sslerror .",
+        "code": "def convert_unreachable_exception(e, error_format=u'Facebook is unreachable %s'):\n exception_class = map_unreachable_exception(e)\n error_message = (error_format % str(e))\n exception = exception_class(error_message)\n return exception\n",
+        "id": 88
+    },
+    {
+        "text": "make every worker ignore keyboarinterrups since it will be handled by the parent process .",
+        "code": "def init_pool_worker():\n signal.signal(signal.SIGINT, signal.SIG_IGN)\n",
+        "id": 89
+    },
+    {
+        "text": "rather basic .",
+        "code": "def output(data, **kwargs):\n return salt.utils.locales.sdecode(str(data))\n",
+        "id": 90
+    },
+    {
+        "text": "break text down into ngrams .",
+        "code": "def count_ngrams(text, max_ngram_size, stop_words):\n if (not isinstance(stop_words, set)):\n  stop_words = set(stop_words)\n words = [word.lower() for word in WORD_RE.findall(text) if (word.lower() not in stop_words)]\n ngram_counts = defaultdict(int)\n for i in range(len(words)):\n  for n in range(1, (max_ngram_size + 1)):\n   if ((i + n) <= len(words)):\n    ngram = ' '.join(words[i:(i + n)])\n    ngram_counts[(n, ngram)] += 1\n for n in range(1, (max_ngram_size + 1)):\n  ngram_counts[(n, None)] = ((len(words) - n) + 1)\n return ngram_counts\n",
+        "id": 91
+    },
+    {
+        "text": "convert an file system path to a uri portion that is suitable for inclusion in a url .",
+        "code": "def filepath_to_uri(path):\n if (path is None):\n  return path\n return urllib.quote(smart_str(path).replace('\\\\', '/'), safe=\"/~!*()'\")\n",
+        "id": 92
+    },
+    {
+        "text": "format a string of python code .",
+        "code": "def FormatCode(unformatted_source, filename='<unknown>', style_config=None, lines=None, print_diff=False, verify=False):\n _CheckPythonVersion()\n style.SetGlobalStyle(style.CreateStyleFromConfig(style_config))\n if (not unformatted_source.endswith('\\n')):\n  unformatted_source += '\\n'\n tree = pytree_utils.ParseCodeToTree(unformatted_source)\n comment_splicer.SpliceComments(tree)\n continuation_splicer.SpliceContinuations(tree)\n subtype_assigner.AssignSubtypes(tree)\n split_penalty.ComputeSplitPenalties(tree)\n blank_line_calculator.CalculateBlankLines(tree)\n uwlines = pytree_unwrapper.UnwrapPyTree(tree)\n for uwl in uwlines:\n  uwl.CalculateFormattingInformation()\n _MarkLinesToFormat(uwlines, lines)\n reformatted_source = reformatter.Reformat(uwlines, verify)\n if (unformatted_source == reformatted_source):\n  return (('' if print_diff else reformatted_source), False)\n code_diff = _GetUnifiedDiff(unformatted_source, reformatted_source, filename=filename)\n if print_diff:\n  return (code_diff, (code_diff != ''))\n return (reformatted_source, True)\n",
+        "id": 93
+    },
+    {
+        "text": "please note: this method must be called right before an expected alert window variables are page local and thus all changes are removed upon navigating to a new page in addition .",
+        "code": "@step('I will confirm all alerts')\ndef i_confirm_all_alerts(step):\n world.browser.execute_script('window.confirm = function(){return true;} ; window.alert = function(){return;}')\n",
+        "id": 94
+    },
+    {
+        "text": "convenience function for getting the text to use for a match when formatting .",
+        "code": "def get_text(original, token, replace):\n if replace:\n  return token.text\n else:\n  return original[token.startchar:token.endchar]\n",
+        "id": 95
+    },
+    {
+        "text": "when calculating result rank .",
+        "code": "def test_ranking_ignores_identifier_quotes(completer):\n text = u'user'\n collection = [u'user_action', u'\"user\"']\n matches = completer.find_matches(text, collection)\n assert (len(matches) == 2)\n",
+        "id": 96
+    },
+    {
+        "text": "return an unused filename with the same extension as the specified path .",
+        "code": "def temp_file_for(path):\n ext = os.path.splitext(path)[1]\n with NamedTemporaryFile(suffix=ext, delete=False) as f:\n  return f.name\n",
+        "id": 97
+    },
+    {
+        "text": "return a random url-safe text string .",
+        "code": "def token_urlsafe(nbytes=None):\n tok = token_bytes(nbytes)\n return base64.urlsafe_b64encode(tok).rstrip('=').decode('ascii')\n",
+        "id": 98
+    },
+    {
+        "text": "sets up a logger for console output .",
+        "code": "def setup_logger(logger, stream, filename=None, fmt=None):\n if (len(logger.handlers) < 1):\n  console = logging.StreamHandler(stream)\n  console.setLevel(logging.DEBUG)\n  console.setFormatter(logging.Formatter(fmt))\n  logger.addHandler(console)\n  logger.setLevel(logging.DEBUG)\n  if filename:\n   outfile = logging.FileHandler(filename)\n   outfile.setLevel(logging.INFO)\n   outfile.setFormatter(logging.Formatter(('%(asctime)s ' + (fmt if fmt else '%(message)s'))))\n   logger.addHandler(outfile)\n",
+        "id": 99
+    }
+]

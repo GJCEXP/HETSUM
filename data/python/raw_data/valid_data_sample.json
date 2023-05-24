@@ -1,0 +1,502 @@
+[
+    {
+        "text": "reorders a test suite by test type .",
+        "code": "def reorder_suite(suite, classes, reverse=False):\n class_count = len(classes)\n suite_class = type(suite)\n bins = [OrderedSet() for i in range((class_count + 1))]\n partition_suite_by_type(suite, classes, bins, reverse=reverse)\n reordered_suite = suite_class()\n for i in range((class_count + 1)):\n  reordered_suite.addTests(bins[i])\n return reordered_suite\n",
+        "id": 0
+    },
+    {
+        "text": "returns the first item in a list .",
+        "code": "def first(value):\n try:\n  return value[0]\n except IndexError:\n  return u''\n",
+        "id": 1
+    },
+    {
+        "text": "setup the rfxtrx platform .",
+        "code": "def setup_platform(hass, config, add_devices_callback, discovery_info=None):\n import RFXtrx as rfxtrxmod\n switches = rfxtrx.get_devices_from_config(config, RfxtrxSwitch)\n add_devices_callback(switches)\n def switch_update(event):\n  'Callback for sensor updates from the RFXtrx gateway.'\n  if ((not isinstance(event.device, rfxtrxmod.LightingDevice)) or event.device.known_to_be_dimmable or event.device.known_to_be_rollershutter):\n   return\n  new_device = rfxtrx.get_new_device(event, config, RfxtrxSwitch)\n  if new_device:\n   add_devices_callback([new_device])\n  rfxtrx.apply_received_command(event)\n if (switch_update not in rfxtrx.RECEIVED_EVT_SUBSCRIBERS):\n  rfxtrx.RECEIVED_EVT_SUBSCRIBERS.append(switch_update)\n",
+        "id": 2
+    },
+    {
+        "text": "updates the probes dictionary with different levels of default values .",
+        "code": "def _expand_probes(probes, defaults):\n expected_probes = {}\n for (probe_name, probe_test) in six.iteritems(probes):\n  if (probe_name not in expected_probes.keys()):\n   expected_probes[probe_name] = {}\n  probe_defaults = probe_test.pop('defaults', {})\n  for (test_name, test_details) in six.iteritems(probe_test):\n   test_defaults = test_details.pop('defaults', {})\n   expected_test_details = deepcopy(defaults)\n   expected_test_details.update(probe_defaults)\n   expected_test_details.update(test_defaults)\n   expected_test_details.update(test_details)\n   if (test_name not in expected_probes[probe_name].keys()):\n    expected_probes[probe_name][test_name] = expected_test_details\n return expected_probes\n",
+        "id": 3
+    },
+    {
+        "text": "test creating chart data source from array of dicts .",
+        "code": "def test_records(test_data):\n ds = ChartDataSource.from_data(test_data.records_data)\n assert (len(ds.columns) == 2)\n assert (len(ds.index) == 4)\n",
+        "id": 4
+    },
+    {
+        "text": "attach votes count to each object of the queryset .",
+        "code": "def attach_total_voters_to_queryset(queryset, as_field='total_voters'):\n model = queryset.model\n type = apps.get_model('contenttypes', 'ContentType').objects.get_for_model(model)\n sql = 'SELECT coalesce(SUM(total_voters), 0) FROM (\\n                SELECT coalesce(votes_votes.count, 0) total_voters\\n                  FROM votes_votes\\n                 WHERE votes_votes.content_type_id = {type_id}\\n                   AND votes_votes.object_id = {tbl}.id\\n          ) as e'\n sql = sql.format(type_id=type.id, tbl=model._meta.db_table)\n qs = queryset.extra(select={as_field: sql})\n return qs\n",
+        "id": 5
+    },
+    {
+        "text": "add locale paths to settings for comprehensive theming .",
+        "code": "def _add_theming_locales():\n theme_locale_paths = settings.COMPREHENSIVE_THEME_LOCALE_PATHS\n for locale_path in theme_locale_paths:\n  settings.LOCALE_PATHS += (path(locale_path),)\n",
+        "id": 6
+    },
+    {
+        "text": "turn auto-escape on/off based on the file type .",
+        "code": "def _guess_autoescape(template_name):\n if ((template_name is None) or ('.' not in template_name)):\n  return False\n ext = template_name.rsplit('.', 1)[1]\n return (ext in ['html', 'htm', 'xml'])\n",
+        "id": 7
+    },
+    {
+        "text": "convert path to a local filesystem path relative to base_folder .",
+        "code": "def path_to_filesystem(root, *paths):\n paths = [sanitize_path(path).strip('/') for path in paths]\n safe_path = root\n for path in paths:\n  if (not path):\n   continue\n  for part in path.split('/'):\n   if (not is_safe_filesystem_path_component(part)):\n    raise UnsafePathError(part)\n   safe_path = os.path.join(safe_path, part)\n return safe_path\n",
+        "id": 8
+    },
+    {
+        "text": "wrapper function to search one dir above if a file does not exist .",
+        "code": "def _open(filepath, *args, **kwargs):\n if (not os.path.exists(filepath)):\n  filepath = os.path.join('..', filepath)\n return open(filepath, 'rb', *args, **kwargs)\n",
+        "id": 9
+    },
+    {
+        "text": "open a resource file given by pathname .",
+        "code": "def open_pathname(pathname, verbose=0):\n try:\n  refno = Res.FSOpenResourceFile(pathname, u'', 1)\n except Res.Error as arg:\n  if (arg[0] != (-199)):\n   raise\n else:\n  return refno\n pathname = _decode(pathname, verbose=verbose)\n refno = Res.FSOpenResourceFile(pathname, u'', 1)\n",
+        "id": 10
+    },
+    {
+        "text": "delete a policy based on rabbitmqctl clear_policy .",
+        "code": "def delete_policy(vhost, name, runas=None):\n if ((runas is None) and (not salt.utils.is_windows())):\n  runas = salt.utils.get_user()\n res = __salt__['cmd.run_all']([__context__['rabbitmqctl'], 'clear_policy', '-p', vhost, name], runas=runas, python_shell=False)\n log.debug('Delete policy: {0}'.format(res['stdout']))\n return _format_response(res, 'Deleted')\n",
+        "id": 11
+    },
+    {
+        "text": "get rectangular grid .",
+        "code": "def getRectangularGrid(diameter, loopsComplex, maximumComplex, minimumComplex, zigzag):\n demiradius = (0.25 * diameter)\n xStart = (minimumComplex.real - demiradius.real)\n y = (minimumComplex.imag - demiradius.imag)\n gridPath = []\n rowIndex = 0\n while (y < maximumComplex.imag):\n  addGridRow(diameter, gridPath, loopsComplex, maximumComplex, rowIndex, xStart, y, zigzag)\n  y += diameter.imag\n  rowIndex += 1\n return gridPath\n",
+        "id": 12
+    },
+    {
+        "text": "bottom the carving of a gcode file .",
+        "code": "def writeOutput(fileName=''):\n print ''\n print 'The bottom tool is parsing the file:'\n print os.path.basename(fileName)\n print ''\n startTime = time.time()\n fileNameSuffix = (fileName[:fileName.rfind('.')] + '_bottom.svg')\n craftText = skeinforge_craft.getChainText(fileName, 'bottom')\n if (craftText == ''):\n  return\n archive.writeFileText(fileNameSuffix, craftText)\n print ''\n print 'The bottom tool has created the file:'\n print fileNameSuffix\n print ''\n print ('It took %s to craft the file.' % euclidean.getDurationString((time.time() - startTime)))\n repository = BottomRepository()\n settings.getReadRepository(repository)\n settings.openSVGPage(fileNameSuffix, repository.svgViewer.value)\n",
+        "id": 13
+    },
+    {
+        "text": "useful method for debugging acceptance tests that are run in vagrant .",
+        "code": "def capture_screenshot_for_step(step, when):\n if world.auto_capture_screenshots:\n  scenario_num = (step.scenario.feature.scenarios.index(step.scenario) + 1)\n  step_num = (step.scenario.steps.index(step) + 1)\n  step_func_name = step.defined_at.function.func_name\n  image_name = '{prefix:03d}__{num:03d}__{name}__{postfix}'.format(prefix=scenario_num, num=step_num, name=step_func_name, postfix=when)\n  world.capture_screenshot(image_name)\n",
+        "id": 14
+    },
+    {
+        "text": "if path is a valid vcs repository .",
+        "code": "def run_vcs_tool(path, action):\n info = get_vcs_info(get_vcs_root(path))\n tools = info['actions'][action]\n for (tool, args) in tools:\n  if programs.find_program(tool):\n   programs.run_program(tool, args, cwd=path)\n   return\n else:\n  cmdnames = [name for (name, args) in tools]\n  raise ActionToolNotFound(info['name'], action, cmdnames)\n",
+        "id": 15
+    },
+    {
+        "text": "request entrance exam problems to be re-scored as a background task .",
+        "code": "def submit_rescore_entrance_exam_for_student(request, usage_key, student=None, only_if_higher=False):\n check_entrance_exam_problems_for_rescoring(usage_key)\n task_type = ('rescore_problem_if_higher' if only_if_higher else 'rescore_problem')\n task_class = rescore_problem\n (task_input, task_key) = encode_entrance_exam_and_student_input(usage_key, student)\n task_input.update({'only_if_higher': only_if_higher})\n return submit_task(request, task_type, task_class, usage_key.course_key, task_input, task_key)\n",
+        "id": 16
+    },
+    {
+        "text": "redefine this fixture to configure the test celery app .",
+        "code": "@pytest.fixture(scope=u'session')\ndef celery_config():\n return {}\n",
+        "id": 17
+    },
+    {
+        "text": "a decorator to place an instance-based lock around a method .",
+        "code": "def synchronous(tlockname):\n def _synched(func):\n  @wraps(func)\n  def _synchronizer(self, *args, **kwargs):\n   tlock = getattr(self, tlockname)\n   logger.debug(('acquiring lock %r for %s' % (tlockname, func.__name__)))\n   with tlock:\n    logger.debug(('acquired lock %r for %s' % (tlockname, func.__name__)))\n    result = func(self, *args, **kwargs)\n    logger.debug(('releasing lock %r for %s' % (tlockname, func.__name__)))\n    return result\n  return _synchronizer\n return _synched\n",
+        "id": 18
+    },
+    {
+        "text": "destroy all quotas associated with a given project .",
+        "code": "def quota_destroy_all_by_project(context, project_id):\n return IMPL.quota_destroy_all_by_project(context, project_id)\n",
+        "id": 19
+    },
+    {
+        "text": "copied from win_system .",
+        "code": "def _get_date_time_format(dt_string):\n valid_formats = ['%I:%M:%S %p', '%I:%M %p', '%H:%M:%S', '%H:%M', '%Y-%m-%d', '%m-%d-%y', '%m-%d-%Y', '%m/%d/%y', '%m/%d/%Y', '%Y/%m/%d']\n for dt_format in valid_formats:\n  try:\n   datetime.strptime(dt_string, dt_format)\n   return dt_format\n  except ValueError:\n   continue\n return False\n",
+        "id": 20
+    },
+    {
+        "text": "install the kqueue() reactor .",
+        "code": "def install():\n p = KQueueReactor()\n from twisted.internet.main import installReactor\n installReactor(p)\n",
+        "id": 21
+    },
+    {
+        "text": "converts task id into a beaker path to result file given a recipe id and a task id .",
+        "code": "def make_path_result(r, t):\n rpath = ('/recipes/' + r)\n tpath = ('/tasks/' + t)\n return ((rpath + tpath) + '/results/')\n",
+        "id": 22
+    },
+    {
+        "text": "modules home page .",
+        "code": "def index():\n s3_redirect_default(URL(f='alert'))\n",
+        "id": 23
+    },
+    {
+        "text": "iterates over all the nodes of g in saturation order .",
+        "code": "def strategy_saturation_largest_first(G, colors):\n distinct_colors = {v: set() for v in G}\n for i in range(len(G)):\n  if (i == 0):\n   node = max(G, key=G.degree)\n   (yield node)\n   for v in G[node]:\n    distinct_colors[v].add(0)\n  else:\n   saturation = {v: len(c) for (v, c) in distinct_colors.items() if (v not in colors)}\n   node = max(saturation, key=(lambda v: (saturation[v], G.degree(v))))\n   (yield node)\n   color = colors[node]\n   for v in G[node]:\n    distinct_colors[v].add(color)\n",
+        "id": 24
+    },
+    {
+        "text": "init process group permissions .",
+        "code": "def initgroups(uid, gid):\n if (not pwd):\n  return\n username = pwd.getpwuid(uid)[0]\n if hasattr(os, u'initgroups'):\n  return os.initgroups(username, gid)\n groups = [gr.gr_gid for gr in grp.getgrall() if (username in gr.gr_mem)]\n setgroups(groups)\n",
+        "id": 25
+    },
+    {
+        "text": "set a wsdl method with wsdl namespace and wsdl name returns added method / existing method if already in the map note: must be holding the _lazylock .",
+        "code": "def _SetWsdlMethod(ns, wsdlName, inputMM):\n _wsdlMethodNSs.add(ns)\n curMM = _wsdlMethodMap.get((ns, wsdlName))\n if isinstance(inputMM, list):\n  if (curMM is None):\n   _wsdlMethodMap[(ns, wsdlName)] = inputMM\n   return inputMM\n  elif isinstance(curMM, list):\n   raise RuntimeError(('Duplicate wsdl method %s %s (new class %s vs existing %s)' % (ns, wsdlName, inputMM[0], curMM[0])))\n  else:\n   return curMM\n elif ((curMM is None) or isinstance(curMM, list)):\n  _wsdlMethodMap[(ns, wsdlName)] = inputMM\n  return inputMM\n else:\n  return curMM\n",
+        "id": 26
+    },
+    {
+        "text": "escape a byte string so that it can be written into c code .",
+        "code": "def escape_byte_string(s):\n s = _replace_specials(s)\n try:\n  return s.decode('ASCII')\n except UnicodeDecodeError:\n  pass\n if IS_PYTHON3:\n  s_new = bytearray()\n  (append, extend) = (s_new.append, s_new.extend)\n  for b in s:\n   if (b >= 128):\n    extend(('\\\\%3o' % b).encode('ASCII'))\n   else:\n    append(b)\n  return s_new.decode('ISO-8859-1')\n else:\n  l = []\n  append = l.append\n  for c in s:\n   o = ord(c)\n   if (o >= 128):\n    append(('\\\\%3o' % o))\n   else:\n    append(c)\n  return join_bytes(l).decode('ISO-8859-1')\n",
+        "id": 27
+    },
+    {
+        "text": "inner covariance matrix for white heteroscedastistity sandwich parameters x : ndarray or data .",
+        "code": "def S_white_simple(x):\n if (x.ndim == 1):\n  x = x[:, None]\n return np.dot(x.T, x)\n",
+        "id": 28
+    },
+    {
+        "text": "only succeed if the value in the given register location contains the given value usage: .",
+        "code": "def contains(name, value):\n ret = {'name': name, 'result': False, 'comment': '', 'changes': {}}\n if (name not in __reg__):\n  ret['result'] = False\n  ret['comment'] = 'Value {0} not in register'.format(name)\n  return ret\n try:\n  if (value in __reg__[name]['val']):\n   ret['result'] = True\n except TypeError:\n  pass\n return ret\n",
+        "id": 29
+    },
+    {
+        "text": "finds indices in sorted array of integers .",
+        "code": "def _find_matching_indices(tree, bin_X, left_mask, right_mask):\n left_index = np.searchsorted(tree, (bin_X & left_mask))\n right_index = np.searchsorted(tree, (bin_X | right_mask), side='right')\n return (left_index, right_index)\n",
+        "id": 30
+    },
+    {
+        "text": "disconnect api connection .",
+        "code": "def _disconnect_session(session):\n session['client'].auth.logout(session['key'])\n",
+        "id": 31
+    },
+    {
+        "text": "test verifying user using verify_user function .",
+        "code": "@pytest.mark.django_db\ndef test_verify_user_empty_email(trans_member):\n with pytest.raises(EmailAddress.DoesNotExist):\n  EmailAddress.objects.get(user=trans_member)\n assert (trans_member.email == '')\n with pytest.raises(ValidationError):\n  accounts.utils.verify_user(trans_member)\n with pytest.raises(EmailAddress.DoesNotExist):\n  EmailAddress.objects.get(user=trans_member)\n",
+        "id": 32
+    },
+    {
+        "text": "fix line ending of content by changing it to .",
+        "code": "def fix_line_ending(content):\n return content.replace('\\r\\n', '\\n').replace('\\r', '\\n')\n",
+        "id": 33
+    },
+    {
+        "text": "check for assertequal or assertequal sentences n318 .",
+        "code": "def assert_equal_none(logical_line):\n _start_re = re.compile('assertEqual\\\\(.*?,\\\\s+None\\\\)$')\n _end_re = re.compile('assertEqual\\\\(None,')\n if (_start_re.search(logical_line) or _end_re.search(logical_line)):\n  (yield (0, 'N318: assertEqual(A, None) or assertEqual(None, A) sentences not allowed. Use assertIsNone(A) instead.'))\n _start_re = re.compile('assertIs(Not)?\\\\(None,')\n _end_re = re.compile('assertIs(Not)?\\\\(.*,\\\\s+None\\\\)$')\n if (_start_re.search(logical_line) or _end_re.search(logical_line)):\n  (yield (0, 'N318: assertIsNot(A, None) or assertIsNot(None, A) must not be used. Use assertIsNone(A) or assertIsNotNone(A) instead.'))\n",
+        "id": 34
+    },
+    {
+        "text": "split and strip keywords .",
+        "code": "def _split_query(query):\n qq = query.split(' ')\n keywords = []\n accum = None\n for kw in qq:\n  if (accum is None):\n   if kw.startswith('\"'):\n    accum = kw[1:]\n   elif kw:\n    keywords.append(kw)\n  else:\n   accum += (' ' + kw)\n   if kw.endswith('\"'):\n    keywords.append(accum[0:(-1)])\n    accum = None\n if (accum is not None):\n  keywords.append(accum)\n return [kw.strip() for kw in keywords if kw.strip()]\n",
+        "id": 35
+    },
+    {
+        "text": "common logic for nspawn .",
+        "code": "@_ensure_exists\ndef _run(name, cmd, output=None, no_start=False, stdin=None, python_shell=True, preserve_state=False, output_loglevel='debug', ignore_retcode=False, use_vt=False, keep_env=None):\n orig_state = state(name)\n exc = None\n try:\n  ret = __salt__['container_resource.run'](name, cmd, container_type=__virtualname__, exec_driver=EXEC_DRIVER, output=output, no_start=no_start, stdin=stdin, python_shell=python_shell, output_loglevel=output_loglevel, ignore_retcode=ignore_retcode, use_vt=use_vt, keep_env=keep_env)\n except Exception:\n  raise\n finally:\n  if (preserve_state and (orig_state == 'stopped') and (state(name) != 'stopped')):\n   stop(name)\n if (output in (None, 'all')):\n  return ret\n else:\n  return ret[output]\n",
+        "id": 36
+    },
+    {
+        "text": "return a file:// url to the given local path .",
+        "code": "def file_url(path):\n return QUrl.fromLocalFile(path).toString(QUrl.FullyEncoded)\n",
+        "id": 37
+    },
+    {
+        "text": "convert request params based on function annotations .",
+        "code": "def convert_params(exception=ValueError, error=400):\n request = cherrypy.serving.request\n types = request.handler.callable.__annotations__\n with cherrypy.HTTPError.handle(exception, error):\n  for key in set(types).intersection(request.params):\n   request.params[key] = types[key](request.params[key])\n",
+        "id": 38
+    },
+    {
+        "text": "return tuple describing the current slice given slice width .",
+        "code": "def get_timeslice(slice_seconds):\n now = int(time.time())\n slice_count = (now // slice_seconds)\n slice_start = int((slice_count * slice_seconds))\n slice_end = (slice_start + slice_seconds)\n return TimeSlice(slice_start, slice_end)\n",
+        "id": 39
+    },
+    {
+        "text": "create subset of dataset and properly handle kernels .",
+        "code": "def _safe_split(estimator, X, y, indices, train_indices=None):\n if (hasattr(estimator, 'kernel') and callable(estimator.kernel) and (not isinstance(estimator.kernel, GPKernel))):\n  raise ValueError('Cannot use a custom kernel function. Precompute the kernel matrix instead.')\n if (not hasattr(X, 'shape')):\n  if getattr(estimator, '_pairwise', False):\n   raise ValueError('Precomputed kernels or affinity matrices have to be passed as arrays or sparse matrices.')\n  X_subset = [X[idx] for idx in indices]\n elif getattr(estimator, '_pairwise', False):\n  if (X.shape[0] != X.shape[1]):\n   raise ValueError('X should be a square kernel matrix')\n  if (train_indices is None):\n   X_subset = X[np.ix_(indices, indices)]\n  else:\n   X_subset = X[np.ix_(indices, train_indices)]\n else:\n  X_subset = safe_indexing(X, indices)\n if (y is not None):\n  y_subset = safe_indexing(y, indices)\n else:\n  y_subset = None\n return (X_subset, y_subset)\n",
+        "id": 40
+    },
+    {
+        "text": "executes a uniform crossover that modify in place the two :term:sequence individuals .",
+        "code": "def cxUniform(ind1, ind2, indpb):\n size = min(len(ind1), len(ind2))\n for i in xrange(size):\n  if (random.random() < indpb):\n   (ind1[i], ind2[i]) = (ind2[i], ind1[i])\n return (ind1, ind2)\n",
+        "id": 41
+    },
+    {
+        "text": "given an order_by tuple such as reverse the ordering and return a new tuple .",
+        "code": "def _reverse_ordering(ordering_tuple):\n def invert(x):\n  return (x[1:] if x.startswith(u'-') else (u'-' + x))\n return tuple([invert(item) for item in ordering_tuple])\n",
+        "id": 42
+    },
+    {
+        "text": "returns the boost used in elasticsearch for this app .",
+        "code": "def get_boost(obj):\n boost = max(log10((1 + get_popularity(obj))), 1.0)\n if (obj.status in VALID_STATUSES):\n  boost *= BOOST_MULTIPLIER_FOR_PUBLIC_CONTENT\n return boost\n",
+        "id": 43
+    },
+    {
+        "text": "decorate a function to raise an error for values > limit .",
+        "code": "def guarded_mul(left, right):\n if (not isinstance(left, numbers.Integral)):\n  pass\n elif (not isinstance(right, numbers.Integral)):\n  pass\n elif ((left in (0, 1)) or (right in (0, 1))):\n  pass\n elif ((left.bit_length() + right.bit_length()) > 664386):\n  raise ValueError(u'Value is too large to be handled in limited time and memory.')\n return operator.mul(left, right)\n",
+        "id": 44
+    },
+    {
+        "text": "build a or pattern string from a list of possible patterns .",
+        "code": "def build_or_pattern(patterns, name=None, escape=False):\n or_pattern = []\n for pattern in patterns:\n  if (not or_pattern):\n   or_pattern.append('(?')\n   if name:\n    or_pattern.append((('P<' + name) + '>'))\n   else:\n    or_pattern.append(':')\n  else:\n   or_pattern.append('|')\n  or_pattern.append((('(?:%s)' % re.escape(pattern)) if escape else pattern))\n or_pattern.append(')')\n return ''.join(or_pattern)\n",
+        "id": 45
+    },
+    {
+        "text": "ansible dynamic inventory experimentation output dynamic inventory as json from statically defined data structures .",
+        "code": "def main():\n parser = argparse.ArgumentParser(description='Ansible dynamic inventory')\n parser.add_argument('--list', help='Ansible inventory of all of the groups', action='store_true', dest='list_inventory')\n parser.add_argument('--host', help='Ansible inventory of a particular host', action='store', dest='ansible_host', type=str)\n cli_args = parser.parse_args()\n list_inventory = cli_args.list_inventory\n ansible_host = cli_args.ansible_host\n if list_inventory:\n  output_list_inventory(ANSIBLE_INV)\n if ansible_host:\n  find_host(ansible_host, HOST_VARS)\n",
+        "id": 46
+    },
+    {
+        "text": "apply max_staleness .",
+        "code": "def _with_primary(max_staleness, selection):\n primary = selection.primary\n sds = []\n for s in selection.server_descriptions:\n  if (s.server_type == SERVER_TYPE.RSSecondary):\n   staleness = (((s.last_update_time - s.last_write_date) - (primary.last_update_time - primary.last_write_date)) + selection.heartbeat_frequency)\n   if (staleness <= max_staleness):\n    sds.append(s)\n  else:\n   sds.append(s)\n return selection.with_server_descriptions(sds)\n",
+        "id": 47
+    },
+    {
+        "text": "start tasktimeslot for preselected task .",
+        "code": "@handle_response_format\n@treeio_login_required\ndef task_time_slot_start(request, task_id, response_format='html'):\n task = get_object_or_404(Task, pk=task_id)\n if (not request.user.profile.has_permission(task, mode='x')):\n  return user_denied(request, message=\"You don't have access to this Task\")\n if (not task.is_being_done_by(request.user.profile)):\n  task_time_slot = TaskTimeSlot(task=task, time_from=datetime.now(), user=request.user.profile)\n  task_time_slot.save()\n  task_time_slot.set_user_from_request(request)\n return HttpResponseRedirect(reverse('projects_task_view', args=[task_id]))\n",
+        "id": 48
+    },
+    {
+        "text": "yields num_reps random samples drawn with replacement from x and y .",
+        "code": "def _get_bootstrap_sample(x, y, num_reps):\n combined = hstack([x, y])\n total_obs = len(combined)\n num_x = len(x)\n for i in range(num_reps):\n  indices = randint(0, total_obs, total_obs)\n  sampled = combined.take(indices)\n  sampled_x = sampled[:num_x]\n  sampled_y = sampled[num_x:]\n  (yield (sampled_x, sampled_y))\n",
+        "id": 49
+    },
+    {
+        "text": "return the integration manager for review board .",
+        "code": "def get_integration_manager():\n global _integration_manager\n if (not _integration_manager):\n  from reviewboard.integrations.models import IntegrationConfig\n  _integration_manager = IntegrationManager(IntegrationConfig)\n return _integration_manager\n",
+        "id": 50
+    },
+    {
+        "text": "retrieves the value of key from configuration in the following order: - from the session; if not found there then - from cookies; if not found there then - from the settings file if search_in_settings is true .",
+        "code": "def get_config_value(request, key, default, search_in_settings=True):\n value = request.session.get(key, request.COOKIES.get(key))\n if (value is None):\n  if search_in_settings:\n   value = getattr(settings, key, default)\n  else:\n   value = default\n if isinstance(default, int):\n  try:\n   value = int(value)\n  except ValueError:\n   value = request.session[key] = int(default)\n return value\n",
+        "id": 51
+    },
+    {
+        "text": "defines an option in the global namespace .",
+        "code": "def define(name, default=None, type=None, help=None, metavar=None, multiple=False, group=None, callback=None):\n return options.define(name, default=default, type=type, help=help, metavar=metavar, multiple=multiple, group=group, callback=callback)\n",
+        "id": 52
+    },
+    {
+        "text": "check if a base addess of e network is compatible with a prefixlen .",
+        "code": "def _checkNetaddrWorksWithPrefixlen(net, prefixlen, version):\n if ((net & _prefixlenToNetmask(prefixlen, version)) == net):\n  return 1\n else:\n  return 0\n",
+        "id": 53
+    },
+    {
+        "text": "list servers in haproxy backend .",
+        "code": "def list_servers(backend, socket='/var/run/haproxy.sock', objectify=False):\n ha_conn = _get_conn(socket)\n ha_cmd = haproxy.cmds.listServers(backend=backend)\n return ha_conn.sendCmd(ha_cmd, objectify=objectify)\n",
+        "id": 54
+    },
+    {
+        "text": "replace :func:os .",
+        "code": "def patch_os():\n patch_module('os')\n",
+        "id": 55
+    },
+    {
+        "text": "recursively go through a directory .",
+        "code": "def recursive_walk(path, wildcard):\n files = []\n directories = [path]\n while (len(directories) > 0):\n  directory = directories.pop()\n  for name in os.listdir(directory):\n   fullpath = os.path.join(directory, name)\n   if os.path.isfile(fullpath):\n    if re.search(wildcard, name):\n     files.append(fullpath)\n   elif os.path.isdir(fullpath):\n    directories.append(fullpath)\n return files\n",
+        "id": 56
+    },
+    {
+        "text": "return a file hash .",
+        "code": "def file_hash(load, fnd):\n gitfs = salt.utils.gitfs.GitFS(__opts__)\n gitfs.init_remotes(__opts__['gitfs_remotes'], PER_REMOTE_OVERRIDES, PER_REMOTE_ONLY)\n return gitfs.file_hash(load, fnd)\n",
+        "id": 57
+    },
+    {
+        "text": "verify if cxxflags variable contains a value in make .",
+        "code": "def cxxflags_contains(value):\n return var_contains('CXXFLAGS', value)\n",
+        "id": 58
+    },
+    {
+        "text": "swap the case of the matched text .",
+        "code": "@builtin(u'Swap the case of text', swapcase, apply_func_to_match_groups)\ndef replace_swapcase(match, number, file_name, metadata, dictionaries, data, functions, *args, **kwargs):\n return apply_func_to_match_groups(match, swapcase)\n",
+        "id": 59
+    },
+    {
+        "text": "a helper function for expm_2009 .",
+        "code": "def _solve_P_Q(U, V, structure=None):\n P = (U + V)\n Q = ((- U) + V)\n if isspmatrix(U):\n  return spsolve(Q, P)\n elif (structure is None):\n  return solve(Q, P)\n elif (structure == UPPER_TRIANGULAR):\n  return solve_triangular(Q, P)\n else:\n  raise ValueError(('unsupported matrix structure: ' + str(structure)))\n",
+        "id": 60
+    },
+    {
+        "text": "outputs the first variable passed that is not false .",
+        "code": "@register.tag\ndef firstof(parser, token):\n bits = token.split_contents()[1:]\n asvar = None\n if (len(bits) < 1):\n  raise TemplateSyntaxError(\"'firstof' statement requires at least one argument\")\n if ((len(bits) >= 2) and (bits[(-2)] == 'as')):\n  asvar = bits[(-1)]\n  bits = bits[:(-2)]\n return FirstOfNode([parser.compile_filter(bit) for bit in bits], asvar)\n",
+        "id": 61
+    },
+    {
+        "text": "login via an account recovery link .",
+        "code": "def recover(request, uidb64=None, token=None):\n UserModel = get_user_model()\n try:\n  uid = force_text(urlsafe_base64_decode(uidb64))\n  user = UserModel._default_manager.get(pk=uid)\n except (TypeError, ValueError, OverflowError, UserModel.DoesNotExist):\n  user = None\n if (user and default_token_generator.check_token(user, token)):\n  temp_pwd = uuid.uuid4().hex\n  user.set_password(temp_pwd)\n  user.save()\n  user = authenticate(username=user.username, password=temp_pwd)\n  user.set_unusable_password()\n  user.save()\n  login(request, user)\n  return redirect('users.recover_done')\n return render(request, 'users/recover_failed.html')\n",
+        "id": 62
+    },
+    {
+        "text": "compute square-free norm of f .",
+        "code": "@public\ndef sqf_norm(f, *gens, **args):\n options.allowed_flags(args, ['polys'])\n try:\n  (F, opt) = poly_from_expr(f, *gens, **args)\n except PolificationFailed as exc:\n  raise ComputationFailed('sqf_norm', 1, exc)\n (s, g, r) = F.sqf_norm()\n if (not opt.polys):\n  return (Integer(s), g.as_expr(), r.as_expr())\n else:\n  return (Integer(s), g, r)\n",
+        "id": 63
+    },
+    {
+        "text": "return true if the task is visible in this context .",
+        "code": "def _is_task_visible(context, task):\n if context.is_admin:\n  return True\n if (task['owner'] is None):\n  return True\n if (context.owner is not None):\n  if (context.owner == task['owner']):\n   return True\n return False\n",
+        "id": 64
+    },
+    {
+        "text": "correlation of two random expressions .",
+        "code": "def correlation(X, Y, condition=None, **kwargs):\n return (covariance(X, Y, condition, **kwargs) / (std(X, condition, **kwargs) * std(Y, condition, **kwargs)))\n",
+        "id": 65
+    },
+    {
+        "text": "get all backups belonging to a volume .",
+        "code": "def backup_get_all_by_volume(context, volume_id, filters=None):\n return IMPL.backup_get_all_by_volume(context, volume_id, filters=filters)\n",
+        "id": 66
+    },
+    {
+        "text": "press the keyboard button for volume up .",
+        "code": "def volume_up(hass):\n hass.services.call(DOMAIN, SERVICE_VOLUME_UP)\n",
+        "id": 67
+    },
+    {
+        "text": "remove endpoints which are added to the path .",
+        "code": "def removeEndpoints(pixelTable, layerExtrusionWidth, paths, removedEndpoints, aroundWidth):\n for removedEndpointIndex in xrange((len(removedEndpoints) - 1), (-1), (-1)):\n  removedEndpoint = removedEndpoints[removedEndpointIndex]\n  removedEndpointPoint = removedEndpoint.point\n  if isPointAddedAroundClosest(pixelTable, layerExtrusionWidth, paths, removedEndpointPoint, aroundWidth):\n   removedEndpoints.remove(removedEndpoint)\n",
+        "id": 68
+    },
+    {
+        "text": "builds a lambda function representing a predicate on a tree node from the conjunction of several other such lambda functions .",
+        "code": "def _tgrep_conjunction_action(_s, _l, tokens, join_char=u'&'):\n tokens = [x for x in tokens if (x != join_char)]\n if (len(tokens) == 1):\n  return tokens[0]\n else:\n  return (lambda ts: (lambda n, m=None, l=None: all((predicate(n, m, l) for predicate in ts))))(tokens)\n",
+        "id": 69
+    },
+    {
+        "text": "run geonodes integration test suite against the external apps .",
+        "code": "@task\n@cmdopts([('name=', 'n', 'Run specific tests.')])\ndef test_integration(options):\n _reset()\n call_task('start_geoserver')\n info('GeoNode is now available, running the tests now.')\n name = options.get('name', 'geonode.tests.integration')\n success = False\n try:\n  if (name == 'geonode.tests.csw'):\n   call_task('start')\n   sh('sleep 30')\n   call_task('setup_data')\n  sh(('python manage.py test %s --noinput --liveserver=localhost:8000' % name))\n except BuildFailure as e:\n  info(('Tests failed! %s' % str(e)))\n else:\n  success = True\n finally:\n  stop()\n _reset()\n if (not success):\n  sys.exit(1)\n",
+        "id": 70
+    },
+    {
+        "text": "compute the euclidean or frobenius norm of x .",
+        "code": "def norm(x):\n x = np.asarray(x)\n (nrm2,) = linalg.get_blas_funcs(['nrm2'], [x])\n return nrm2(x)\n",
+        "id": 71
+    },
+    {
+        "text": "given two dictionaries describe their difference for nested dictionaries .",
+        "code": "def _dict_diff(d1, d2):\n d1_keys = set(d1.keys())\n d2_keys = set(d2.keys())\n both = (d1_keys & d2_keys)\n missing_in_d1 = []\n missing_in_d2 = []\n different = []\n for k in both:\n  if (isinstance(d1[k], dict) and isinstance(d2[k], dict)):\n   (missing_in_v1, missing_in_v2, different_in_v) = _dict_diff(d1[k], d2[k])\n   missing_in_d1.extend(['{0}.{1}'.format(k, m) for m in missing_in_v1])\n   missing_in_d2.extend(['{0}.{1}'.format(k, m) for m in missing_in_v2])\n   for (child_k, left, right) in different_in_v:\n    different.append(('{0}.{1}'.format(k, child_k), left, right))\n   continue\n  if (d1[k] != d2[k]):\n   different.append((k, d1[k], d2[k]))\n missing_in_d1.extend((d2_keys - both))\n missing_in_d2.extend((d1_keys - both))\n return (missing_in_d1, missing_in_d2, different)\n",
+        "id": 72
+    },
+    {
+        "text": "take the value passed .",
+        "code": "def set_cache_over_settings(destination, setting, key_prefix, value, ttl):\n existing = destination.settings.get(setting, {})\n existing.update(value)\n set_cache(((key_prefix + '.') + setting), value, ttl)\n destination.settings[setting] = value\n",
+        "id": 73
+    },
+    {
+        "text": "convert a sequence to a bytes type .",
+        "code": "def to_bytes(seq):\n b = bytearray()\n for item in seq:\n  b.append(item)\n return bytes(b)\n",
+        "id": 74
+    },
+    {
+        "text": "shuts down the worker and data source threads .",
+        "code": "def ShutdownThreads(data_source_thread, thread_pool):\n logger.info('An error occurred. Shutting down...')\n data_source_thread.exit_flag = True\n thread_pool.Shutdown()\n data_source_thread.join(timeout=3.0)\n if data_source_thread.isAlive():\n  logger.warn('%s hung while trying to exit', data_source_thread.GetFriendlyName())\n",
+        "id": 75
+    },
+    {
+        "text": "returns version information for single module .",
+        "code": "def get_single(name, url, module, required, getter=u'__version__'):\n mod = get_version_module(module, name, url)\n version_getter = getattr(mod, getter)\n if hasattr(version_getter, u'__call__'):\n  current = version_getter()\n else:\n  current = version_getter\n return (name, url, current, required)\n",
+        "id": 76
+    },
+    {
+        "text": "simplified version of c{l{withattribute}} when matching on a div class - made difficult because c{class} is a reserved word in python .",
+        "code": "def withClass(classname, namespace=''):\n classattr = (('%s:class' % namespace) if namespace else 'class')\n return withAttribute(**{classattr: classname})\n",
+        "id": 77
+    },
+    {
+        "text": "shutdown a running system delay : int optional wait time in seconds before the system will be shutdown .",
+        "code": "def shutdown(delay=0, message=None):\n cmd = ['shutdown', '-i', '5', '-g', delay, '-y']\n if message:\n  cmd.append(message)\n ret = __salt__['cmd.run'](cmd, python_shell=False)\n return ret\n",
+        "id": 78
+    },
+    {
+        "text": "sort a list of elements that have priority attributes .",
+        "code": "def prioSort(elements):\n random.shuffle(elements)\n prio_elems = [(getPriority(e), e) for e in elements]\n prio_elems.sort()\n sorted_elems = [s for (_, s) in prio_elems]\n return sorted_elems\n",
+        "id": 79
+    },
+    {
+        "text": "yaml: openshift-builder perform builds in openshift for the job .",
+        "code": "def openshift_builder(registry, xml_parent, data):\n osb = XML.SubElement(xml_parent, 'com.openshift.jenkins.plugins.pipeline.OpenShiftBuilder')\n mapping = [('api-url', 'apiURL', 'https://openshift.default.svc.cluster.local'), ('bld-cfg', 'bldCfg', 'frontend'), ('namespace', 'namespace', 'test'), ('auth-token', 'authToken', ''), ('commit-ID', 'commitID', ''), ('verbose', 'verbose', False), ('build-name', 'buildName', ''), ('show-build-logs', 'showBuildLogs', False)]\n convert_mapping_to_xml(osb, data, mapping, fail_required=True)\n",
+        "id": 80
+    },
+    {
+        "text": "enable / disable sidebar items .",
+        "code": "def setup_sidebar_items(data):\n if data.allow_sidebar_items:\n  frappe.db.sql(u'update `tabPortal Menu Item` set enabled=0')\n  frappe.db.sql(u'update `tabPortal Menu Item` set enabled=1\\n DCTB  DCTB  DCTB where route in ({0})'.format(u', '.join([u'\"{0}\"'.format(d) for d in data.allow_sidebar_items])))\n if data.remove_sidebar_items:\n  frappe.db.sql(u'update `tabPortal Menu Item` set enabled=1')\n  frappe.db.sql(u'update `tabPortal Menu Item` set enabled=0\\n DCTB  DCTB  DCTB where route in ({0})'.format(u', '.join([u'\"{0}\"'.format(d) for d in data.remove_sidebar_items])))\n",
+        "id": 81
+    },
+    {
+        "text": "generate a password and hash it .",
+        "code": "def gen_password():\n alphabet = 'abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'\n password = ''\n for _ in range(20):\n  next_index = random.randrange(len(alphabet))\n  password += alphabet[next_index]\n hashed_pwd = gen_hash('salt', password, 'sha512')\n return (password, hashed_pwd)\n",
+        "id": 82
+    },
+    {
+        "text": "return full absolute path of libs for an action .",
+        "code": "def get_action_libs_abs_path(pack=None, entry_point=None):\n entry_point_abs_path = get_entry_point_abs_path(pack=pack, entry_point=entry_point)\n if (entry_point_abs_path is not None):\n  return os.path.join(os.path.dirname(entry_point_abs_path), ACTION_LIBS_DIR)\n else:\n  return None\n",
+        "id": 83
+    },
+    {
+        "text": "enable or disable deinterlace filter .",
+        "code": "def libvlc_video_set_deinterlace(p_mi, psz_mode):\n f = (_Cfunctions.get('libvlc_video_set_deinterlace', None) or _Cfunction('libvlc_video_set_deinterlace', ((1,), (1,)), None, None, MediaPlayer, ctypes.c_char_p))\n return f(p_mi, psz_mode)\n",
+        "id": 84
+    },
+    {
+        "text": "all api requests should return json objects .",
+        "code": "def api_handle_error_with_json(handler):\n def api_handle_error_with_json_wrapper_fn(request, *args, **kwargs):\n  try:\n   return handler(request, *args, **kwargs)\n  except PermissionDenied:\n   raise\n  except Http404:\n   raise\n  except Exception as e:\n   logger.error('Error in JSON view: {}'.format(request.path))\n   traceback.print_exc()\n   return JsonResponseMessageError((_('Unexpected error: %(err)s') % {'err': e}), status=500)\n return api_handle_error_with_json_wrapper_fn\n",
+        "id": 85
+    },
+    {
+        "text": "run the local scp command to download a file or directory from a remote host and kill it if the reactor stops .",
+        "code": "def download(**kwargs):\n kwargs['direction'] = DOWNLOAD\n return scp(**kwargs)\n",
+        "id": 86
+    },
+    {
+        "text": "use basic logger .",
+        "code": "def setBasicLoggerDEBUG():\n setLoggerClass(BasicLogger)\n BasicLogger.setLevel(DEBUG)\n",
+        "id": 87
+    },
+    {
+        "text": "return pythonpath environment variable value for the new sandboxed environment .",
+        "code": "def get_sandbox_python_path(inherit_from_parent=True, inherit_parent_virtualenv=True):\n sandbox_python_path = []\n parent_python_path = os.environ.get('PYTHONPATH', '')\n parent_python_path = parent_python_path.split(':')\n parent_python_path = [path for path in parent_python_path if path]\n if inherit_from_parent:\n  sandbox_python_path.extend(parent_python_path)\n if (inherit_parent_virtualenv and hasattr(sys, 'real_prefix')):\n  site_packages_dir = get_python_lib()\n  assert (sys.prefix in site_packages_dir)\n  sandbox_python_path.append(site_packages_dir)\n sandbox_python_path = ':'.join(sandbox_python_path)\n sandbox_python_path = (':' + sandbox_python_path)\n return sandbox_python_path\n",
+        "id": 88
+    },
+    {
+        "text": "returns whether the slug can be interpreted as a number .",
+        "code": "def slug_is_numerical(slug):\n try:\n  float(slug)\n except ValueError:\n  return False\n return True\n",
+        "id": 89
+    },
+    {
+        "text": "set a key/value pair in the vault service .",
+        "code": "def set_(key, value, profile=None):\n comps = key.split('?')\n path = comps[0]\n key = comps[1]\n return salt.utils.vault.write_(path, key, value, profile=profile)\n",
+        "id": 90
+    },
+    {
+        "text": "find a parameter in tuple and dictionary arguments a function receives .",
+        "code": "def _getParameter(name, index, args, kwargs, default=None):\n param = kwargs.get(name)\n if (len(args) > index):\n  if param:\n   raise ValueError((\"Parameter '%s' is specified twice\" % name))\n  param = args[index]\n return (param or default)\n",
+        "id": 91
+    },
+    {
+        "text": "create a security group .",
+        "code": "def create_security_group(call=None, kwargs=None):\n global netconn\n if (not netconn):\n  netconn = get_conn(NetworkManagementClient)\n if (kwargs is None):\n  kwargs = {}\n if (kwargs.get('location') is None):\n  kwargs['location'] = get_location()\n if (kwargs.get('resource_group') is None):\n  kwargs['resource_group'] = config.get_cloud_config_value('resource_group', {}, __opts__, search_global=True)\n if (kwargs.get('name') is None):\n  kwargs['name'] = config.get_cloud_config_value('name', {}, __opts__, search_global=True)\n group_params = NetworkSecurityGroup(location=kwargs['location'])\n netconn.network_security_group.create_or_update(rource_group_name=kwargs['resource_group'], network_security_group_name=kwargs['name'], parameters=group_params)\n count = 0\n while True:\n  try:\n   return show_security_group(kwargs=kwargs)\n  except CloudError:\n   count += 1\n   if (count > 120):\n    raise ValueError('Timed out waiting for operation to complete.')\n   time.sleep(5)\n",
+        "id": 92
+    },
+    {
+        "text": "turn a port number into a device name .",
+        "code": "def device(portnumber):\n enum = comm.CommPortIdentifier.getPortIdentifiers()\n ports = []\n while enum.hasMoreElements():\n  el = enum.nextElement()\n  if (el.getPortType() == comm.CommPortIdentifier.PORT_SERIAL):\n   ports.append(el)\n return ports[portnumber].getName()\n",
+        "id": 93
+    },
+    {
+        "text": "checks that all names in in_ as in obj .",
+        "code": "def assert_in(obj, in_=None, out_=None):\n if (in_ is not None):\n  for name in in_:\n   assert (name in obj)\n if (out_ is not None):\n  for name in out_:\n   assert (name not in obj)\n",
+        "id": 94
+    },
+    {
+        "text": "convert native set *val  to a set object .",
+        "code": "@box(types.Set)\ndef box_set(typ, val, c):\n inst = setobj.SetInstance(c.context, c.builder, typ, val)\n obj = inst.parent\n res = cgutils.alloca_once_value(c.builder, obj)\n with c.builder.if_else(cgutils.is_not_null(c.builder, obj)) as (has_parent, otherwise):\n  with has_parent:\n   c.pyapi.incref(obj)\n  with otherwise:\n   payload = inst.payload\n   (ok, listobj) = _native_set_to_python_list(typ, payload, c)\n   with c.builder.if_then(ok, likely=True):\n    obj = c.pyapi.set_new(listobj)\n    c.pyapi.decref(listobj)\n    c.builder.store(obj, res)\n c.context.nrt.decref(c.builder, typ, val)\n return c.builder.load(res)\n",
+        "id": 95
+    },
+    {
+        "text": "get new repository .",
+        "code": "def getNewRepository():\n return InterpretRepository()\n",
+        "id": 96
+    },
+    {
+        "text": "finds a dominating set for the graph g .",
+        "code": "def dominating_set(G, start_with=None):\n all_nodes = set(G)\n if (start_with is None):\n  start_with = arbitrary_element(all_nodes)\n if (start_with not in G):\n  raise nx.NetworkXError('node {} is not in G'.format(start_with))\n dominating_set = {start_with}\n dominated_nodes = set(G[start_with])\n remaining_nodes = ((all_nodes - dominated_nodes) - dominating_set)\n while remaining_nodes:\n  v = remaining_nodes.pop()\n  undominated_neighbors = (set(G[v]) - dominating_set)\n  dominating_set.add(v)\n  dominated_nodes |= undominated_neighbors\n  remaining_nodes -= undominated_neighbors\n return dominating_set\n",
+        "id": 97
+    },
+    {
+        "text": "remove connected components smaller than the specified size .",
+        "code": "def remove_small_objects(ar, min_size=64, connectivity=1, in_place=False):\n _check_dtype_supported(ar)\n if in_place:\n  out = ar\n else:\n  out = ar.copy()\n if (min_size == 0):\n  return out\n if (out.dtype == bool):\n  selem = ndi.generate_binary_structure(ar.ndim, connectivity)\n  ccs = np.zeros_like(ar, dtype=np.int32)\n  ndi.label(ar, selem, output=ccs)\n else:\n  ccs = out\n try:\n  component_sizes = np.bincount(ccs.ravel())\n except ValueError:\n  raise ValueError('Negative value labels are not supported. Try relabeling the input with `scipy.ndimage.label` or `skimage.morphology.label`.')\n if (len(component_sizes) == 2):\n  warn('Only one label was provided to `remove_small_objects`. Did you mean to use a boolean array?')\n too_small = (component_sizes < min_size)\n too_small_mask = too_small[ccs]\n out[too_small_mask] = 0\n return out\n",
+        "id": 98
+    },
+    {
+        "text": "returns the redirect url back to courseware args: course_id: course id string location: the location id of course component raises: itemnotfounderror if no data at the location or nopathtoitem if location not in any class returns: redirect url string .",
+        "code": "def get_redirect_url(course_key, usage_key):\n (course_key, chapter, section, vertical_unused, position, final_target_id) = path_to_location(modulestore(), usage_key)\n if (chapter is None):\n  redirect_url = reverse('courseware', args=(unicode(course_key),))\n elif (section is None):\n  redirect_url = reverse('courseware_chapter', args=(unicode(course_key), chapter))\n elif (position is None):\n  redirect_url = reverse('courseware_section', args=(unicode(course_key), chapter, section))\n else:\n  redirect_url = reverse('courseware_position', args=(unicode(course_key), chapter, section, navigation_index(position)))\n redirect_url += '?{}'.format(urlencode({'activate_block_id': unicode(final_target_id)}))\n return redirect_url\n",
+        "id": 99
+    }
+]

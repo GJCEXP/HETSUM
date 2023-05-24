@@ -1,0 +1,502 @@
+[
+    {
+        "code": "public int hashCode(){\n  return value.hashCode();\n}\n",
+        "text": " This returns the hash code for the key. The hash code is generated from the internal string the key represents. ",
+        "id": 1
+    },
+    {
+        "code": "public void onStart(){\n}\n",
+        "text": " Fired when the request is started, override to handle in your own code",
+        "id": 2
+    },
+    {
+        "code": "@Override protected void propertyChange(PropertyChangeEvent evt){\n  if (SeaGlassLookAndFeel.shouldUpdateStyle(evt)) {\n    updateStyle((JTextComponent)evt.getSource());\n  }\n  super.propertyChange(evt);\n}\n",
+        "text": " This method gets called when a bound property is changed on the associated JTextComponent.  This is a hook which UI implementations may change to reflect how the UI displays bound properties of JTextComponent subclasses. This is implemented to rebuild the ActionMap based upon an EditorKit change.",
+        "id": 3
+    },
+    {
+        "code": "@NotNull public PsiQuery filter(@NotNull final Class<? extends PsiNamedElement> clazz,@NotNull final String name){\n  final Set<PsiElement> result=new HashSet<PsiElement>(Arrays.asList(myPsiElements));\n  for (  final PsiElement element : myPsiElements) {\n    final PsiNamedElement namedElement=PyUtil.as(element,clazz);\n    if ((namedElement == null) || (!name.equals(namedElement.getName()))) {\n      result.remove(element);\n    }\n  }\n  return new PsiQuery(result.toArray(new PsiElement[result.size()]));\n}\n",
+        "text": " Filter elements by class and name",
+        "id": 4
+    },
+    {
+        "code": "protected void writeQualifiedName(String nsAlias,String name) throws IOException {\n  if (nsAlias != null && nsAlias.length() > 0) {\n    writer.write(nsAlias);\n    writer.write(':');\n  }\n  writer.write(name);\n}\n",
+        "text": " Writes a namespace qualified element or attribute name.",
+        "id": 5
+    },
+    {
+        "code": "public TextEditor deleteAll(String pattern){\n  return replaceAll(pattern,\"\");\n}\n",
+        "text": " Remove all occurrences of the given regex pattern, replacing them with the empty string.",
+        "id": 6
+    },
+    {
+        "code": "public synchronized GcmHelper addRegistrationCallback(@NonNull Context context,@NonNull GcmRegistrationListener registrationListener,boolean sticky){\n  if (null == registrationCallbacks) {\n    registrationCallbacks=new ConcurrentLinkedQueue<>();\n  }\n  registrationCallbacks.add(registrationListener);\n  if (sticky && !TextUtils.isEmpty(this.pushToken)) {\n    registrationListener.onTokenAvailable(context,pushToken,false);\n  }\n  return this;\n}\n",
+        "text": " Add a GCM Registration listener. This does not replace the existing listeners but adds to the list of listeners",
+        "id": 7
+    },
+    {
+        "code": "@Override public void acceptTrainingSet(TrainingSetEvent e){\n  Instances trainingSet=e.getTrainingSet();\n  DataSetEvent dse=new DataSetEvent(this,trainingSet);\n  acceptDataSet(dse);\n}\n",
+        "text": " Accept a training set",
+        "id": 8
+    },
+    {
+        "code": "<T>List<T> onFind(Class<T> modelClass,String[] columns,String[] conditions,String orderBy,String limit,boolean isEager){\n  BaseUtility.checkConditionsCorrect(conditions);\n  List<T> dataList=query(modelClass,columns,getWhereClause(conditions),getWhereArgs(conditions),null,null,orderBy,limit,getForeignKeyAssociations(modelClass.getName(),isEager));\n  return dataList;\n}\n",
+        "text": " The open interface for other classes in CRUD package to query multiple records by parameters.",
+        "id": 9
+    },
+    {
+        "code": "private boolean isAgentEmpty(Agent agent){\n  if (agent != null) {\n    String first=agent.getFirstName();\n    String last=agent.getLastName();\n    String email=agent.getEmail();\n    String home=agent.getHomepage();\n    String org=agent.getOrganisation();\n    String phone=agent.getPhone();\n    String position=agent.getPosition();\n    String city=null;\n    String street=null;\n    String country=null;\n    String code=null;\n    String province=null;\n    Address address=agent.getAddress();\n    if (address != null) {\n      city=address.getCity();\n      street=address.getAddress();\n      country=address.getCountry();\n      code=address.getPostalCode();\n      province=address.getProvince();\n    }\n    String directory=null;\n    String identifier=null;\n    List<UserId> userIds=agent.getUserIds();\n    if (!userIds.isEmpty()) {\n      UserId userId=userIds.get(0);\n      directory=userId.getDirectory();\n      identifier=userId.getIdentifier();\n    }\n    return (Strings.isNullOrEmpty(city) && Strings.isNullOrEmpty(street) && Strings.isNullOrEmpty(country)&& Strings.isNullOrEmpty(code)&& Strings.isNullOrEmpty(province)&& Strings.isNullOrEmpty(first)&& Strings.isNullOrEmpty(last)&& Strings.isNullOrEmpty(email)&& Strings.isNullOrEmpty(home)&& Strings.isNullOrEmpty(org)&& Strings.isNullOrEmpty(phone)&& Strings.isNullOrEmpty(position)&& Strings.isNullOrEmpty(directory)&& Strings.isNullOrEmpty(identifier));\n  }\n  return true;\n}\n",
+        "text": " Determine if the Agent is empty. In other words, the user hasn't entered any information for a single field yet.",
+        "id": 10
+    },
+    {
+        "code": "public static byte[] calendarToRawBytes(Calendar timestamp,boolean honorDeviceTimeOffset){\n  if (honorDeviceTimeOffset) {\n    int offsetInHours=MiBandCoordinator.getDeviceTimeOffsetHours();\n    if (offsetInHours != 0) {\n      timestamp.add(Calendar.HOUR_OF_DAY,offsetInHours);\n    }\n  }\n  byte[] year=fromUint16(timestamp.get(Calendar.YEAR));\n  return new byte[]{year[0],year[1],fromUint8(timestamp.get(Calendar.MONTH) + 1),fromUint8(timestamp.get(Calendar.DATE)),fromUint8(timestamp.get(Calendar.HOUR_OF_DAY)),fromUint8(timestamp.get(Calendar.MINUTE)),fromUint8(timestamp.get(Calendar.SECOND)),dayOfWeekToRawBytes(timestamp),0};\n}\n",
+        "text": " Converts a timestamp to the byte sequence to be sent to the current time characteristic",
+        "id": 11
+    },
+    {
+        "code": "private static void decodeBase256Segment(BitSource bits,StringBuilder result,Collection<byte[]> byteSegments) throws FormatException {\n  int codewordPosition=1 + bits.getByteOffset();\n  int d1=unrandomize255State(bits.readBits(8),codewordPosition++);\n  int count;\n  if (d1 == 0) {\n    count=bits.available() / 8;\n  }\n else   if (d1 < 250) {\n    count=d1;\n  }\n else {\n    count=250 * (d1 - 249) + unrandomize255State(bits.readBits(8),codewordPosition++);\n  }\n  if (count < 0) {\n    throw FormatException.getFormatInstance();\n  }\n  byte[] bytes=new byte[count];\n  for (int i=0; i < count; i++) {\n    if (bits.available() < 8) {\n      throw FormatException.getFormatInstance();\n    }\n    bytes[i]=(byte)unrandomize255State(bits.readBits(8),codewordPosition++);\n  }\n  byteSegments.add(bytes);\n  try {\n    result.append(new String(bytes,\"ISO8859_1\"));\n  }\n catch (  UnsupportedEncodingException uee) {\n    throw new IllegalStateException(\"Platform does not support required encoding: \" + uee);\n  }\n}\n",
+        "text": " See ISO 16022:2006, 5.2.9 and Annex B, B.2",
+        "id": 12
+    },
+    {
+        "code": "protected void initBPOrderDetails(int C_BPartner_ID,boolean forInvoice){\n  log.config(\"C_BPartner_ID=\" + C_BPartner_ID);\n  KeyNamePair pp=new KeyNamePair(0,\"\");\n  orderField.removeActionListener(this);\n  orderField.removeAllItems();\n  orderField.addItem(pp);\n  ArrayList<KeyNamePair> list=loadOrderData(C_BPartner_ID,forInvoice,sameWarehouseCb.isSelected());\n  for (  KeyNamePair knp : list)   orderField.addItem(knp);\n  orderField.setSelectedIndex(0);\n  orderField.addActionListener(this);\n  initBPDetails(C_BPartner_ID);\n}\n",
+        "text": " Load PBartner dependent Order/Invoice/Shipment Field.",
+        "id": 13
+    },
+    {
+        "code": "public ModpackInitializationPanel(WizardController controller,Map wizardData,Vector<String> versions,String selVersion){\n  initComponents();\n  this.controller=controller;\n  this.wizardData=wizardData;\n  wizardData.put(KEY_GAME_VERSION,versions);\n  wizardData.put(\"selVersion\",selVersion);\n  wizardData.put(KEY_INCLUDING_LAUNCHER,false);\n  configureComboContents();\n  checkProblem();\n}\n",
+        "text": " Creates new form ModpackInitializationPanel",
+        "id": 14
+    },
+    {
+        "code": "public synchronized void remove(int index){\n  super.remove(index);\n  double removedValue=mValue.remove(index);\n  if (removedValue == mMinValue || removedValue == mMaxValue) {\n    initRange();\n  }\n}\n",
+        "text": " Removes an existing value from the series.",
+        "id": 15
+    },
+    {
+        "code": "private boolean coordIsCalendarCell(float y){\n  return y > cellHeight;\n}\n",
+        "text": " y is bigger than the head of the calendar, meaning that the coordination may represent a day of the calendar",
+        "id": 16
+    },
+    {
+        "code": "protected void sprint(double doubleField){\n  sprint(String.valueOf(doubleField));\n}\n",
+        "text": " Pretty printing accumulator function for doubles",
+        "id": 17
+    },
+    {
+        "code": "private int attributeMap(String name){\n  Integer num=map.get(name);\n  if (num == null) {\n    return 0;\n  }\n  return num.intValue();\n}\n",
+        "text": " Returns the integer attribute number for the passed attribute name.",
+        "id": 18
+    },
+    {
+        "code": "private void groupPlayerStandingCSV(){\n  for (  PlayerQB p : teamQBs) {\n    if (p.year == 0)     teamRSs.add(p);\n else     if (p.year == 1)     teamFRs.add(p);\n else     if (p.year == 2)     teamSOs.add(p);\n else     if (p.year == 3)     teamJRs.add(p);\n else     if (p.year == 4)     teamSRs.add(p);\n  }\n  for (  PlayerRB p : teamRBs) {\n    if (p.year == 0)     teamRSs.add(p);\n else     if (p.year == 1)     teamFRs.add(p);\n else     if (p.year == 2)     teamSOs.add(p);\n else     if (p.year == 3)     teamJRs.add(p);\n else     if (p.year == 4)     teamSRs.add(p);\n  }\n  for (  PlayerWR p : teamWRs) {\n    if (p.year == 0)     teamRSs.add(p);\n else     if (p.year == 1)     teamFRs.add(p);\n else     if (p.year == 2)     teamSOs.add(p);\n else     if (p.year == 3)     teamJRs.add(p);\n else     if (p.year == 4)     teamSRs.add(p);\n  }\n  for (  PlayerK p : teamKs) {\n    if (p.year == 0)     teamRSs.add(p);\n else     if (p.year == 1)     teamFRs.add(p);\n else     if (p.year == 2)     teamSOs.add(p);\n else     if (p.year == 3)     teamJRs.add(p);\n else     if (p.year == 4)     teamSRs.add(p);\n  }\n  for (  PlayerOL p : teamOLs) {\n    if (p.year == 0)     teamRSs.add(p);\n else     if (p.year == 1)     teamFRs.add(p);\n else     if (p.year == 2)     teamSOs.add(p);\n else     if (p.year == 3)     teamJRs.add(p);\n else     if (p.year == 4)     teamSRs.add(p);\n  }\n  for (  PlayerS p : teamSs) {\n    if (p.year == 0)     teamRSs.add(p);\n else     if (p.year == 1)     teamFRs.add(p);\n else     if (p.year == 2)     teamSOs.add(p);\n else     if (p.year == 3)     teamJRs.add(p);\n else     if (p.year == 4)     teamSRs.add(p);\n  }\n  for (  PlayerCB p : teamCBs) {\n    if (p.year == 0)     teamRSs.add(p);\n else     if (p.year == 1)     teamFRs.add(p);\n else     if (p.year == 2)     teamSOs.add(p);\n else     if (p.year == 3)     teamJRs.add(p);\n else     if (p.year == 4)     teamSRs.add(p);\n  }\n  for (  PlayerF7 p : teamF7s) {\n    if (p.year == 0)     teamRSs.add(p);\n else     if (p.year == 1)     teamFRs.add(p);\n else     if (p.year == 2)     teamSOs.add(p);\n else     if (p.year == 3)     teamJRs.add(p);\n else     if (p.year == 4)     teamSRs.add(p);\n  }\n}\n",
+        "text": " For news stories or other info gathering, setup player groups by student standing Run through each type of player, add them to the appropriate year",
+        "id": 19
+    },
+    {
+        "code": "public String list() throws IOException, TomcatManagerException {\n  return invoke(\"/list\",null,null);\n}\n",
+        "text": " List currently deployed webapps.",
+        "id": 20
+    },
+    {
+        "code": "public AttributeFiller(AttributesImpl attributes,PO poToAutoFill){\n  attributes.clear();\n  atts=attributes;\n  po=poToAutoFill;\n}\n",
+        "text": " Will clear attributes !!!",
+        "id": 21
+    },
+    {
+        "code": "public static final void toByteArray(ByteArrayOutputStream output,String str){\n  if (str == null) {\n    return;\n  }\n  output.write(34);\n  int max=str.length();\n  for (int i=0; i < max; i++) {\n    int b=str.charAt(i);\n    if ((b >= 32) && (b <= 126)) {\nswitch (b) {\ncase 34:\ncase 92:\n        output.write(92);\n      break;\n  }\n  output.write(b);\n}\n else {\n  output.write(92);\nswitch (b) {\ncase 8:\n    output.write(98);\n  break;\ncase 9:\noutput.write(116);\nbreak;\ncase 10:\noutput.write(110);\nbreak;\ncase 12:\noutput.write(102);\nbreak;\ncase 13:\noutput.write(114);\nbreak;\ndefault :\noutput.write(117);\nint b3=b >> 4;\nint b4=b & 0xf;\nif (b4 < 10) b4+=48;\n else b4+=87;\nint b2=b3 >> 4;\nb3&=0xf;\nif (b3 < 10) b3+=48;\n else b3+=87;\nint b1=b2 >> 4;\nb2&=0xf;\nif (b2 < 10) b2+=48;\n else b2+=87;\nif (b1 < 10) b1+=48;\n else b1+=87;\noutput.write(b1);\noutput.write(b2);\noutput.write(b3);\noutput.write(b4);\nbreak;\n}\n}\n}\noutput.write(34);\n}\n",
+        "text": " Provides a Java string literal representing the parameter string. This includes surrounding double quotes, and quoted special characters, including UTF escape sequences when necessary.   This function works only for ASCII character encoding, and assumes this is the default encoding.",
+        "id": 22
+    },
+    {
+        "code": "@RequestMapping(value={\"/\",\"\"},method=RequestMethod.PUT) @ResponseBody public RestWrapper insert(@ModelAttribute(\"file\") @Valid File file,BindingResult bindingResult,Principal principal){\n  RestWrapper restWrapper=null;\n  if (bindingResult.hasErrors()) {\n    BindingResultError bindingResultError=new BindingResultError();\n    return bindingResultError.errorMessage(bindingResult);\n  }\n  try {\n    file.setCreationTS(DateConverter.stringToDate(file.getTableCreationTS()));\n    fileDAO.insert(file);\n    restWrapper=new RestWrapper(file,RestWrapper.OK);\n    LOGGER.info(\"Record with ID:\" + file.getBatchId() + \" inserted in File by User:\"+ principal.getName()+ file);\n  }\n catch (  MetadataException e) {\n    LOGGER.error(e);\n    restWrapper=new RestWrapper(e.getMessage(),RestWrapper.ERROR);\n  }\n  return restWrapper;\n}\n",
+        "text": " This method calls proc InsertFile and adds a record of File. It also validates the values passed.",
+        "id": 23
+    },
+    {
+        "code": "private void enableUpdates(){\n  if (lmgr != null) {\n    try {\n      lmgr.addGpsStatusListener(this);\n      lmgr.requestLocationUpdates(LocationManager.GPS_PROVIDER,gpsLoggingInterval,0,this);\n    }\n catch (    SecurityException e) {\n      Log.e(TAG,\"You denied GPS permission, so this app won't work\");\n    }\n  }\n}\n",
+        "text": " Request GPS update notification",
+        "id": 24
+    },
+    {
+        "code": "private void addInteger(){\n  int oldPos=pos - 1;\n  String literal=scanInteger();\n  final String substring;\n  final int radix;\n  if (literal.startsWith(\"0x\") || literal.startsWith(\"0X\")) {\n    radix=16;\n    substring=literal.substring(2);\n  }\n else   if (literal.startsWith(\"0\") && literal.length() > 1) {\n    radix=8;\n    substring=literal.substring(1);\n  }\n else {\n    radix=10;\n    substring=literal;\n  }\n  int value=0;\n  try {\n    value=Integer.parseInt(substring,radix);\n  }\n catch (  NumberFormatException e) {\n    error(\"invalid base-\" + radix + \" integer constant: \"+ literal);\n  }\n  addToken(TokenKind.INT,oldPos,pos,value);\n}\n",
+        "text": " Scans an addInteger literal.  ON ENTRY: pos is 1 + the index of the first char in the literal. ON EXIT: pos is 1 + the index of the last char in the literal.",
+        "id": 25
+    },
+    {
+        "code": "public void removeMouseListener(GlobalMouseListener listener){\n  listeners.remove(listener);\n}\n",
+        "text": " Removes a global mouse listener",
+        "id": 26
+    },
+    {
+        "code": "public XMLDocument(double version,boolean standalone){\n  prolog=new Vector<Object>(2);\n  StringBuffer versionStr=new StringBuffer();\n  versionStr.append(\"<?xml version=\\\"\");\n  versionStr.append(version);\n  versionStr.append(\"\\\" standalone=\\\"\");\n  if (standalone)   versionStr.append(\"yes\\\"?>\");\n else   versionStr.append(\"no\\\"?>\\n\");\n  this.versionDecl=versionStr.toString();\n}\n",
+        "text": " This sets the document up. Since an XML document can be pretty much anything, all this does is create the XML Instruction with the version specified, and identifies the document as standalone if set",
+        "id": 27
+    },
+    {
+        "code": "public ObjectName createDistributionLocator(String host,int port,String workingDirectory,String productDirectory,String remoteCommand) throws MalformedObjectNameException {\n  try {\n    DistributionLocatorJmxImpl locator=(DistributionLocatorJmxImpl)addDistributionLocator();\n    DistributionLocatorConfig config=locator.getConfig();\n    config.setHost(host);\n    config.setPort(port);\n    config.setWorkingDirectory(workingDirectory);\n    config.setProductDirectory(productDirectory);\n    config.setRemoteCommand(remoteCommand);\n    return new ObjectName(locator.getMBeanName());\n  }\n catch (  RuntimeException e) {\n    logger.warn(e.getMessage(),e);\n    throw e;\n  }\ncatch (  VirtualMachineError err) {\n    SystemFailure.initiateFailure(err);\n    throw err;\n  }\ncatch (  Error e) {\n    SystemFailure.checkFailure();\n    logger.error(e.getMessage(),e);\n    throw e;\n  }\n}\n",
+        "text": " Creates a new DistributionLocator for this system and registers an MBean for managing it.   If the Locator already exists, then this will simply register an MBean for it.",
+        "id": 28
+    },
+    {
+        "code": "void applyCenterPanel(GrassMarlin ui){\n  if (treeViewComponent != null) {\n    centerPanelComponent.add(treeViewComponent,SplitPane.Position.CENTER);\n  }\n  centerPanelComponent.add(graphComponent,SplitPane.Position.RIGHT);\n  centerPanelComponent.add(logComponent,SplitPane.Position.LEFT_BOTTOM);\n  Border b=BorderFactory.createMatteBorder(1,0,1,1,Color.GRAY);\n  Border b2=BorderFactory.createMatteBorder(1,1,1,1,Color.GRAY);\n  treeViewComponent.setBorder(b2);\n  graphComponent.setBorder(b);\n  logComponent.setBorder(b2);\n  centerPanelComponent.setInitialSize(x,y);\n  Dimension d=new Dimension(5,5);\n  ui.add(new Filler(d,d,d),BorderLayout.WEST);\n  ui.add(new Filler(d,d,d),BorderLayout.EAST);\n  ui.add(centerPanelComponent,BorderLayout.CENTER);\n}\n",
+        "text": " Positions the center two components into something that extends a JSplitPane",
+        "id": 29
+    },
+    {
+        "code": "private boolean isAbstract(String source){\n  int nonterminalCount=0;\n  for (  String t : source.split(\"\\\\s+\")) {\n    if (!t.matches(NT_REGEX))     return false;\n    nonterminalCount++;\n  }\n  return nonterminalCount != 0;\n}\n",
+        "text": " Determines whether a rule is an abstract rule. An abstract rule is one that has no terminals on its source side. If the rule is abstract, the rule's arity is returned. Otherwise, 0 is returned.",
+        "id": 30
+    },
+    {
+        "code": "public static String URIforPortablePath(String path){\n  if (path.startsWith(FileUtil.PREFERENCES)) {\n    return path.replaceFirst(FileUtil.PREFERENCES,\"/prefs/\");\n  }\n else   if (path.startsWith(FileUtil.PROGRAM)) {\n    return path.replaceFirst(FileUtil.PROGRAM,\"/dist/\");\n  }\n else {\n    return null;\n  }\n}\n",
+        "text": " Get the public URI for a portable path. This method returns public URIs for only some portable paths, and does not check that the portable path is actually sane. Note that this refuses to return portable paths that are outside of program: and preference:",
+        "id": 31
+    },
+    {
+        "code": "public int hashCode(){\n  return Float.floatToIntBits(value);\n}\n",
+        "text": " Returns a hash code for this FloatConstant object. ",
+        "id": 32
+    },
+    {
+        "code": "public static void log(Throwable error,String message,Object... args){\n  if (loggingEnabled) {\n    Log.d(TAG,args.length == 0 ? message : String.format(message,args),error);\n  }\n}\n",
+        "text": " Send a log message if logging is enabled.",
+        "id": 33
+    },
+    {
+        "code": "public void addExtensionNamespace(String uri,ExtensionHandler extNS){\n  m_extensionFunctionNamespaces.put(uri,extNS);\n}\n",
+        "text": " Register an extension namespace handler. This handler provides functions for testing whether a function is known within the namespace and also for invoking the functions.",
+        "id": 34
+    },
+    {
+        "code": "private void generateTypeParameterInfos(BinaryMember parent,char[] signature,HashMap newElements,ArrayList typeParameterHandles){\n  if (signature == null)   return;\n  char[][] typeParameterSignatures=Signature.getTypeParameters(signature);\n  for (int i=0, typeParameterCount=typeParameterSignatures.length; i < typeParameterCount; i++) {\n    char[] typeParameterSignature=typeParameterSignatures[i];\n    char[] typeParameterName=Signature.getTypeVariable(typeParameterSignature);\n    CharOperation.replace(typeParameterSignature,'/','.');\n    char[][] typeParameterBoundSignatures=Signature.getTypeParameterBounds(typeParameterSignature);\n    int boundLength=typeParameterBoundSignatures.length;\n    char[][] typeParameterBounds=new char[boundLength][];\n    for (int j=0; j < boundLength; j++) {\n      typeParameterBounds[j]=Signature.toCharArray(typeParameterBoundSignatures[j]);\n    }\n    TypeParameter typeParameter=new TypeParameter(parent,parent.manager,new String(typeParameterName));\n    TypeParameterElementInfo info=new TypeParameterElementInfo();\n    info.bounds=typeParameterBounds;\n    info.boundsSignatures=typeParameterBoundSignatures;\n    typeParameterHandles.add(typeParameter);\n    while (newElements.containsKey(typeParameter))     typeParameter.occurrenceCount++;\n    newElements.put(typeParameter,info);\n  }\n}\n",
+        "text": " Creates the handles and infos for the type parameter of the given binary member. Adds new handles to the given vector.",
+        "id": 35
+    },
+    {
+        "code": "public final void testNextBytesbyteArray02(){\n  byte[] myBytes;\n  byte[] myBytes1;\n  byte[] myBytes2;\n  for (int i=1; i < LENGTH; i+=INCR) {\n    myBytes=new byte[i];\n    for (int j=1; j < i; j++) {\n      myBytes[j]=(byte)(j & 0xFF);\n    }\n    sr.setSeed(myBytes);\n    sr2.setSeed(myBytes);\n    for (int k=1; k < LENGTH; k+=INCR) {\n      myBytes1=new byte[k];\n      myBytes2=new byte[k];\n      sr.nextBytes(myBytes1);\n      sr2.nextBytes(myBytes2);\n      for (int l=0; l < k; l++) {\n        assertFalse(\"unexpected: myBytes1[l] != myBytes2[l]  :: l==\" + l + \" k=\"+ k+ \" i=\"+ i+ \" myBytes1[l]=\"+ myBytes1[l]+ \" myBytes2[l]=\"+ myBytes2[l],myBytes1[l] != myBytes2[l]);\n      }\n    }\n  }\n  for (int n=1; n < LENGTH; n+=INCR) {\n    int n1=10;\n    int n2=20;\n    int n3=100;\n    byte[][] bytes1=new byte[10][n1];\n    byte[][] bytes2=new byte[5][n2];\n    for (int k=0; k < bytes1.length; k++) {\n      sr.nextBytes(bytes1[k]);\n    }\n    for (int k=0; k < bytes2.length; k++) {\n      sr2.nextBytes(bytes2[k]);\n    }\n    for (int k=0; k < n3; k++) {\n      int i1=k / n1;\n      int i2=k % n1;\n      int i3=k / n2;\n      int i4=k % n2;\n      assertTrue(\"non-equality: i1=\" + i1 + \" i2=\"+ i2+ \" i3=\"+ i3+ \" i4=\"+ i4,bytes1[i1][i2] == bytes2[i3][i4]);\n    }\n  }\n}\n",
+        "text": " test against the void nextBytes(byte[]) method; it checks out that different SecureRandom objects being supplied with the same seed return the same sequencies of bytes as results of their nextBytes(byte[]) methods",
+        "id": 36
+    },
+    {
+        "code": "private void signalNotEmpty(){\n  final ReentrantLock takeLock=this.takeLock;\n  takeLock.lock();\n  try {\n    notEmpty.signal();\n  }\n  finally {\n    takeLock.unlock();\n  }\n}\n",
+        "text": " Signals a waiting take. Called only from put/offer (which do not otherwise ordinarily lock takeLock.)",
+        "id": 37
+    },
+    {
+        "code": "public RoutingInfo(Object o){\n  this.text=o.toString();\n}\n",
+        "text": " Creates a routing info based on any object. Object's toString() method's output is used as the info text.",
+        "id": 38
+    },
+    {
+        "code": "private List<View> addView(View view,List<View> cache){\n  if (cache == null) {\n    cache=new LinkedList<View>();\n  }\n  cache.add(view);\n  return cache;\n}\n",
+        "text": " Adds view to specified cache. Creates a cache list if it is null.",
+        "id": 39
+    },
+    {
+        "code": "public static CertChainKeyPair generateSigned(String fqdn,X509Certificate issuerCertificate,PrivateKey issuerPrivateKey){\n  try {\n    return generateCertificateAndSign(fqdn,issuerCertificate,issuerPrivateKey,getServerExtensions(issuerCertificate));\n  }\n catch (  CertificateException|OperatorCreationException|NoSuchAlgorithmException|IOException e) {\n    throw new RuntimeException(String.format(\"Failed to generate server certificate, reason: %s\",e.getMessage()),e);\n  }\n}\n",
+        "text": " Generates a signed certificate and a private key.",
+        "id": 40
+    },
+    {
+        "code": "private void startAnimation(){\n  ValueAnimator animator=ValueAnimator.ofFloat(1.0f);\n  ArrayList<NameValuesHolder> nameValueList=(ArrayList<NameValuesHolder>)mPendingAnimations.clone();\n  mPendingAnimations.clear();\n  int propertyMask=0;\n  int propertyCount=nameValueList.size();\n  for (int i=0; i < propertyCount; ++i) {\n    NameValuesHolder nameValuesHolder=nameValueList.get(i);\n    propertyMask|=nameValuesHolder.mNameConstant;\n  }\n  mAnimatorMap.put(animator,new PropertyBundle(propertyMask,nameValueList));\n  animator.addUpdateListener(mAnimatorEventListener);\n  animator.addListener(mAnimatorEventListener);\n  if (mStartDelaySet) {\n    animator.setStartDelay(mStartDelay);\n  }\n  if (mDurationSet) {\n    animator.setDuration(mDuration);\n  }\n  if (mInterpolatorSet) {\n    animator.setInterpolator(mInterpolator);\n  }\n  animator.start();\n}\n",
+        "text": " Starts the underlying Animator for a set of properties. We use a single animator that simply runs from 0 to 1, and then use that fractional value to set each property value accordingly.",
+        "id": 41
+    },
+    {
+        "code": "public void addRequest(Request request){\n  requestSet.add(request);\n}\n",
+        "text": " Adds a Request object to this object.",
+        "id": 42
+    },
+    {
+        "code": "public static double logpmf(double x,int n,double p){\n  if (x < 0 || x > n) {\n    return Double.NEGATIVE_INFINITY;\n  }\n  if (p <= 0.) {\n    return x == 0 ? 0. : Double.NEGATIVE_INFINITY;\n  }\n  if (p >= 1.) {\n    return x == n ? 0. : Double.NEGATIVE_INFINITY;\n  }\n  final double q=1 - p;\n  if (x == 0) {\n    if (p < .1) {\n      return -devianceTerm(n,n * q) - n * p;\n    }\n else {\n      return n * Math.log(q);\n    }\n  }\n  if (x == n) {\n    if (p > .9) {\n      return -devianceTerm(n,n * p) - n * q;\n    }\n else {\n      return n * Math.log(p);\n    }\n  }\n  final double lc=stirlingError(n) - stirlingError(x) - stirlingError(n - x)- devianceTerm(x,n * p)- devianceTerm(n - x,n * q);\n  final double f=(MathUtil.TWOPI * x * (n - x)) / n;\n  return lc - .5 * Math.log(f);\n}\n",
+        "text": " Poisson probability mass function (PMF) for integer values.",
+        "id": 43
+    },
+    {
+        "code": "private void byte2hex(byte b,StringBuffer buf){\n  char[] hexChars={'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};\n  int high=((b & 0xf0) >> 4);\n  int low=(b & 0x0f);\n  buf.append(hexChars[high]);\n  buf.append(hexChars[low]);\n}\n",
+        "text": " Converts a byte to hex digit and writes to the supplied buffer",
+        "id": 44
+    },
+    {
+        "code": "public static List<GeoTimeSerie> timesplit(GeoTimeSerie gts,long quietperiod,int minvalues,String labelname){\n  List<GeoTimeSerie> series=new ArrayList<GeoTimeSerie>();\n  if (0 == gts.values || gts.hasLabel(labelname)) {\n    series.add(gts.clone());\n    return series;\n  }\n  sort(gts,false);\n  long lasttick=gts.ticks[0];\n  int idx=0;\n  int gtsid=1;\n  GeoTimeSerie serie=new GeoTimeSerie(gts.lastbucket,gts.bucketcount,gts.bucketspan,4);\n  serie.setName(gts.getName());\n  Map<String,String> labels=new HashMap<String,String>();\n  labels.putAll(gts.getLabels());\n  labels.put(labelname,Integer.toString(gtsid));\n  serie.setLabels(labels);\n  while (idx < gts.values) {\n    if (gts.ticks[idx] - lasttick >= quietperiod) {\n      if (serie.values > 0 && serie.values >= minvalues) {\n        series.add(serie);\n      }\n      serie=new GeoTimeSerie(gts.lastbucket,gts.bucketcount,gts.bucketspan,4);\n      serie.setName(gts.getName());\n      labels=new HashMap<String,String>();\n      labels.putAll(gts.getLabels());\n      gtsid++;\n      labels.put(labelname,Integer.toString(gtsid));\n      serie.setLabels(labels);\n    }\n    Object value=GTSHelper.valueAtIndex(gts,idx);\n    GTSHelper.setValue(serie,gts.ticks[idx],null != gts.locations ? gts.locations[idx] : GeoTimeSerie.NO_LOCATION,null != gts.elevations ? gts.elevations[idx] : GeoTimeSerie.NO_ELEVATION,value,false);\n    lasttick=gts.ticks[idx];\n    idx++;\n  }\n  if (serie.values > 0 && serie.values >= minvalues) {\n    series.add(serie);\n  }\n  return series;\n}\n",
+        "text": " Split a GTS into multiple GTS by cutting in 'quiet zones', i.e. intervals of quietperiod or more during which there were no measurements. If gts has no values or if label is already part of the labels of gts, then the resulting list of GTS will only contain a clone of gts.",
+        "id": 45
+    },
+    {
+        "code": "protected void checkSignature(byte[] buf){\n  if (!Arrays.equals(buf,PngHelperInternal.getPngIdSignature()))   throw new PngjInputException(\"Bad PNG signature\");\n}\n",
+        "text": " Throws PngjInputException if bad signature",
+        "id": 46
+    },
+    {
+        "code": "private void twoWayMergeInternal(final ReservoirLongsSketch sketchIn,final boolean isModifiable){\n  if (sketchIn.getN() <= sketchIn.getK()) {\n    twoWayMergeInternalStandard(sketchIn);\n  }\n else   if (gadget_.getN() < gadget_.getK()) {\n    final ReservoirLongsSketch tmpSketch=gadget_;\n    gadget_=(isModifiable ? sketchIn : sketchIn.copy());\n    twoWayMergeInternalStandard(tmpSketch);\n  }\n else   if (sketchIn.getImplicitSampleWeight() < gadget_.getN() / ((double)(gadget_.getK() - 1))) {\n    twoWayMergeInternalWeighted(sketchIn);\n  }\n else {\n    final ReservoirLongsSketch tmpSketch=gadget_;\n    gadget_=(isModifiable ? sketchIn : sketchIn.copy());\n    twoWayMergeInternalWeighted(tmpSketch);\n  }\n}\n",
+        "text": " This either merges sketchIn into gadget_ or gadget_ into sketchIn. If merging into sketchIn with isModifiable set to false, copies elements from sketchIn first, leaving original unchanged.",
+        "id": 47
+    },
+    {
+        "code": "final public void print(Object v){\n  Writer out=this.out;\n  if (out == null)   return;\n  try {\n    if (v == null)     out.write(_nullChars,0,_nullChars.length);\n else {\n      String s=v.toString();\n      out.write(s,0,s.length());\n    }\n  }\n catch (  IOException e) {\n    log.log(Level.FINE,e.toString(),e);\n  }\n}\n",
+        "text": " Prints the value of the object.",
+        "id": 48
+    },
+    {
+        "code": "public void subscribeTo(final K key,final Subscriber<V> subscriber,final Executor subscribeOn){\n  CompletableFuture.runAsync(null,subscribeOn);\n}\n",
+        "text": " Subscribe asynchronously to a pipe",
+        "id": 49
+    },
+    {
+        "code": "public static boolean copyStream(InputStream is,OutputStream os,CopyListener listener,int bufferSize) throws IOException {\n  int current=0;\n  int total=is.available();\n  if (total <= 0) {\n    total=DEFAULT_IMAGE_TOTAL_SIZE;\n  }\n  final byte[] bytes=new byte[bufferSize];\n  int count;\n  if (shouldStopLoading(listener,current,total))   return false;\n  while ((count=is.read(bytes,0,bufferSize)) != -1) {\n    os.write(bytes,0,count);\n    current+=count;\n    if (shouldStopLoading(listener,current,total))     return false;\n  }\n  os.flush();\n  return true;\n}\n",
+        "text": " Copies stream, fires progress events by listener, can be interrupted by listener.",
+        "id": 50
+    },
+    {
+        "code": "private void refreshBuffer() throws IOException {\n  if (output == null) {\n    throw new OutOfSpaceException();\n  }\n  output.write(buffer,0,position);\n  position=0;\n}\n",
+        "text": " Internal helper that writes the current buffer to the output. The buffer position is reset to its initial value when this returns.",
+        "id": 51
+    },
+    {
+        "code": "public String damageBayDoor(){\n  String bayType=\"none\";\n  Vector<Bay> potential;\n  potential=new Vector<Bay>();\n  Enumeration<Transporter> iter=transports.elements();\n  while (iter.hasMoreElements()) {\n    Transporter next=iter.nextElement();\n    if (next instanceof Bay) {\n      Bay nextBay=(Bay)next;\n      if (nextBay.getDoors() > 0) {\n        potential.add(nextBay);\n      }\n    }\n  }\n  if (potential.size() > 0) {\n    Bay chosenBay=potential.elementAt(Compute.randomInt(potential.size()));\n    chosenBay.destroyDoor();\n    chosenBay.resetDoors();\n    chosenBay.setDoors(chosenBay.getDoors() - 1);\n    bayType=chosenBay.getType();\n  }\n  return bayType;\n}\n",
+        "text": " Damages a randomly determined bay door on the entity, if one exists",
+        "id": 52
+    },
+    {
+        "code": "public void updateEnabledState(){\n  boolean b=(getSimulationThread() == null);\n  boolean prep=b && controller != null && controller.isPrepared();\n  clearButton.setEnabled(b);\n  prepareButton.setEnabled(b);\n  runButton.setEnabled(prep);\n  if (b)   pauseButton.setSelected(false);\n  pauseButton.setEnabled(!b);\n  stepButton.setEnabled(prep);\n  cancelButton.setEnabled(!b);\n  for (  JComboBox<Object> combo : selectors.combos)   combo.setEnabled(b);\n}\n",
+        "text": " Enables/disables combos and buttons. ",
+        "id": 53
+    },
+    {
+        "code": "private void prepareVolumeData() throws Exception {\n  prepareVPlexVolumeData();\n  prepareRPVolumeData();\n}\n",
+        "text": " Prepares the data for volume tests.",
+        "id": 54
+    },
+    {
+        "code": "private static int determineIconIdByMimeTypeList(List<String> mimetypes){\n  if (mimetypes == null || mimetypes.size() < 1) {\n    return R.drawable.file;\n  }\n else {\n    for (    String mimetype : mimetypes) {\n      Integer iconId=MIMETYPE_TO_ICON_MAPPING.get(mimetype);\n      if (iconId != null) {\n        return iconId;\n      }\n    }\n    for (    String mimetype : mimetypes) {\n      String mainMimetypePart=mimetype.split(\"/\")[0];\n      Integer iconId=MAINMIMETYPE_TO_ICON_MAPPING.get(mainMimetypePart);\n      if (iconId != null) {\n        return iconId;\n      }\n    }\n  }\n  return R.drawable.file;\n}\n",
+        "text": " determines the icon based on the mime type.",
+        "id": 55
+    },
+    {
+        "code": "public SmsMmsMessage(Context _context,long _messageId,long _threadId,long _timestamp,String _messageBody,int _unreadCount,int _messageType){\n  context=_context;\n  messageId=_messageId;\n  threadId=_threadId;\n  timestamp=_timestamp;\n  messageBody=_messageBody;\n  unreadCount=_unreadCount;\n  messageType=_messageType;\n  fromAddress=SmsPopupUtils.getMmsAddress(context,messageId);\n  fromEmailGateway=false;\n  contactName=PhoneNumberUtils.formatNumber(fromAddress);\n  ContactIdentification contactIdentify=SmsPopupUtils.getPersonIdFromPhoneNumber(context,fromAddress);\n  if (contactIdentify == null) {\n    contactIdentify=SmsPopupUtils.getPersonIdFromEmail(context,fromAddress);\n    if (contactIdentify != null) {\n      fromEmailGateway=true;\n    }\n  }\n  if (contactIdentify != null) {\n    contactId=contactIdentify.contactId;\n    contactLookupKey=contactIdentify.contactLookup;\n    contactName=contactIdentify.contactName;\n  }\n}\n",
+        "text": " Construct SmsMmsMessage for getMmsDetails() - fetched from the MMS database table",
+        "id": 56
+    },
+    {
+        "code": "public void attributeAsClass(){\n  DataSortedTableModel model;\n  if (m_CurrentCol == -1) {\n    return;\n  }\n  model=(DataSortedTableModel)m_TableData.getModel();\n  if (model.getAttributeAt(m_CurrentCol) == null) {\n    return;\n  }\n  setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));\n  model.attributeAsClassAt(m_CurrentCol);\n  setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));\n}\n",
+        "text": " sets the current attribute as class attribute, i.e. it moves it to the end of the attributes",
+        "id": 57
+    },
+    {
+        "code": "public void addListener(RefreshListener listener){\n  if (listener == null) {\n    throw new NullPointerException(\"Listener must not be null\");\n  }\n  refreshListeners.add(listener);\n}\n",
+        "text": " Adds a listener, to be notified when a reference is refreshed/swapped.",
+        "id": 58
+    },
+    {
+        "code": "public final void doExport(final String trackName,final File target,int verbosity) throws IOException {\n  Log.i(TAG,\"Exporting gpx file\" + target.getAbsolutePath());\n  mDbHelper=new DatabaseHelper(mContext.getApplicationContext());\n  final BufferedWriter bw=new BufferedWriter(new FileWriter(target));\n  bw.write(XML_HEADER);\n  bw.write(TAG_GPX);\n  if (verbosity == VERBOSITY_TRACK_AND_WAYPOINTS || verbosity == VERBOSITY_WAYPOINTS_ONLY || verbosity == VERBOSITY_ALL) {\n    writeWaypoints(bw);\n  }\n  if (verbosity == VERBOSITY_TRACK_AND_WAYPOINTS || verbosity == VERBOSITY_ALL) {\n    writeTrackpoints(trackName,bw);\n  }\n  bw.flush();\n  if (verbosity == VERBOSITY_ALL) {\n    writeWifis(bw);\n    bw.flush();\n    writeCells(bw);\n    bw.flush();\n  }\n  bw.write(TAG_GPX_CLOSE);\n  bw.close();\n  mDbHelper.close();\n  Log.i(TAG,\"Finished building gpx file\");\n}\n",
+        "text": " Writes the GPX file",
+        "id": 59
+    },
+    {
+        "code": "public List<V> valuesInSelection(RichEditText editor,int spanType){\n  List<V> result=new ArrayList<V>();\n  Selection expandedSelection=getExpandedSelection(editor,spanType);\n  if (expandedSelection != null) {\n    for (    Span<V> span : getSpans(editor.getText(),expandedSelection)) {\n      result.add(span.getValue());\n    }\n  }\n  return result;\n}\n",
+        "text": " Returns the value of this effect in the current selection.",
+        "id": 60
+    },
+    {
+        "code": "private boolean isGTEDelta(double value){\n  return Math.abs(value) - Math.abs(mDelta) > -1.0e-5;\n}\n",
+        "text": " Indicates if the absolute value of the argument is greater than or equal to the delta value with accuracy to 14 digits of precision.  This avoids rounding errors at 15 digits or  precision or greater.",
+        "id": 61
+    },
+    {
+        "code": "public static String rowToString(JSONArray ja){\n  StringBuilder sb=new StringBuilder();\n  for (int i=0; i < ja.length(); i+=1) {\n    if (i > 0) {\n      sb.append(',');\n    }\n    Object object=ja.opt(i);\n    if (object != null) {\n      String string=object.toString();\n      if (string.length() > 0 && (string.indexOf(',') >= 0 || string.indexOf('\\n') >= 0 || string.indexOf('\\r') >= 0 || string.indexOf(0) >= 0 || string.charAt(0) == '\"')) {\n        sb.append('\"');\n        int length=string.length();\n        for (int j=0; j < length; j+=1) {\n          char c=string.charAt(j);\n          if (c >= ' ' && c != '\"') {\n            sb.append(c);\n          }\n        }\n        sb.append('\"');\n      }\n else {\n        sb.append(string);\n      }\n    }\n  }\n  sb.append('\\n');\n  return sb.toString();\n}\n",
+        "text": " Produce a comma delimited text row from a JSONArray. Values containing the comma character will be quoted. Troublesome characters may be removed.",
+        "id": 62
+    },
+    {
+        "code": "private void maybeSampleSyncParams(){\n  long playbackPositionUs=audioTrackUtil.getPlaybackHeadPositionUs();\n  if (playbackPositionUs == 0) {\n    return;\n  }\n  if (log.allowVerbose()) {\n    log.v(\"playbackPositionUs = \" + playbackPositionUs);\n  }\n  long systemClockUs=System.nanoTime() / 1000;\n  if (systemClockUs - lastPlayheadSampleTimeUs >= MIN_PLAYHEAD_OFFSET_SAMPLE_INTERVAL_US) {\n    playheadOffsets[nextPlayheadOffsetIndex]=playbackPositionUs - systemClockUs;\n    nextPlayheadOffsetIndex=(nextPlayheadOffsetIndex + 1) % MAX_PLAYHEAD_OFFSET_COUNT;\n    if (playheadOffsetCount < MAX_PLAYHEAD_OFFSET_COUNT) {\n      playheadOffsetCount++;\n    }\n    lastPlayheadSampleTimeUs=systemClockUs;\n    smoothedPlayheadOffsetUs=0;\n    for (int i=0; i < playheadOffsetCount; i++) {\n      smoothedPlayheadOffsetUs+=playheadOffsets[i] / playheadOffsetCount;\n    }\n  }\n  if (needsPassthroughWorkarounds()) {\n    return;\n  }\n  if (systemClockUs - lastTimestampSampleTimeUs >= MIN_TIMESTAMP_SAMPLE_INTERVAL_US) {\n    audioTimestampSet=audioTrackUtil.updateTimestamp();\n    if (audioTimestampSet) {\n      long audioTimestampUs=audioTrackUtil.getTimestampNanoTime() / 1000;\n      if (log.allowVerbose()) {\n        log.v(\"audioTimestampUs = \" + audioTimestampUs);\n      }\n      long audioTimestampFramePosition=audioTrackUtil.getTimestampFramePosition();\n      if (audioTimestampUs < resumeSystemTimeUs) {\n        audioTimestampSet=false;\n        log.w(\"The timestamp corresponds to a time before the track was most recently resumed: \" + audioTimestampUs + \", \"+ resumeSystemTimeUs);\n      }\n else       if (Math.abs(audioTimestampUs - systemClockUs) > MAX_AUDIO_TIMESTAMP_OFFSET_US) {\n        String message=\"Spurious audio timestamp (system clock mismatch): \" + audioTimestampFramePosition + \", \"+ audioTimestampUs+ \", \"+ systemClockUs+ \", \"+ playbackPositionUs;\n        if (failOnSpuriousAudioTimestamp) {\n          throw new InvalidAudioTrackTimestampException(message);\n        }\n        log.w(message);\n        audioTimestampSet=false;\n      }\n else       if (Math.abs(framesToDurationUs(audioTimestampFramePosition) - playbackPositionUs) > MAX_AUDIO_TIMESTAMP_OFFSET_US) {\n        String message=\"Spurious audio timestamp (frame position mismatch): \" + audioTimestampFramePosition + \", \"+ audioTimestampUs+ \", \"+ systemClockUs+ \", \"+ playbackPositionUs;\n        if (failOnSpuriousAudioTimestamp) {\n          throw new InvalidAudioTrackTimestampException(message);\n        }\n        log.w(message);\n        audioTimestampSet=false;\n      }\n    }\n    if (isLatencyQuirkEnabled) {\n      latencyUs=AmazonQuirks.getAudioHWLatency();\n    }\n else     if (getLatencyMethod != null && !passthrough) {\n      try {\n        latencyUs=(Integer)getLatencyMethod.invoke(audioTrack,(Object[])null) * 1000L - bufferSizeUs;\n        latencyUs=Math.max(latencyUs,0);\n        if (latencyUs > MAX_LATENCY_US) {\n          log.w(\"Ignoring impossibly large audio latency: \" + latencyUs);\n          latencyUs=0;\n        }\n      }\n catch (      Exception e) {\n        getLatencyMethod=null;\n      }\n    }\n    lastTimestampSampleTimeUs=systemClockUs;\n  }\n}\n",
+        "text": " Updates the audio track latency and playback position parameters.",
+        "id": 63
+    },
+    {
+        "code": "@Override public boolean contains(Object object){\n  if (object == null) {\n    return false;\n  }\n  for (int i=0; i < size; i++) {\n    if (object.equals(elements[i])) {\n      return true;\n    }\n  }\n  return false;\n}\n",
+        "text": " Answers if there is an element in this queue equals to the object.",
+        "id": 64
+    },
+    {
+        "code": "public void close() throws IOException {\n  writer.close();\n}\n",
+        "text": " Closes the XmlWriter and the underlying output writer.",
+        "id": 65
+    },
+    {
+        "code": "public static void substituteProperties(Node node,Properties properties){\n  Node child;\n  Node next=node.getFirstChild();\n  while ((child=next) != null) {\n    next=child.getNextSibling();\n    if (child.getNodeType() == Node.TEXT_NODE) {\n      child.setNodeValue(PropertiesUtil.substituteProperty(child.getNodeValue(),properties));\n    }\n else     if (child.getNodeType() == Node.ELEMENT_NODE) {\n      NamedNodeMap attributes=child.getAttributes();\n      for (int i=0; i < attributes.getLength(); i++) {\n        Node attribute=attributes.item(i);\n        attribute.setNodeValue(PropertiesUtil.substituteProperty(attribute.getNodeValue(),properties));\n      }\n      substituteProperties(child,properties);\n    }\n  }\n}\n",
+        "text": " Replaces ${property[:default value]} references in all attributes and text nodes of supplied node.  If the property is not defined neither in the given Properties instance nor in System.getProperty and no default value is provided, a runtime exception is thrown.",
+        "id": 66
+    },
+    {
+        "code": "@SuppressWarnings(\"unchecked\") public PseudoFunctionSelector(String functionName,String expression){\n  super(Type.PSEUDO_FUNCTION);\n  this.pseudoFunction=(PseudoFunction<E>)lookupPseudoFunction(functionName.trim());\n  this.expression=expression;\n  this.parsedExpression=pseudoFunction.parseExpression(expression);\n}\n",
+        "text": " Creates pseudo function selector for given function and expression.",
+        "id": 67
+    },
+    {
+        "code": "public static String fixQueryMistakes(String q){\n  q=q.replaceAll(\"hashtag:\",\"#\");\n  q=q.replaceAll(\" AND \",\" \");\n  return q;\n}\n",
+        "text": " fixing a query mistake covers most common wrong queries from the user",
+        "id": 68
+    },
+    {
+        "code": "public byte[] readBytes() throws IOException {\n  if (!parseTag())   throw new BurlapProtocolException(\"expected <base64>\");\n  String tag=sbuf.toString();\n  if (tag.equals(\"null\")) {\n    expectEndTag(\"null\");\n    return null;\n  }\n else   if (tag.equals(\"base64\")) {\n    sbuf.setLength(0);\n    byte[] value=parseBytes();\n    expectEndTag(\"base64\");\n    return value;\n  }\n else   throw expectBeginTag(\"base64\",tag);\n}\n",
+        "text": " Reads a byte array from the input stream.  The two valid possibilities are either a &lt;null> or a &lt;base64>.",
+        "id": 69
+    },
+    {
+        "code": "public synchronized Utterance pend(){\n  Utterance utterance=null;\n  while (list.size() == 0) {\n    try {\n      wait();\n    }\n catch (    InterruptedException ie) {\n      return null;\n    }\n  }\n  utterance=(Utterance)list.removeFirst();\n  notify();\n  return utterance;\n}\n",
+        "text": " Blocks until there is an utterance in the queue.",
+        "id": 70
+    },
+    {
+        "code": "public void testLongValuePos(){\n  String a=\"123809648392384754573567356745735.63567890295784902768787678287E+21\";\n  BigDecimal aNumber=new BigDecimal(a);\n  long result=1246043477766677607L;\n  assertTrue(\"incorrect value\",aNumber.longValue() == result);\n}\n",
+        "text": " Long value of a positive BigDecimal",
+        "id": 71
+    },
+    {
+        "code": "public static EvaluationResult findOrCreate(ResultHierarchy hierarchy,Result parent,String name,String shortname){\n  ArrayList<EvaluationResult> ers=ResultUtil.filterResults(hierarchy,parent,EvaluationResult.class);\n  EvaluationResult ev=null;\n  for (  EvaluationResult e : ers) {\n    if (shortname.equals(e.getShortName())) {\n      ev=e;\n      break;\n    }\n  }\n  if (ev == null) {\n    ev=new EvaluationResult(name,shortname);\n    hierarchy.add(parent,ev);\n  }\n  return ev;\n}\n",
+        "text": " Find or create an evaluation result.",
+        "id": 72
+    },
+    {
+        "code": "public static boolean isRunningJavaWebStart(){\n  boolean hasJNLP=false;\n  try {\n    Class.forName(\"javax.jnlp.ServiceManager\");\n    hasJNLP=true;\n  }\n catch (  ClassNotFoundException ex) {\n    hasJNLP=false;\n  }\n  return hasJNLP;\n}\n",
+        "text": " Are we running from a webstart instance?",
+        "id": 73
+    },
+    {
+        "code": "public boolean isConnected(){\n  return connected.get();\n}\n",
+        "text": " Returns the connection status.",
+        "id": 74
+    },
+    {
+        "code": "private void tryScheduleAction(Runnable action){\n  try {\n    scheduler.submit(action);\n  }\n catch (  RejectedExecutionException e) {\n  }\n}\n",
+        "text": " Tries to schedule a runnable on the underlying executor.  Rejected executions will be suppressed.  This is useful for cases when the clients EventLoop is shut down before the EventLoop of the underlying connection.",
+        "id": 75
+    },
+    {
+        "code": "private static double scoreSequence(List<LatLong> pts){\n  LatLong prev=pts.get(pts.size() - 1);\n  LatLong prevprev=pts.get(pts.size() - 2);\n  double prevAngle=Math.atan2(prev.lat - prevprev.lat,prev.lng - prevprev.lng);\n  double score=0;\n  for (  LatLong pt : pts) {\n    double angle=Math.atan2(pt.lat - prev.lat,pt.lng - prev.lng);\n    double diff=prevAngle - angle;\n    if (diff > Math.PI)     diff-=Math.PI * 2;\n else     if (diff < -Math.PI)     diff+=Math.PI * 2;\n    if (diff < 0)     score+=10;\n else     score+=diff;\n    prev=pt;\n    prevAngle=angle;\n  }\n  return score;\n}\n",
+        "text": " How good does this sequence of points look? The sequence must be clockwise and have the least acute angles possible. ",
+        "id": 76
+    },
+    {
+        "code": "public void addWebAppDebugModelListener(IWebAppDebugModelListener listener){\nsynchronized (privateInstanceLock) {\n    webAppDebugModelListeners.add(listener);\n  }\n}\n",
+        "text": " Add a listener for changes to the model.",
+        "id": 77
+    },
+    {
+        "code": "public void resetPolicy(){\n  mPreferences.putString(PREF_LAST_RESPONSE,Integer.toString(Policy.RETRY));\n  setRetryUntil(DEFAULT_RETRY_UNTIL);\n  setMaxRetries(DEFAULT_MAX_RETRIES);\n  setRetryCount(Long.parseLong(DEFAULT_RETRY_COUNT));\n  setValidityTimestamp(DEFAULT_VALIDITY_TIMESTAMP);\n  mPreferences.commit();\n}\n",
+        "text": " We call this to guarantee that we fetch a fresh policy from the server. This is to be used if the URL is invalid.",
+        "id": 78
+    },
+    {
+        "code": "public void simulateMethod(SootMethod method,ReferenceVariable thisVar,ReferenceVariable returnVar,ReferenceVariable params[]){\n  String subSignature=method.getSubSignature();\n  if (subSignature.equals(\"java.lang.Class[] getClassContext()\")) {\n    java_lang_SecurityManager_getClassContext(method,thisVar,returnVar,params);\n    return;\n  }\n else   if (subSignature.equals(\"java.lang.ClassLoader currentClassLoader0()\")) {\n    java_lang_SecurityManager_currentClassLoader0(method,thisVar,returnVar,params);\n    return;\n  }\n else   if (subSignature.equals(\"java.lang.Class currentLoadedClass0()\")) {\n    java_lang_SecurityManager_currentLoadedClass0(method,thisVar,returnVar,params);\n    return;\n  }\n else {\n    defaultMethod(method,thisVar,returnVar,params);\n    return;\n  }\n}\n",
+        "text": " Implements the abstract method simulateMethod. It distributes the request to the corresponding methods  by signatures.",
+        "id": 79
+    },
+    {
+        "code": "public static boolean isFileExists(final String path){\n  if (TextUtils.isEmpty(path)) {\n    Log.e(FileUtils.class,\"isFileExists(): Null or Empty parameter given\");\n    return false;\n  }\n  final File fileToCheck=new File(path);\n  return fileToCheck.exists() && !fileToCheck.isDirectory();\n}\n",
+        "text": " Check if given path is a File and if it exists",
+        "id": 80
+    },
+    {
+        "code": "private List<Reference> createSignatureReferences(XMLSignatureFactory xmlSigFactory,List<String> referenceIdList) throws NoSuchAlgorithmException, InvalidAlgorithmParameterException {\n  List<Reference> result=new ArrayList<Reference>();\n  for (  String refId : referenceIdList) {\n    if (refId == null) {\n      continue;\n    }\n    Reference ref=xmlSigFactory.newReference(\"#\" + refId,xmlSigFactory.newDigestMethod(DigestMethod.SHA512,null),Collections.singletonList(xmlSigFactory.newCanonicalizationMethod(CanonicalizationMethod.EXCLUSIVE,(C14NMethodParameterSpec)null)),null,null);\n    result.add(ref);\n  }\n  return Collections.unmodifiableList(result);\n}\n",
+        "text": " Creates all references needed for this signature",
+        "id": 81
+    },
+    {
+        "code": "public boolean removeNetworkConnection(NetworkConnection networkConnection){\n  return networkConnections.remove(networkConnection);\n}\n",
+        "text": " Remove a networkConnection from a VM's networks.",
+        "id": 82
+    },
+    {
+        "code": "@Override public Enumeration<Option> listOptions(){\n  Vector<Option> result=new Vector<Option>();\n  result.addElement(new Option(\"\\tSets the attribute index\\n\" + \"\\t(default last).\",\"C\",1,\"-C <col>\"));\n  result.addElement(new Option(\"\\tComma-separated list of labels to add.\\n\" + \"\\t(default: none)\",\"L\",1,\"-L <label1,label2,...>\"));\n  result.addElement(new Option(\"\\tTurns on the sorting of the labels.\",\"S\",0,\"-S\"));\n  return result.elements();\n}\n",
+        "text": " Returns an enumeration describing the available options.",
+        "id": 83
+    },
+    {
+        "code": "protected Object convertArray(Object value){\n  return value;\n}\n",
+        "text": " Returns the value unchanged.",
+        "id": 84
+    },
+    {
+        "code": "public static String encodeString(String s){\n  return new String(encode(s.getBytes()));\n}\n",
+        "text": " Encodes a string into Base64 format. No blanks or line breaks are inserted.",
+        "id": 85
+    },
+    {
+        "code": "GridLuceneFile(GridLuceneDirectory dir){\n  this.dir=dir;\n  filesCnt.incrementAndGet();\n}\n",
+        "text": " File used as buffer, in no RAMDirectory",
+        "id": 86
+    },
+    {
+        "code": "public void addAttributes(Attributes atts) throws SAXException {\n  int nAtts=atts.getLength();\n  for (int i=0; i < nAtts; i++) {\n    String uri=atts.getURI(i);\n    if (null == uri)     uri=\"\";\n    addAttributeAlways(uri,atts.getLocalName(i),atts.getQName(i),atts.getType(i),atts.getValue(i),false);\n  }\n}\n",
+        "text": " Add the given attributes to the currently collected ones. These attributes are always added, regardless of whether on not an element is currently open.",
+        "id": 87
+    },
+    {
+        "code": "public synchronized void addPanListener(PanListener listener){\n  mPanListeners.add(listener);\n}\n",
+        "text": " Adds a new pan listener.",
+        "id": 88
+    },
+    {
+        "code": "public synchronized long lastOnlineAgo(){\n  return (System.currentTimeMillis() - lastOnline) / 1000;\n}\n",
+        "text": " How long ago the stream was last online. If the stream was never seen as online this session, then a huge number will be returned.",
+        "id": 89
+    },
+    {
+        "code": "public double distance_weighted(PlaPointFloat p_other,double p_horizontal_weight,double p_vertical_weight){\n  double delta_x=v_x - p_other.v_x;\n  double delta_y=v_y - p_other.v_y;\n  delta_x*=p_horizontal_weight;\n  delta_y*=p_vertical_weight;\n  double result=Math.sqrt(delta_x * delta_x + delta_y * delta_y);\n  return result;\n}\n",
+        "text": " Computes the weighted distance to p_other.",
+        "id": 90
+    },
+    {
+        "code": "public NameSpace swap(NameSpace newTop){\n  NameSpace oldTop=(NameSpace)(stack.elementAt(0));\n  stack.setElementAt(newTop,0);\n  return oldTop;\n}\n",
+        "text": " Swap in the value as the new top of the stack and return the old value.",
+        "id": 91
+    },
+    {
+        "code": "public static List<String> classesPath() throws FileNotFoundException, LoadingFileException {\n  List<File> files=getJavaFiles();\n  List<String> paths=new ArrayList<String>();\n  for (  File file : files)   paths.add(file.getPath());\n  return paths;\n}\n",
+        "text": " Returns a list with the paths of all java classes.",
+        "id": 92
+    },
+    {
+        "code": "public static Number sub(Number a,Number b){\n  if (isFloatingPoint(a) || isFloatingPoint(b)) {\n    return a.doubleValue() - b.doubleValue();\n  }\n else {\n    return a.longValue() - b.longValue();\n  }\n}\n",
+        "text": " Returns the value of subtracting the first from the second number.",
+        "id": 93
+    },
+    {
+        "code": "public static Stream<String> wordsOf(String text){\n  requireNonNull(text);\n  return WORDS.splitAsStream(text);\n}\n",
+        "text": " Creates and returns a Stream of the words in the given text. Words are a group of characters separated by one or more white spaces.",
+        "id": 94
+    },
+    {
+        "code": "public static DeleteParticipant[] loadDeleteParticipants(RefactoringStatus status,RefactoringProcessor processor,Object element,DeleteArguments arguments,IParticipantDescriptorFilter filter,String[] affectedNatures,SharableParticipants shared){\n  RefactoringParticipant[] participants=fgDeleteInstance.getParticipants(status,processor,element,arguments,filter,affectedNatures,shared);\n  DeleteParticipant[] result=new DeleteParticipant[participants.length];\n  System.arraycopy(participants,0,result,0,participants.length);\n  return result;\n}\n",
+        "text": " Loads the delete participants for the given element.",
+        "id": 95
+    },
+    {
+        "code": "public PutResult(String successCount,String failCount,List<String> errorMessages){\n  _successCount=successCount;\n  _failCount=failCount;\n  _errorMessages=new ArrayList<>();\n  if (errorMessages != null) {\n    _errorMessages.addAll(errorMessages);\n  }\n}\n",
+        "text": " Creates a new PutResult object.",
+        "id": 96
+    },
+    {
+        "code": "@Override public int hashCode(){\n  int myPosition=position;\n  int hash=0;\n  while (myPosition < limit) {\n    hash=hash + get(myPosition++);\n  }\n  return hash;\n}\n",
+        "text": " Calculates this buffer's hash code from the remaining chars. The position, limit, capacity and mark don't affect the hash code.",
+        "id": 97
+    },
+    {
+        "code": "public void print(CharSequence text) throws IOException {\n  int size=text.length();\n  int pos=0;\n  for (int i=0; i < size; i++) {\n    if (text.charAt(i) == '\\n') {\n      write(text.subSequence(pos,size),i - pos + 1);\n      pos=i + 1;\n      atStartOfLine=true;\n    }\n  }\n  write(text.subSequence(pos,size),size - pos);\n}\n",
+        "text": " Print text to the output stream.",
+        "id": 98
+    },
+    {
+        "code": "public void closeRunningApp(String deviceID,String app_package) throws InterruptedException, IOException {\n  cmd.runCommand(\"adb -s \" + deviceID + \" shell am force-stop \"+ app_package);\n}\n",
+        "text": " This method will close the running app",
+        "id": 99
+    },
+    {
+        "code": "@AndroidOnly(\"The RI doesn't throw the IllegalStateException.\") public void test_unwrap_05(){\n  String host=\"new host\";\n  int port=8080;\n  ByteBuffer[] bbA={ByteBuffer.allocate(100),ByteBuffer.allocate(10),ByteBuffer.allocate(100)};\n  ByteBuffer bb=ByteBuffer.allocate(10);\n  SSLEngine sse=getEngine(host,port);\n  try {\n    sse.unwrap(bb,bbA,0,bbA.length);\n    fail(\"IllegalStateException wasn't thrown\");\n  }\n catch (  IllegalStateException iobe) {\n  }\ncatch (  Exception e) {\n    fail(e + \" was thrown instead of IllegalStateException\");\n  }\n}\n",
+        "text": " javax.net.ssl.SSLEngine#unwrap(ByteBuffer src, ByteBuffer[] dsts, int offset, int length) Exception case: IllegalStateException should be thrown.",
+        "id": 100
+    }
+]

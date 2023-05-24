@@ -1,0 +1,502 @@
+[
+    {
+        "id": 0,
+        "code": "def get_svc_avail_path():\n return AVAIL_SVR_DIRS",
+        "text": "return list of paths that may contain available services ."
+    },
+    {
+        "id": 1,
+        "code": "def first(value):\n try:\n  return value[0]\n except IndexError:\n  return u''",
+        "text": "returns the first item in a list ."
+    },
+    {
+        "id": 2,
+        "code": "def setup_platform(hass, config, add_devices_callback, discovery_info=None):\n import RFXtrx as rfxtrxmod\n switches = rfxtrx.get_devices_from_config(config, RfxtrxSwitch)\n add_devices_callback(switches)\n def switch_update(event):\n  'Callback for sensor updates from the RFXtrx gateway.'\n  if ((not isinstance(event.device, rfxtrxmod.LightingDevice)) or event.device.known_to_be_dimmable or event.device.known_to_be_rollershutter):\n   return\n  new_device = rfxtrx.get_new_device(event, config, RfxtrxSwitch)\n  if new_device:\n   add_devices_callback([new_device])\n  rfxtrx.apply_received_command(event)\n if (switch_update not in rfxtrx.RECEIVED_EVT_SUBSCRIBERS):\n  rfxtrx.RECEIVED_EVT_SUBSCRIBERS.append(switch_update)",
+        "text": "setup the rfxtrx platform ."
+    },
+    {
+        "id": 3,
+        "code": "def _save_and_remove_module(name, orig_modules):\n if (name not in sys.modules):\n  __import__(name)\n  del sys.modules[name]\n for modname in list(sys.modules):\n  if ((modname == name) or modname.startswith((name + '.'))):\n   orig_modules[modname] = sys.modules[modname]\n   del sys.modules[modname]",
+        "text": "helper function to save and remove a module from sys ."
+    },
+    {
+        "id": 4,
+        "code": "def get_minions():\n conn = _get_conn(ret=None)\n cur = conn.cursor()\n sql = 'SELECT DISTINCT id FROM salt_returns'\n cur.execute(sql)\n data = cur.fetchall()\n ret = []\n for minion in data:\n  ret.append(minion[0])\n _close_conn(conn)\n return ret",
+        "text": "return a list of minions ."
+    },
+    {
+        "id": 5,
+        "code": "def url2ip(url):\n iport = urlsplit(url)[1].split(':')\n if (len(iport) > 1):\n  return (gethostbyname(iport[0]), iport[1])\n return gethostbyname(iport[0])",
+        "text": "works like turning url ."
+    },
+    {
+        "id": 6,
+        "code": "def _is_suggestion_handled(thread_id, exploration_id):\n thread = feedback_models.FeedbackThreadModel.get_by_exp_and_thread_id(exploration_id, thread_id)\n return (thread.status in [feedback_models.STATUS_CHOICES_FIXED, feedback_models.STATUS_CHOICES_IGNORED])",
+        "text": "checks if the current suggestion has already been accepted/rejected ."
+    },
+    {
+        "id": 7,
+        "code": "def gf_factor_sqf(f, p, K, method=None):\n (lc, f) = gf_monic(f, p, K)\n if (gf_degree(f) < 1):\n  return (lc, [])\n method = (method or query('GF_FACTOR_METHOD'))\n if (method is not None):\n  factors = _factor_methods[method](f, p, K)\n else:\n  factors = gf_zassenhaus(f, p, K)\n return (lc, factors)",
+        "text": "factor a square-free polynomial f in gf(p)[x] ."
+    },
+    {
+        "id": 8,
+        "code": "def all(iterable):\n for element in iterable:\n  if (not element):\n   return False\n return True",
+        "text": "from url ."
+    },
+    {
+        "id": 9,
+        "code": "def draw_nx(G, pos, **kwds):\n draw(G, pos, **kwds)",
+        "text": "for backward compatibility; use draw or draw_networkx ."
+    },
+    {
+        "id": 10,
+        "code": "def random_bucket_name(prefix='awscli-s3integ-', num_random=10):\n return (prefix + random_chars(num_random))",
+        "text": "generate a random s3 bucket name ."
+    },
+    {
+        "id": 11,
+        "code": "def _proxy_process(proxyname, test):\n changes_old = []\n changes_new = []\n if (not _is_proxy_running(proxyname)):\n  if (not test):\n   __salt__['cmd.run_all']('salt-proxy --proxyid={0} -l info -d'.format(salt.ext.six.moves.shlex_quote(proxyname)), timeout=5)\n   changes_new.append('Salt Proxy: Started proxy process for {0}'.format(proxyname))\n  else:\n   changes_new.append('Salt Proxy: process {0} will be started'.format(proxyname))\n else:\n  changes_old.append('Salt Proxy: already running for {0}'.format(proxyname))\n return (True, changes_new, changes_old)",
+        "text": "check and execute proxy process ."
+    },
+    {
+        "id": 12,
+        "code": "def _retrieve_device_config():\n return __salt__['snmp.config']()",
+        "text": "retrieves the snmp config from the device ."
+    },
+    {
+        "id": 13,
+        "code": "def normalize_formset_dict(formset, attr_list):\n assert isinstance(formset, BaseSimpleFormSet)\n res = []\n for form in formset.forms:\n  res.append(normalize_form_dict(form, attr_list))\n return res",
+        "text": "normalize_formset_dict -> a list of dictionary of ."
+    },
+    {
+        "id": 14,
+        "code": "def parse_strtime(timestr, fmt=PERFECT_TIME_FORMAT):\n return datetime.datetime.strptime(timestr, fmt)",
+        "text": "turn a formatted time back into a datetime ."
+    },
+    {
+        "id": 15,
+        "code": "def load_extra_data(backend, details, response, uid, user, social_user=None, *args, **kwargs):\n social_user = (social_user or UserSocialAuth.get_social_auth(backend.name, uid, user))\n if social_user:\n  extra_data = backend.extra_data(user, uid, response, details)\n  if (kwargs.get('original_email') and ('email' not in extra_data)):\n   extra_data['email'] = kwargs.get('original_email')\n  if (extra_data and (social_user.extra_data != extra_data)):\n   if social_user.extra_data:\n    social_user.extra_data.update(extra_data)\n   else:\n    social_user.extra_data = extra_data\n   social_user.save()\n  return {'social_user': social_user}",
+        "text": "load extra data from provider and store it on current usersocialauth extra_data field ."
+    },
+    {
+        "id": 16,
+        "code": "def upgrade(migrate_engine):\n meta = MetaData()\n meta.bind = migrate_engine\n volume_type_projects = Table('volume_type_projects', meta, autoload=True)\n if (migrate_engine.name == 'postgresql'):\n  sql = ('ALTER TABLE volume_type_projects ALTER COLUMN deleted ' + 'TYPE INTEGER USING deleted::integer')\n  migrate_engine.execute(sql)\n else:\n  volume_type_projects.c.deleted.alter(Integer)",
+        "text": "deleted col of volume_type_projects converted ."
+    },
+    {
+        "id": 17,
+        "code": "def _tree_to_bitstrs(tree):\n clades_bitstrs = {}\n term_names = [term.name for term in tree.find_clades(terminal=True)]\n for clade in tree.find_clades(terminal=False):\n  bitstr = _clade_to_bitstr(clade, term_names)\n  clades_bitstrs[clade] = bitstr\n return clades_bitstrs",
+        "text": "create a dict of a trees clades to corresponding bitstrings ."
+    },
+    {
+        "id": 18,
+        "code": "def __virtual__():\n if __opts__['master_tops'].get('ext_nodes'):\n  return True\n return False",
+        "text": "only run if properly configured ."
+    },
+    {
+        "id": 19,
+        "code": "def _gitPresent():\n try:\n  gitvers = subprocess.check_output('git --version'.split(), stderr=subprocess.PIPE)\n except (CalledProcessError, OSError):\n  gitvers = ''\n return bool(gitvers.startswith('git version'))",
+        "text": "check for git on command-line ."
+    },
+    {
+        "id": 20,
+        "code": "@control_command(args=[(u'task_name', text_t), (u'rate_limit', text_t)], signature=u'<task_name> <rate_limit (e.g., 5/s | 5/m | 5/h)>')\ndef rate_limit(state, task_name, rate_limit, **kwargs):\n try:\n  rate(rate_limit)\n except ValueError as exc:\n  return nok(u'Invalid rate limit string: {0!r}'.format(exc))\n try:\n  state.app.tasks[task_name].rate_limit = rate_limit\n except KeyError:\n  logger.error(u'Rate limit attempt for unknown task %s', task_name, exc_info=True)\n  return nok(u'unknown task')\n state.consumer.reset_rate_limits()\n if (not rate_limit):\n  logger.info(u'Rate limits disabled for tasks of type %s', task_name)\n  return ok(u'rate limit disabled successfully')\n logger.info(u'New rate limit for tasks of type %s: %s.', task_name, rate_limit)\n return ok(u'new rate limit set successfully')",
+        "text": "tell worker(s) to modify the rate limit for a task by type ."
+    },
+    {
+        "id": 21,
+        "code": "def get_image(isbn, image_filename):\n print (((('get_image(' + isbn) + ',') + isbn) + ')')\n response = urllib2.urlopen(book_url)\n html = response.read()\n re_image_url = 'https://img\\\\d\\\\.doubanio\\\\.com/lpic/s\\\\d*\\\\.jpg'\n image_url = re.search(re_image_url, html).group()\n with open(image_filename, 'w') as ft:\n  response = urllib2.urlopen(image_url)\n  image = response.read()\n  ft.write(image)",
+        "text": ":type en_isbn: str :rtype: str ."
+    },
+    {
+        "id": 22,
+        "code": "def test_sort():\n model = _create_model([[('B', '', '', 1), ('C', '', '', 2), ('A', '', '', 0)]])\n filter_model = sortfilter.CompletionFilterModel(model)\n filter_model.sort(0, Qt.AscendingOrder)\n actual = _extract_model_data(filter_model)\n assert (actual == [[('A', '', ''), ('B', '', ''), ('C', '', '')]])\n filter_model.sort(0, Qt.DescendingOrder)\n actual = _extract_model_data(filter_model)\n assert (actual == [[('C', '', ''), ('B', '', ''), ('A', '', '')]])",
+        "text": "ensure that a sort argument passed to sort overrides dumb_sort ."
+    },
+    {
+        "id": 23,
+        "code": "@depends(HAS_PYVMOMI)\ndef get_ntp_config(host, username, password, protocol=None, port=None, host_names=None):\n service_instance = salt.utils.vmware.get_service_instance(host=host, username=username, password=password, protocol=protocol, port=port)\n host_names = _check_hosts(service_instance, host, host_names)\n ret = {}\n for host_name in host_names:\n  host_ref = _get_host_ref(service_instance, host, host_name=host_name)\n  ntp_config = host_ref.configManager.dateTimeSystem.dateTimeInfo.ntpConfig.server\n  ret.update({host_name: ntp_config})\n return ret",
+        "text": "get the ntp configuration information for a given host or list of host_names ."
+    },
+    {
+        "id": 24,
+        "code": "def get_environ_proxies(url):\n if should_bypass_proxies(url):\n  return {}\n else:\n  return getproxies()",
+        "text": "return a dict of environment proxies ."
+    },
+    {
+        "id": 25,
+        "code": "def tsql_query(query, **kwargs):\n try:\n  cur = _get_connection(**kwargs).cursor()\n  cur.execute(query)\n  return loads(_MssqlEncoder().encode({'resultset': cur.fetchall()}))['resultset']\n except Exception as e:\n  return (('Could not run the query',), (str(e),))",
+        "text": "run a sql query and return query result as list of tuples ."
+    },
+    {
+        "id": 26,
+        "code": "@retry_on_failure\ndef test_inet_pton():\n if (not is_cli):\n  return\n socket.inet_pton(socket.AF_INET, '127.0.0.1')\n AssertError(socket.error, socket.inet_pton, socket.AF_INET, 'garbage dkfjdkfjdkfj')",
+        "text": "tests socket ."
+    },
+    {
+        "id": 27,
+        "code": "def TrimmedMean(t, p=0.01):\n t = Trim(t, p)\n return Mean(t)",
+        "text": "computes the trimmed mean of a sequence of numbers ."
+    },
+    {
+        "id": 28,
+        "code": "def getPointsFromSegmentTable(segmentTable):\n points = []\n segmentTableKeys = segmentTable.keys()\n segmentTableKeys.sort()\n for segmentTableKey in segmentTableKeys:\n  for segment in segmentTable[segmentTableKey]:\n   for endpoint in segment:\n    points.append(endpoint.point)\n return points",
+        "text": "get the points from the segment table ."
+    },
+    {
+        "id": 29,
+        "code": "def _mathdefault(s):\n if rcParams[u'_internal.classic_mode']:\n  return (u'\\\\mathdefault{%s}' % s)\n else:\n  return (u'{%s}' % s)",
+        "text": "for backward compatibility ."
+    },
+    {
+        "id": 30,
+        "code": "def index():\n s3_redirect_default(URL(f='alert'))",
+        "text": "modules home page ."
+    },
+    {
+        "id": 31,
+        "code": "def get_linode_id_from_name(name):\n nodes = _query('linode', 'list')['DATA']\n linode_id = ''\n for node in nodes:\n  if (name == node['LABEL']):\n   linode_id = node['LINODEID']\n   return linode_id\n if (not linode_id):\n  raise SaltCloudNotFound('The specified name, {0}, could not be found.'.format(name))",
+        "text": "returns the linode id for a vm from the provided name ."
+    },
+    {
+        "id": 32,
+        "code": "def qt5_qml_data(directory):\n qmldir = qt5_qml_dir()\n return (os.path.join(qmldir, directory), 'qml')",
+        "text": "return qml library directory formatted for data ."
+    },
+    {
+        "id": 33,
+        "code": "def addBeginXMLTag(attributeDictionary, className, depth, output, text=''):\n depthStart = (' DCTB ' * depth)\n output.write(('%s<%s%s>%s ' % (depthStart, className, getAttributeDictionaryString(attributeDictionary), text)))",
+        "text": "add the begin xml tag ."
+    },
+    {
+        "id": 34,
+        "code": "def S_white_simple(x):\n if (x.ndim == 1):\n  x = x[:, None]\n return np.dot(x.T, x)",
+        "text": "inner covariance matrix for white heteroscedastistity sandwich parameters x : ndarray  or  data ."
+    },
+    {
+        "id": 35,
+        "code": "def test_cons_list():\n entry = tokenize('(a . [])')[0]\n assert (entry == HyList([HySymbol('a')]))\n assert (type(entry) == HyList)\n entry = tokenize('(a . ())')[0]\n assert (entry == HyExpression([HySymbol('a')]))\n assert (type(entry) == HyExpression)\n entry = tokenize('(a b . {})')[0]\n assert (entry == HyDict([HySymbol('a'), HySymbol('b')]))\n assert (type(entry) == HyDict)",
+        "text": "check that cons of something and a list gets tokenized as a list ."
+    },
+    {
+        "id": 36,
+        "code": "def _disconnect_session(session):\n session['client'].auth.logout(session['key'])",
+        "text": "disconnect api connection ."
+    },
+    {
+        "id": 37,
+        "code": "def _build_match_rule(action, target):\n match_rule = policy.RuleCheck('rule', action)\n (resource, is_write) = get_resource_and_action(action)\n if is_write:\n  res_map = attributes.RESOURCE_ATTRIBUTE_MAP\n  if (resource in res_map):\n   for attribute_name in res_map[resource]:\n    if _is_attribute_explicitly_set(attribute_name, res_map[resource], target):\n     attribute = res_map[resource][attribute_name]\n     if (('enforce_policy' in attribute) and is_write):\n      attr_rule = policy.RuleCheck('rule', ('%s:%s' % (action, attribute_name)))\n      match_rule = policy.AndCheck([match_rule, attr_rule])\n return match_rule",
+        "text": "create the rule to match for a given action ."
+    },
+    {
+        "id": 38,
+        "code": "def token_list_to_text(tokenlist):\n ZeroWidthEscape = Token.ZeroWidthEscape\n return u''.join((item[1] for item in tokenlist if (item[0] != ZeroWidthEscape)))",
+        "text": "concatenate all the text parts again ."
+    },
+    {
+        "id": 39,
+        "code": "def cxUniform(ind1, ind2, indpb):\n size = min(len(ind1), len(ind2))\n for i in xrange(size):\n  if (random.random() < indpb):\n   (ind1[i], ind2[i]) = (ind2[i], ind1[i])\n return (ind1, ind2)",
+        "text": "executes a uniform crossover that modify in place the two :term:sequence individuals ."
+    },
+    {
+        "id": 40,
+        "code": "def test_possible_string_format_functions():\n t = QTable([([1, 2] * u.m)])\n t['col0'].info.format = '%.3f'\n assert (t.pformat() == [' col0', '  m  ', '-----', '1.000', '2.000'])\n t['col0'].info.format = 'hi {:.3f}'\n assert (t.pformat() == ['  col0  ', '   m    ', '--------', 'hi 1.000', 'hi 2.000'])\n t['col0'].info.format = '.4f'\n assert (t.pformat() == [' col0 ', '  m   ', '------', '1.0000', '2.0000'])",
+        "text": "the quantityinfo info class for quantity implements a possible_string_format_functions() method that overrides the standard pprint ."
+    },
+    {
+        "id": 41,
+        "code": "def get_subclasses(c):\n return (c.__subclasses__() + sum(map(get_subclasses, c.__subclasses__()), []))",
+        "text": "get all subclasses of a given class ."
+    },
+    {
+        "id": 42,
+        "code": "def getCarving(fileName=''):\n carving = SVGCarving()\n carving.parseSVG(fileName, archive.getFileText(fileName))\n return carving",
+        "text": "get the triangle mesh for the gts file ."
+    },
+    {
+        "id": 43,
+        "code": "def update_index(force=False):\n manager = MANAGER\n if force:\n  with quiet():\n   run_as_root(('%(manager)s clean' % locals()))\n  run_as_root(('%(manager)s -f update' % locals()))\n else:\n  run_as_root(('%(manager)s update' % locals()))",
+        "text": "update pkgin package definitions ."
+    },
+    {
+        "id": 44,
+        "code": "def function_noArgs():\n return",
+        "text": "a function which accepts no arguments at all ."
+    },
+    {
+        "id": 45,
+        "code": "def _strip_rst_role(type_str):\n match = REST_ROLE_PATTERN.match(type_str)\n if match:\n  return match.group(1)\n else:\n  return type_str",
+        "text": "strip off the part looks like a rest role in type_str ."
+    },
+    {
+        "id": 46,
+        "code": "def fromstring(html, guess_charset=True, parser=None):\n if (not isinstance(html, _strings)):\n  raise TypeError('string required')\n doc = document_fromstring(html, parser=parser, guess_charset=guess_charset)\n start = html[:50].lstrip().lower()\n if (start.startswith('<html') or start.startswith('<!doctype')):\n  return doc\n head = _find_tag(doc, 'head')\n if len(head):\n  return doc\n body = _find_tag(doc, 'body')\n if ((len(body) == 1) and ((not body.text) or (not body.text.strip())) and ((not body[(-1)].tail) or (not body[(-1)].tail.strip()))):\n  return body[0]\n if _contains_block_level_tag(body):\n  body.tag = 'div'\n else:\n  body.tag = 'span'\n return body",
+        "text": "parse the html ."
+    },
+    {
+        "id": 47,
+        "code": "def get_vcs_root(path):\n previous_path = path\n while (get_vcs_info(path) is None):\n  path = abspardir(path)\n  if (path == previous_path):\n   return\n  else:\n   previous_path = path\n return osp.abspath(path)",
+        "text": "return vcs root directory path return none if path is not within a supported vcs repository ."
+    },
+    {
+        "id": 48,
+        "code": "def _get_objects(obj_type):\n lst_objs = FakeRetrieveResult()\n for key in _db_content[obj_type]:\n  lst_objs.add_object(_db_content[obj_type][key])\n return lst_objs",
+        "text": "get objects of the type ."
+    },
+    {
+        "id": 49,
+        "code": "@decorator.decorator\ndef outplace(f, clip, *a, **k):\n newclip = clip.copy()\n f(newclip, *a, **k)\n return newclip",
+        "text": "applies f(clip ."
+    },
+    {
+        "id": 50,
+        "code": "def escape(inp):\n def conv(obj):\n  'Convert obj.'\n  if isinstance(obj, list):\n   rv = as_unicode((('[' + ','.join((conv(o) for o in obj))) + ']'))\n  elif isinstance(obj, dict):\n   rv = as_unicode((('{' + ','.join([('%s:%s' % (conv(key), conv(value))) for (key, value) in obj.iteritems()])) + '}'))\n  else:\n   rv = (as_unicode('\"%s\"') % as_unicode(obj).replace('\"', '\\\\\"'))\n  return rv\n return conv(inp)",
+        "text": "creates a vim-friendly string from a group of dicts ."
+    },
+    {
+        "id": 51,
+        "code": "def _cache(bank, key, fun, **kwargs):\n items = cache.fetch(bank, key)\n if (items is None):\n  items = {}\n  try:\n   item_list = fun(**kwargs)\n  except CloudError as exc:\n   log.warning('There was a cloud error calling {0} with kwargs {1}: {2}'.format(fun, kwargs, exc))\n  for item in item_list:\n   items[item.name] = object_to_dict(item)\n  cache.store(bank, key, items)\n return items",
+        "text": "cache an azure arm object ."
+    },
+    {
+        "id": 52,
+        "code": "def p_inclusive_or_expression_2(t):\n pass",
+        "text": "inclusive_or_expression : inclusive_or_expression or exclusive_or_expression ."
+    },
+    {
+        "id": 53,
+        "code": "def main():\n parser = argparse.ArgumentParser(description='Ansible dynamic inventory')\n parser.add_argument('--list', help='Ansible inventory of all of the groups', action='store_true', dest='list_inventory')\n parser.add_argument('--host', help='Ansible inventory of a particular host', action='store', dest='ansible_host', type=str)\n cli_args = parser.parse_args()\n list_inventory = cli_args.list_inventory\n ansible_host = cli_args.ansible_host\n if list_inventory:\n  output_list_inventory(ANSIBLE_INV)\n if ansible_host:\n  find_host(ansible_host, HOST_VARS)",
+        "text": "ansible dynamic inventory experimentation output dynamic inventory as json from statically defined data structures ."
+    },
+    {
+        "id": 54,
+        "code": "def write_corpus_as_vw(corpus, filename):\n LOG.debug(u'Writing corpus to: %s', filename)\n corpus_size = 0\n with utils.smart_open(filename, u'wb') as corpus_file:\n  for line in corpus_to_vw(corpus):\n   corpus_file.write((line.encode(u'utf-8') + ' '))\n   corpus_size += 1\n return corpus_size",
+        "text": "iterate over corpus ."
+    },
+    {
+        "id": 55,
+        "code": "@utils.arg('--tenant', metavar='<tenant-id>', required=True, help=_('ID of tenant to delete quota for.'))\n@utils.arg('--user', metavar='<user-id>', help=_('ID of user to delete quota for.'))\ndef do_quota_delete(cs, args):\n cs.quotas.delete(args.tenant, user_id=args.user)",
+        "text": "delete quota for a tenant/user so their quota will revert back to default ."
+    },
+    {
+        "id": 56,
+        "code": "def ValidateActionsInTarget(target, target_dict, build_file):\n target_name = target_dict.get('target_name')\n actions = target_dict.get('actions', [])\n for action in actions:\n  action_name = action.get('action_name')\n  if (not action_name):\n   raise GypError((\"Anonymous action in target %s.  An action must have an 'action_name' field.\" % target_name))\n  inputs = action.get('inputs', None)\n  if (inputs is None):\n   raise GypError(('Action in target %s has no inputs.' % target_name))\n  action_command = action.get('action')\n  if (action_command and (not action_command[0])):\n   raise GypError(('Empty action as command in target %s.' % target_name))",
+        "text": "validates the inputs to the actions in a target ."
+    },
+    {
+        "id": 57,
+        "code": "def min_entries(x, axis=None):\n x = Expression.cast_to_const(x)\n return (- max_entries((- x), axis=axis))",
+        "text": ":math:min_{i ."
+    },
+    {
+        "id": 58,
+        "code": "def link(src, dst):\n if (os.name == u'nt'):\n  if (ctypes.windll.kernel32.CreateHardLinkW(dst, src, 0) == 0):\n   raise ctypes.WinError()\n else:\n  os.link(src, dst)",
+        "text": "create a file link from source to destination ."
+    },
+    {
+        "id": 59,
+        "code": "def test_rus_fit():\n rus = RandomUnderSampler(random_state=RND_SEED)\n rus.fit(X, Y)\n assert_equal(rus.min_c_, 0)\n assert_equal(rus.maj_c_, 1)\n assert_equal(rus.stats_c_[0], 3)\n assert_equal(rus.stats_c_[1], 7)",
+        "text": "test the fitting method ."
+    },
+    {
+        "id": 60,
+        "code": "def MissingMetricsCriteria():\n return ([], [])",
+        "text": "this criteria is alerted if metrics data is completely missing at a timestamp ."
+    },
+    {
+        "id": 61,
+        "code": "def _download_restricted(url, filename, age):\n params = {u'age_limit': age, u'skip_download': True, u'writeinfojson': True, u'outtmpl': u'%(id)s.%(ext)s'}\n ydl = YoutubeDL(params)\n ydl.add_default_info_extractors()\n json_filename = (os.path.splitext(filename)[0] + u'.info.json')\n try_rm(json_filename)\n ydl.download([url])\n res = os.path.exists(json_filename)\n try_rm(json_filename)\n return res",
+        "text": "returns true if the file has been downloaded ."
+    },
+    {
+        "id": 62,
+        "code": "def test_nearmiss_wrong_version():\n version = 1000\n nm3 = NearMiss(version=version, random_state=RND_SEED)\n assert_raises(ValueError, nm3.fit_sample, X, Y)",
+        "text": "test either if an error is raised when the version is unknown ."
+    },
+    {
+        "id": 63,
+        "code": "@dispatch(Expr, object)\ndef pre_compute(leaf, data, scope=None, **kwargs):\n return data",
+        "text": "transform data prior to calling compute ."
+    },
+    {
+        "id": 64,
+        "code": "def recursive_walk(path, wildcard):\n files = []\n directories = [path]\n while (len(directories) > 0):\n  directory = directories.pop()\n  for name in os.listdir(directory):\n   fullpath = os.path.join(directory, name)\n   if os.path.isfile(fullpath):\n    if re.search(wildcard, name):\n     files.append(fullpath)\n   elif os.path.isdir(fullpath):\n    directories.append(fullpath)\n return files",
+        "text": "recursively go through a directory ."
+    },
+    {
+        "id": 65,
+        "code": "def set_special(user, special, cmd):\n lst = list_tab(user)\n for cron in lst['special']:\n  if ((special == cron['spec']) and (cmd == cron['cmd'])):\n   return 'present'\n spec = {'spec': special, 'cmd': cmd}\n lst['special'].append(spec)\n comdat = _write_cron_lines(user, _render_tab(lst))\n if comdat['retcode']:\n  return comdat['stderr']\n return 'new'",
+        "text": "set up a special command in the crontab ."
+    },
+    {
+        "id": 66,
+        "code": "def file_hash(load, fnd):\n gitfs = salt.utils.gitfs.GitFS(__opts__)\n gitfs.init_remotes(__opts__['gitfs_remotes'], PER_REMOTE_OVERRIDES, PER_REMOTE_ONLY)\n return gitfs.file_hash(load, fnd)",
+        "text": "return a file hash ."
+    },
+    {
+        "id": 67,
+        "code": "def p_statement_assign(t):\n names[t[1]] = t[3]",
+        "text": "statement : name equals expression ."
+    },
+    {
+        "id": 68,
+        "code": "def standard_b64encode(s):\n return b64encode(s)",
+        "text": "encode a string using the standard base64 alphabet ."
+    },
+    {
+        "id": 69,
+        "code": "def _is_task_visible(context, task):\n if context.is_admin:\n  return True\n if (task['owner'] is None):\n  return True\n if (context.owner is not None):\n  if (context.owner == task['owner']):\n   return True\n return False",
+        "text": "return true if the task is visible in this context ."
+    },
+    {
+        "id": 70,
+        "code": "def write(fd, data):\n return WriteEvent(fd, data)",
+        "text": "event: write to a file descriptor asynchronously ."
+    },
+    {
+        "id": 71,
+        "code": "def norm(x):\n x = np.asarray(x)\n (nrm2,) = linalg.get_blas_funcs(['nrm2'], [x])\n return nrm2(x)",
+        "text": "compute the euclidean or frobenius norm of x ."
+    },
+    {
+        "id": 72,
+        "code": "def test_hsl_to_rgb_part_12():\n assert (hsl_to_rgb(300, 20, 50) == (153, 102, 153))\n assert (hsl_to_rgb(300, 60, 50) == (204, 51, 204))\n assert (hsl_to_rgb(300, 100, 50) == (255, 0, 255))",
+        "text": "test hsl to rgb color function ."
+    },
+    {
+        "id": 73,
+        "code": "def getTopPaths(paths):\n top = (-9.876543219876543e+17)\n for path in paths:\n  for point in path:\n   top = max(top, point.z)\n return top",
+        "text": "get the top of the paths ."
+    },
+    {
+        "id": 74,
+        "code": "def sync_beacons(saltenv=None, refresh=True):\n ret = _sync('beacons', saltenv)\n if refresh:\n  refresh_beacons()\n return ret",
+        "text": "."
+    },
+    {
+        "id": 75,
+        "code": "def ShutdownThreads(data_source_thread, thread_pool):\n logger.info('An error occurred. Shutting down...')\n data_source_thread.exit_flag = True\n thread_pool.Shutdown()\n data_source_thread.join(timeout=3.0)\n if data_source_thread.isAlive():\n  logger.warn('%s hung while trying to exit', data_source_thread.GetFriendlyName())",
+        "text": "shuts down the worker and data source threads ."
+    },
+    {
+        "id": 76,
+        "code": "def test_attribute_access():\n can_compile(u'(. foo bar baz)')\n can_compile(u'(. foo [bar] baz)')\n can_compile(u'(. foo bar [baz] [0] quux [frob])')\n can_compile(u'(. foo bar [(+ 1 2 3 4)] quux [frob])')\n cant_compile(u'(. foo bar :baz [0] quux [frob])')\n cant_compile(u'(. foo bar baz (0) quux [frob])')\n cant_compile(u'(. foo bar baz [0] quux {frob})')",
+        "text": "ensure attribute access compiles correctly ."
+    },
+    {
+        "id": 77,
+        "code": "def withClass(classname, namespace=''):\n classattr = (('%s:class' % namespace) if namespace else 'class')\n return withAttribute(**{classattr: classname})",
+        "text": "simplified version of c{l{withattribute}} when matching on a div class - made difficult because c{class} is a reserved word in python ."
+    },
+    {
+        "id": 78,
+        "code": "@validate('form')\ndef valid_att_in_label(arch):\n return (not arch.xpath('//label[not(@for or @string)]'))",
+        "text": "label nodes must have a @for or a @string ."
+    },
+    {
+        "id": 79,
+        "code": "def shutdown(delay=0, message=None):\n cmd = ['shutdown', '-i', '5', '-g', delay, '-y']\n if message:\n  cmd.append(message)\n ret = __salt__['cmd.run'](cmd, python_shell=False)\n return ret",
+        "text": "shutdown a running system delay : int optional wait time in seconds before the system will be shutdown ."
+    },
+    {
+        "id": 80,
+        "code": "def burt_table(data, variables):\n values = [(var, value) for var in variables for value in var.values]\n table = numpy.zeros((len(values), len(values)))\n counts = [len(attr.values) for attr in variables]\n offsets = numpy.r_[(0, numpy.cumsum(counts))]\n for i in range(len(variables)):\n  for j in range((i + 1)):\n   var1 = variables[i]\n   var2 = variables[j]\n   cm = contingency.get_contingency(data, var2, var1)\n   (start1, end1) = (offsets[i], (offsets[i] + counts[i]))\n   (start2, end2) = (offsets[j], (offsets[j] + counts[j]))\n   table[start1:end1, start2:end2] += cm\n   if (i != j):\n    table[start2:end2, start1:end1] += cm.T\n return (values, table)",
+        "text": "construct a burt table  for variables ."
+    },
+    {
+        "id": 81,
+        "code": "def pickle_dump(data, filename):\n fh = open(filename, 'w')\n try:\n  pickle.dump(data, fh)\n finally:\n  fh.close()",
+        "text": "equivalent to pickle ."
+    },
+    {
+        "id": 82,
+        "code": "def _generate_output_dataframe(data_subset, defaults):\n cols = set(data_subset.columns)\n desired_cols = set(defaults)\n data_subset.drop((cols - desired_cols), axis=1, inplace=True)\n for col in (desired_cols - cols):\n  data_subset[col] = defaults[col]\n return data_subset",
+        "text": "generates an output dataframe from the given subset of user-provided data ."
+    },
+    {
+        "id": 83,
+        "code": "def openshift_builder(registry, xml_parent, data):\n osb = XML.SubElement(xml_parent, 'com.openshift.jenkins.plugins.pipeline.OpenShiftBuilder')\n mapping = [('api-url', 'apiURL', 'https://openshift.default.svc.cluster.local'), ('bld-cfg', 'bldCfg', 'frontend'), ('namespace', 'namespace', 'test'), ('auth-token', 'authToken', ''), ('commit-ID', 'commitID', ''), ('verbose', 'verbose', False), ('build-name', 'buildName', ''), ('show-build-logs', 'showBuildLogs', False)]\n convert_mapping_to_xml(osb, data, mapping, fail_required=True)",
+        "text": "yaml: openshift-builder perform builds in openshift for the job ."
+    },
+    {
+        "id": 84,
+        "code": "def setup_sidebar_items(data):\n if data.allow_sidebar_items:\n  frappe.db.sql(u'update `tabPortal Menu Item` set enabled=0')\n  frappe.db.sql(u'update `tabPortal Menu Item` set enabled=1  DCTB  DCTB  DCTB where route in ({0})'.format(u', '.join([u'\"{0}\"'.format(d) for d in data.allow_sidebar_items])))\n if data.remove_sidebar_items:\n  frappe.db.sql(u'update `tabPortal Menu Item` set enabled=1')\n  frappe.db.sql(u'update `tabPortal Menu Item` set enabled=0  DCTB  DCTB  DCTB where route in ({0})'.format(u', '.join([u'\"{0}\"'.format(d) for d in data.remove_sidebar_items])))",
+        "text": "enable / disable sidebar items ."
+    },
+    {
+        "id": 85,
+        "code": "def get_cache_key(user_or_username, size, prefix):\n if isinstance(user_or_username, get_user_model()):\n  user_or_username = get_username(user_or_username)\n key = (six.u('%s_%s_%s') % (prefix, user_or_username, size))\n return (six.u('%s_%s') % (slugify(key)[:100], hashlib.md5(force_bytes(key)).hexdigest()))",
+        "text": "returns a cache key consisten of a username and image size ."
+    },
+    {
+        "id": 86,
+        "code": "def root_mean_square_error(y_real, y_pred):\n (y_real, y_pred) = check_arrays(y_real, y_pred)\n return np.sqrt((np.sum(((y_pred - y_real) ** 2)) / y_real.shape[0]))",
+        "text": "it computes the root mean squared difference  between predicted and actual ratings for users ."
+    },
+    {
+        "id": 87,
+        "code": "def start(name):\n cmd = ['service', name, 'start']\n return (not __salt__['cmd.retcode'](cmd, python_shell=False))",
+        "text": "start the specified service cli example: ."
+    },
+    {
+        "id": 88,
+        "code": "@register.inclusion_tag('addons/review_list_box.html')\n@jinja2.contextfunction\ndef review_list_box(context, addon, reviews):\n c = dict(context.items())\n c.update(addon=addon, reviews=reviews)\n return c",
+        "text": "details page: show a box with three add-on reviews ."
+    },
+    {
+        "id": 89,
+        "code": "def get_if_addr6(iff):\n for x in in6_getifaddr():\n  if ((x[2] == iff) and (x[1] == IPV6_ADDR_GLOBAL)):\n   return x[0]\n return None",
+        "text": "returns the main global unicast address associated with provided interface ."
+    },
+    {
+        "id": 90,
+        "code": "def test_boolean():\n assert hug.types.boolean('1')\n assert hug.types.boolean('T')\n assert (not hug.types.boolean(''))\n assert hug.types.boolean('False')\n assert (not hug.types.boolean(False))",
+        "text": "test to ensure the custom boolean type correctly supports boolean conversion ."
+    },
+    {
+        "id": 91,
+        "code": "def split_line_endings(data):\n lines = NEWLINE_RE.split(data)\n if (not lines[(-1)]):\n  lines = lines[:(-1)]\n return lines",
+        "text": "splits a string into lines while preserving all non-crlf characters ."
+    },
+    {
+        "id": 92,
+        "code": "def jet():\n rc('image', cmap='jet')\n im = gci()\n if (im is not None):\n  im.set_cmap(cm.jet)\n draw_if_interactive()",
+        "text": "set the default colormap to jet and apply to current image if any ."
+    },
+    {
+        "id": 93,
+        "code": "def description_setter(registry, xml_parent, data):\n descriptionsetter = XML.SubElement(xml_parent, 'hudson.plugins.descriptionsetter.DescriptionSetterPublisher')\n XML.SubElement(descriptionsetter, 'regexp').text = data.get('regexp', '')\n XML.SubElement(descriptionsetter, 'regexpForFailed').text = data.get('regexp-for-failed', '')\n if ('description' in data):\n  XML.SubElement(descriptionsetter, 'description').text = data['description']\n if ('description-for-failed' in data):\n  XML.SubElement(descriptionsetter, 'descriptionForFailed').text = data['description-for-failed']\n for_matrix = str(data.get('set-for-matrix', False)).lower()\n XML.SubElement(descriptionsetter, 'setForMatrix').text = for_matrix",
+        "text": "yaml: description-setter this plugin sets the description for each build ."
+    },
+    {
+        "id": 94,
+        "code": "def get_jid(jid):\n options = _get_options(ret=None)\n _response = _request('GET', (((options['url'] + options['db']) + '/') + jid))\n if ('error' in _response):\n  log.error('Unable to get JID \"{0}\" : \"{1}\"'.format(jid, _response))\n  return {}\n return {_response['id']: _response}",
+        "text": "get the document with a given jid ."
+    },
+    {
+        "id": 95,
+        "code": "def setBasicLoggerDEBUG():\n setLoggerClass(BasicLogger)\n BasicLogger.setLevel(DEBUG)",
+        "text": "use basic logger ."
+    },
+    {
+        "id": 96,
+        "code": "def check_version(name, url, version, expected):\n if (expected is None):\n  return False\n if (LooseVersion(version) < LooseVersion(expected)):\n  print(u'*** {0} <{1}> is too old! ***'.format(name, url))\n  print(u'Installed version {0}, required {1}'.format(version, expected))\n  return True\n return False",
+        "text": "check for single module version ."
+    },
+    {
+        "id": 97,
+        "code": "def clear():\n BACKEND.clear()",
+        "text": "clears out any microsite configuration from the current request/thread ."
+    },
+    {
+        "id": 98,
+        "code": "def _getParameter(name, index, args, kwargs, default=None):\n param = kwargs.get(name)\n if (len(args) > index):\n  if param:\n   raise ValueError((\"Parameter '%s' is specified twice\" % name))\n  param = args[index]\n return (param or default)",
+        "text": "find a parameter in tuple and dictionary arguments a function receives ."
+    },
+    {
+        "id": 99,
+        "code": "def includeme(config):\n settings = config.get_settings()\n config.include('pyramid_tm')\n session_factory = get_session_factory(get_engine(settings))\n config.registry['dbsession_factory'] = session_factory\n config.add_request_method((lambda r: get_tm_session(session_factory, r.tm)), 'dbsession', reify=True)",
+        "text": "initialize the model for a pyramid app ."
+    }
+]

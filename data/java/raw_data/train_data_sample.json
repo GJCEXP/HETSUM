@@ -1,0 +1,502 @@
+[
+    {
+        "code": "@Override public int runCommand(boolean mergeErrorIntoOutput,String... commands) throws IOException, InterruptedException {\n  return runCommand(mergeErrorIntoOutput,new ArrayList<String>(Arrays.asList(commands)));\n}\n",
+        "text": " Runs a command on the command line synchronously.",
+        "id": 1
+    },
+    {
+        "code": "private int findPLV(int M_PriceList_ID){\n  Timestamp priceDate=null;\n  String dateStr=Env.getContext(Env.getCtx(),p_WindowNo,\"DateOrdered\");\n  if (dateStr != null && dateStr.length() > 0)   priceDate=Env.getContextAsDate(Env.getCtx(),p_WindowNo,\"DateOrdered\");\n else {\n    dateStr=Env.getContext(Env.getCtx(),p_WindowNo,\"DateInvoiced\");\n    if (dateStr != null && dateStr.length() > 0)     priceDate=Env.getContextAsDate(Env.getCtx(),p_WindowNo,\"DateInvoiced\");\n  }\n  if (priceDate == null)   priceDate=new Timestamp(System.currentTimeMillis());\n  log.config(\"M_PriceList_ID=\" + M_PriceList_ID + \" - \"+ priceDate);\n  int retValue=0;\n  String sql=\"SELECT plv.M_PriceList_Version_ID, plv.ValidFrom \" + \"FROM M_PriceList pl, M_PriceList_Version plv \" + \"WHERE pl.M_PriceList_ID=plv.M_PriceList_ID\"+ \" AND plv.IsActive='Y'\"+ \" AND pl.M_PriceList_ID=? \"+ \"ORDER BY plv.ValidFrom DESC\";\n  try {\n    PreparedStatement pstmt=DB.prepareStatement(sql,null);\n    pstmt.setInt(1,M_PriceList_ID);\n    ResultSet rs=pstmt.executeQuery();\n    while (rs.next() && retValue == 0) {\n      Timestamp plDate=rs.getTimestamp(2);\n      if (!priceDate.before(plDate))       retValue=rs.getInt(1);\n    }\n    rs.close();\n    pstmt.close();\n  }\n catch (  SQLException e) {\n    log.log(Level.SEVERE,sql,e);\n  }\n  Env.setContext(Env.getCtx(),p_WindowNo,\"M_PriceList_Version_ID\",retValue);\n  return retValue;\n}\n",
+        "text": " Find Price List Version and update context",
+        "id": 2
+    },
+    {
+        "code": "public static boolean memoryIsLow(){\n  return availableMemory() * 100 < RUNTIME.totalMemory() * 5;\n}\n",
+        "text": " Returns true if less then 5% of the available memory is free.",
+        "id": 3
+    },
+    {
+        "code": "public String describeAttributes(){\n  StringBuilder sb=new StringBuilder();\n  sb.append(\"[\");\n  boolean first=true;\n  for (  Object key : attributes.keySet()) {\n    if (first) {\n      first=false;\n    }\n else {\n      sb.append(\", \");\n    }\n    sb.append(key);\n    sb.append(\"==\");\n    sb.append(attributes.get(key));\n  }\n  sb.append(\"]\");\n  return sb.toString();\n}\n",
+        "text": " Returns a string representation of the object's current attributes",
+        "id": 4
+    },
+    {
+        "code": "public static byte[] nextBytes(byte[] buffer){\n  sRandom.nextBytes(buffer);\n  return buffer;\n}\n",
+        "text": " Fill the given buffer with random bytes.",
+        "id": 5
+    },
+    {
+        "code": "public void removeAllFromDamaged(final Collection<Unit> damagedUnits){\n  for (  final Unit u : damagedUnits) {\n    while (m_damaged.contains(u)) {\n      m_damaged.remove(u);\n    }\n  }\n}\n",
+        "text": " Can have multiple of the same unit, to show multiple hits to that unit.",
+        "id": 6
+    },
+    {
+        "code": "private IJavaElement[] computeChildren(ArrayList namesWithoutExtension){\n  int size=namesWithoutExtension.size();\n  if (size == 0)   return NO_ELEMENTS;\n  IJavaElement[] children=new IJavaElement[size];\n  for (int i=0; i < size; i++) {\n    String nameWithoutExtension=(String)namesWithoutExtension.get(i);\n    children[i]=new ClassFile(this,manager,nameWithoutExtension);\n  }\n  return children;\n}\n",
+        "text": " Compute the children of this package fragment. Children of jar package fragments can only be IClassFile (representing .class files).",
+        "id": 7
+    },
+    {
+        "code": "public Object[] toArray(){\n  Object[] result=new Object[size];\n  System.arraycopy(elementData,0,result,0,size);\n  return result;\n}\n",
+        "text": " Returns an array containing all of the elements in this list in the correct order.",
+        "id": 8
+    },
+    {
+        "code": "private static int lastIndexOf(Object o,Object[] elements,int index){\n  if (o == null) {\n    for (int i=index; i >= 0; i--)     if (elements[i] == null)     return i;\n  }\n else {\n    for (int i=index; i >= 0; i--)     if (o.equals(elements[i]))     return i;\n  }\n  return -1;\n}\n",
+        "text": " static version of lastIndexOf.",
+        "id": 9
+    },
+    {
+        "code": "public static byte[] generateMac(byte[] byteCipherText,SecretKey integrityKey) throws NoSuchAlgorithmException, InvalidKeyException {\n  Mac sha256_HMAC=Mac.getInstance(HMAC_ALGORITHM);\n  sha256_HMAC.init(integrityKey);\n  return sha256_HMAC.doFinal(byteCipherText);\n}\n",
+        "text": " Generate the mac based on HMAC_ALGORITHM",
+        "id": 10
+    },
+    {
+        "code": "@Override protected void onDeleteComplete(int token,Object cookie,int result){\n  if (token == mDeleteToken) {\nsynchronized (sDeletingThreadsLock) {\n      sDeletingThreads=false;\n      if (DELETEDEBUG) {\n        Log.v(TAG,\"Conversation onDeleteComplete sDeletingThreads: \" + sDeletingThreads);\n      }\n      sDeletingThreadsLock.notifyAll();\n    }\n    UnreadBadgeService.update(mContext);\n    NotificationManager.create(mContext);\n  }\n}\n",
+        "text": " Always call this super method from your overridden onDeleteComplete function.",
+        "id": 11
+    },
+    {
+        "code": "public static double log10(double val){\n  if (val > 0.0)   return Math.log10(val);\n  return HUGE_NEGATIVE;\n}\n",
+        "text": " Adjusted log10 to handle values less or equal to zero.   The logarithm does not result in real numbers for arguments less or equal to zero, but the plot should still somehow handle such values without crashing. So anything &le; 0 is mapped to a 'really big negative' number just for the sake of plotting.   Note that LogarithmicAxis.java in the JFreeChart has another interesting idea for modifying the log10 of values &le; 10, resulting in a smooth plot for the full real argument range. Unfortunately that clobbers values like 1e-7, which might be a very real vacuum reading.",
+        "id": 12
+    },
+    {
+        "code": "private static ILaunchConfiguration createNewLaunchConfiguration(IProject project) throws CoreException, OperationCanceledException {\n  String initialName=calculateLaunchConfigName(project);\n  ILaunchConfiguration launchConfig=GwtSuperDevModeCodeServerLaunchUtil.createLaunchConfig(initialName,project);\n  return launchConfig;\n}\n",
+        "text": " Create a new launch configuration.",
+        "id": 13
+    },
+    {
+        "code": "protected long parseDate() throws IOException {\n  if (_utcCalendar == null)   _utcCalendar=Calendar.getInstance(TimeZone.getTimeZone(\"UTC\"));\n  return parseDate(_utcCalendar);\n}\n",
+        "text": " Parses a date value from the stream.",
+        "id": 14
+    },
+    {
+        "code": "@Override public Request<List<BuilderStatus>> builds(ProjectReference projectReference){\n  List<DummyBuilderStatus> current=currentBuilderStatuses.get(projectReference.name());\n  List<BuilderStatus> update=new ArrayList<>();\n  if (current != null) {\n    for (    DummyBuilderStatus dummyBuilderStatus : current) {\n      update.add(dummyBuilderStatus);\n    }\n  }\n  return new DummyRequest<>(update);\n}\n",
+        "text": " Gets the project builds for the given project",
+        "id": 15
+    },
+    {
+        "code": "public String lookahead(){\n  if (buf != null) {\n    return new String(buf,bufPos,buf.length - bufPos);\n  }\n else {\n    return text.substring(pos.getIndex());\n  }\n}\n",
+        "text": " Returns a string containing the remainder of the characters to be returned by this iterator, without any option processing.  If the iterator is currently within a variable expansion, this will only extend to the end of the variable expansion.  This method is provided so that iterators may interoperate with string-based APIs.  The typical sequence of calls is to call skipIgnored(), then call lookahead(), then parse the string returned by lookahead(), then call jumpahead() to resynchronize the iterator.",
+        "id": 16
+    },
+    {
+        "code": "protected int entityIndex(Entity entity){\n  return Arrays.binarySearch(entities,entity);\n}\n",
+        "text": " Check whether the device contains the specified entity",
+        "id": 17
+    },
+    {
+        "code": "public void runTest() throws Throwable {\n  Document doc;\n  NodeList elementList;\n  Node nameNode;\n  CharacterData child;\n  doc=(Document)load(\"staff\",true);\n  elementList=doc.getElementsByTagName(\"address\");\n  nameNode=elementList.item(0);\n  child=(CharacterData)nameNode.getFirstChild();\n{\n    boolean success=false;\n    try {\n      child.insertData(-5,\"ABC\");\n    }\n catch (    DOMException ex) {\n      success=(ex.code == DOMException.INDEX_SIZE_ERR);\n    }\n    assertTrue(\"throws_INDEX_SIZE_ERR\",success);\n  }\n}\n",
+        "text": " Runs the test case.",
+        "id": 18
+    },
+    {
+        "code": "public void testObsoleteDstZoneName() throws Exception {\n  SimpleDateFormat format=new SimpleDateFormat(\"yyyy-MM-dd'T'HH:mm zzzz\",Locale.US);\n  Date normal=format.parse(\"1970-01-01T00:00 EET\");\n  Date dst=format.parse(\"1970-01-01T00:00 EEST\");\n  assertEquals(60 * 60 * 1000,normal.getTime() - dst.getTime());\n}\n",
+        "text": " Africa/Cairo standard time is EET and daylight time is EEST. They no longer use their DST zone but we should continue to parse it properly.",
+        "id": 19
+    },
+    {
+        "code": "public abstract boolean isLoggable(Level level);\n",
+        "text": " logger like API to be used by RMI implementation ",
+        "id": 20
+    },
+    {
+        "code": "public String replaceTokens(String queryString,String replacement,String... nonReplacementTokenPrefixes){\n  Matcher matcher=tokenPattern.matcher(queryString);\n  StringBuffer buf=new StringBuffer();\n  while (matcher.find()) {\n    String origToken=matcher.group(1);\n    if (origToken != null) {\n      matcher.appendReplacement(buf,\"\");\n      if (tokenStartsWithPrefix(origToken,nonReplacementTokenPrefixes)) {\n        buf.append(\"${\" + origToken + \"}\");\n      }\n else {\n        buf.append(replacement);\n      }\n    }\n  }\n  matcher.appendTail(buf);\n  return buf.toString();\n}\n",
+        "text": " Replaces a query string with tokens of format ${token-name} with the specified replacement string for all tokens.",
+        "id": 21
+    },
+    {
+        "code": "public boolean isPlural(){\n  return typeString.contains(SUFFIX_PLURAL);\n}\n",
+        "text": " Determine if the Expression is in plural form.",
+        "id": 22
+    },
+    {
+        "code": "public void insert(ForceItem item){\n  try {\n    insert(item,root,xMin,yMin,xMax,yMax);\n  }\n catch (  StackOverflowError e) {\n    e.printStackTrace();\n  }\n}\n",
+        "text": " Inserts an item into the quadtree.",
+        "id": 23
+    },
+    {
+        "code": "private void handleHovering(int x,int y){\n  handleCellHover(x,y);\n  if (columnHeadersVisible) {\n    handleHoverOnColumnHeader(x,y);\n  }\n}\n",
+        "text": " Handles the assignment of the correct values to the hover* field variables that let the painting code now what to paint as hovered.",
+        "id": 24
+    },
+    {
+        "code": "public static void drawCircledText(Graphics2D g,Font font,String text,int x,int y){\n  Graphics2D g2=(Graphics2D)g.create();\n  g2.setFont(font);\n  FontMetrics fm=g2.getFontMetrics();\n  int padding=4;\n  Rectangle2D bounds=fm.getStringBounds(text,g2);\n  double th=bounds.getHeight();\n  double tw=bounds.getWidth();\n  float radius=(float)(Math.max(th,tw) / 2f + padding);\n  Ellipse2D.Float circle=new Ellipse2D.Float(x - radius,y - radius,2 * radius + 1,2 * radius + 1);\n  g2.fill(circle);\n  g2.setColor(Color.BLACK);\n  g2.drawString(text,(int)(x - tw / 2),(y + fm.getAscent() / 2));\n  if (DEBUG) {\n    g2.setColor(Color.RED);\n    g2.drawLine(x - 50,y,x + 50,y);\n    g2.drawLine(x,y - 50,x,y + 50);\n  }\n  g2.dispose();\n}\n",
+        "text": " Utility function to draw a circle text centered at coordinates (x, y)",
+        "id": 25
+    },
+    {
+        "code": "private void registerEnd(final String prefixSingular,final String prefixPlural,final String endString){\n  prefixEndList.add(new PrefixEntry(endString,prefixSingular,prefixPlural));\n  registerPrefix(prefixSingular,prefixPlural);\n}\n",
+        "text": " Define the singular and plural prefix strings for an item name to be matched at the end, for example bottle of ... potion.",
+        "id": 26
+    },
+    {
+        "code": "public void addObserver(Observer observer){\n  observers.add(observer);\n}\n",
+        "text": " Sets the observer, which will observe the iterator returned in the next call to iterator() method. Future calls to iterator() won't be observed, unless an observer is set again.",
+        "id": 27
+    },
+    {
+        "code": "public String toString(){\n  return \"[PKCS #10 certificate request:\\n\" + subjectPublicKeyInfo.toString() + \" subject: <\"+ subject+ \">\"+ \"\\n\"+ \" attributes: \"+ attributeSet.toString()+ \"\\n]\";\n}\n",
+        "text": " Provides a short description of this request.",
+        "id": 28
+    },
+    {
+        "code": "public SystemPropertiesTableModel(){\n  columnNames=new String[2];\n  columnNames[0]=res.getString(\"SystemPropertiesTableModel.NameColumn\");\n  columnNames[1]=res.getString(\"SystemPropertiesTableModel.ValueColumn\");\n  data=new Object[0][0];\n}\n",
+        "text": " Construct a new SystemPropertiesTableModel.",
+        "id": 29
+    },
+    {
+        "code": "public boolean cancelJob(long id,boolean isPersistent){\n  JobHolder holder;\nsynchronized (getNextJobLock) {\n    if (jobConsumerExecutor.isRunning(id,isPersistent))     return false;\n    if (isPersistent) {\nsynchronized (persistentJobQueue) {\n        holder=persistentJobQueue.findJobById(id);\n        if (holder == null)         return false;\n        persistentJobQueue.remove(holder);\n      }\n    }\n else {\nsynchronized (nonPersistentJobQueue) {\n        holder=nonPersistentJobQueue.findJobById(id);\n        if (holder == null)         return false;\n        nonPersistentJobQueue.remove(holder);\n      }\n    }\n  }\n  BaseJob baseJob=holder.getBaseJob();\n  if (dependencyInjector != null) {\n    dependencyInjector.inject(baseJob);\n  }\n  baseJob.onCancel();\n  return true;\n}\n",
+        "text": " Cancels job which is waiting to be run.",
+        "id": 30
+    },
+    {
+        "code": "public static boolean isSimpleMatchPattern(String str){\n  return str.indexOf('*') != -1;\n}\n",
+        "text": " Is the str a simple match pattern.",
+        "id": 31
+    },
+    {
+        "code": "public String readScript(String fname) throws IOException {\n  StringBuilder sb=new StringBuilder();\n  BufferedReader in=null;\n  try {\n    if (fname.startsWith(\"hdfs:\") || fname.startsWith(\"gpfs:\")) {\n      FileSystem fs=FileSystem.get(ConfigurationManager.getCachedJobConf());\n      Path scriptPath=new Path(fname);\n      in=new BufferedReader(new InputStreamReader(fs.open(scriptPath)));\n    }\n else {\n      in=new BufferedReader(new FileReader(fname));\n    }\n    String tmp=null;\n    while ((tmp=in.readLine()) != null) {\n      sb.append(tmp);\n      sb.append(\"\\n\");\n    }\n  }\n  finally {\n    IOUtilFunctions.closeSilently(in);\n  }\n  return sb.toString();\n}\n",
+        "text": " Read a DML or PyDML file as a string.",
+        "id": 32
+    },
+    {
+        "code": "public static BinaryFieldAccessor create(Field field,int id){\n  BinaryWriteMode mode=BinaryUtils.mode(field.getType());\nswitch (mode) {\ncase P_BYTE:\n    return new BytePrimitiveAccessor(field,id);\ncase P_BOOLEAN:\n  return new BooleanPrimitiveAccessor(field,id);\ncase P_SHORT:\nreturn new ShortPrimitiveAccessor(field,id);\ncase P_CHAR:\nreturn new CharPrimitiveAccessor(field,id);\ncase P_INT:\nreturn new IntPrimitiveAccessor(field,id);\ncase P_LONG:\nreturn new LongPrimitiveAccessor(field,id);\ncase P_FLOAT:\nreturn new FloatPrimitiveAccessor(field,id);\ncase P_DOUBLE:\nreturn new DoublePrimitiveAccessor(field,id);\ncase BYTE:\ncase BOOLEAN:\ncase SHORT:\ncase CHAR:\ncase INT:\ncase LONG:\ncase FLOAT:\ncase DOUBLE:\ncase DECIMAL:\ncase STRING:\ncase UUID:\ncase DATE:\ncase TIMESTAMP:\ncase BYTE_ARR:\ncase SHORT_ARR:\ncase INT_ARR:\ncase LONG_ARR:\ncase FLOAT_ARR:\ncase DOUBLE_ARR:\ncase CHAR_ARR:\ncase BOOLEAN_ARR:\ncase DECIMAL_ARR:\ncase STRING_ARR:\ncase UUID_ARR:\ncase DATE_ARR:\ncase TIMESTAMP_ARR:\ncase ENUM_ARR:\ncase OBJECT_ARR:\ncase BINARY_OBJ:\ncase BINARY:\nreturn new DefaultFinalClassAccessor(field,id,mode,false);\ndefault :\nreturn new DefaultFinalClassAccessor(field,id,mode,!U.isFinal(field.getType()));\n}\n}\n",
+        "text": " Create accessor for the field.",
+        "id": 33
+    },
+    {
+        "code": "private String result(HttpURLConnection conn,boolean input) throws IOException {\n  StringBuffer sb=new StringBuffer();\n  if (input) {\n    InputStream is=conn.getInputStream();\n    BufferedReader reader=new BufferedReader(new InputStreamReader(is,\"utf-8\"));\n    String line=null;\n    while ((line=reader.readLine()) != null) {\n      sb.append(line);\n    }\n    reader.close();\n    is.close();\n  }\n  Map<String,Object> result=new HashMap<String,Object>();\n  result.put(\"code\",conn.getResponseCode());\n  result.put(\"mesg\",conn.getResponseMessage());\n  result.put(\"type\",conn.getContentType());\n  result.put(\"data\",sb);\n  String output=String.valueOf(conn.getResponseCode());\n  setOutputResponseCode(output);\n  Gson gson=new Gson();\n  String json=gson.toJson(result);\n  logger.info(\"json = \" + json);\n  return json;\n}\n",
+        "text": " Report the result in JSON way",
+        "id": 34
+    },
+    {
+        "code": "public boolean isBannedMethod(String sig){\n  return banned_methods.contains(sig);\n}\n",
+        "text": " Used by the specification create to check if a method is legal to put in the  spec.  Must check the method, and all superclass definitions of the method.",
+        "id": 35
+    },
+    {
+        "code": "private SendReturn send(int messageType,String message) throws InterruptedException, ExtractorException {\n  String length=String.format(\"%d\",message.length());\n  String lenlen=String.format(\"%d\",length.length());\n  String type=String.format(\"%04d\",messageType);\n  String outMessage;\n  int bytesRead;\n  String replyString;\n  int ll;\n  int t;\n  SendReturn retval=new SendReturn();\n  boolean lengthKnown;\n  int totalBytesRead=0;\n  int totalBytesNeeded;\n  boolean longMessageSupport=true;\n  if (!connected)   throw new OracleExtractException(\"Not connected\");\n  outMessage=lenlen + length + type+ message;\n  if (logger.isDebugEnabled()) {\n    logger.debug(\"Sending Message type \" + messageType);\n    logger.debug(\" - Message is -> \" + message);\n    logger.debug(\" - Therefore sending -> \" + outMessage);\n  }\n  out.println(outMessage);\n  if (messageType != Const.MessageControl) {\n    try {\n      if (longMessageSupport) {\n        lengthKnown=false;\n        totalBytesRead=0;\n        totalBytesNeeded=0;\n        for (; ; ) {\n          bytesRead=in.read(replyBuffer,totalBytesRead,replyBufferSize - totalBytesRead - 1);\n          if (bytesRead == -1) {\n            throw new OracleExtractException(\"End of Stream\");\n          }\n          totalBytesRead+=bytesRead;\n          logger.debug(\"Read = \" + bytesRead + \" total = \"+ totalBytesRead+ \" needed = \"+ totalBytesNeeded);\n          if (lengthKnown) {\n            if (totalBytesRead >= totalBytesNeeded)             break;\n else             continue;\n          }\n          if (totalBytesRead <= 9)           continue;\n          lengthKnown=true;\n          replyBuffer[totalBytesRead]='\\0';\n          lengthBuffer[0]=replyBuffer[0];\n          lengthBuffer[1]=replyBuffer[1];\n          lengthBuffer[2]=replyBuffer[2];\n          lengthBuffer[3]=replyBuffer[3];\n          lengthBuffer[4]=replyBuffer[4];\n          lengthBuffer[5]=replyBuffer[5];\n          lengthBuffer[6]=replyBuffer[6];\n          lengthBuffer[7]=replyBuffer[7];\n          lengthBuffer[8]=replyBuffer[8];\n          lengthBuffer[9]=replyBuffer[9];\n          lengthBuffer[10]='\\0';\n          String lengthString=new String(lengthBuffer);\n          totalBytesNeeded=Integer.parseInt(lengthString.substring(1,9),16);\n          totalBytesNeeded+=13;\n          if (totalBytesNeeded + 1 > replyBufferSize)           increaseReplyBuffer(totalBytesNeeded + 1);\n          if (totalBytesRead >= totalBytesNeeded)           break;\n        }\n      }\n else {\n        totalBytesRead=in.read(replyBuffer);\n      }\n    }\n catch (    ClosedByInterruptException e) {\n      throw new InterruptedException(\"Oracle extractor was interrupted\");\n    }\ncatch (    IOException e) {\n      throw new OracleExtractException(\"End of Stream\");\n    }\n    if (totalBytesRead == -1) {\n      throw new OracleExtractException(\"End of Stream\");\n    }\n    replyBuffer[totalBytesRead]='\\0';\n    replyString=new String(replyBuffer,0,totalBytesRead);\n    if (logger.isDebugEnabled()) {\n      logger.debug(\"Reply = \\\"\" + replyString + \"\\\"\\n\");\n    }\n    ll=Integer.parseInt(replyString.substring(0,1));\n    t=Integer.parseInt(replyString.substring(1 + ll,1 + ll + 4));\n    replyString=replyString.substring(1 + ll + 4);\n    if (logger.isDebugEnabled()) {\n      logger.debug(\"Reply = \\\"\" + replyString + \"\\\"\\n\");\n    }\n    retval.type=t;\n    retval.reply=replyString;\n  }\n else {\n    retval.type=Const.ReplyReserved;\n    retval.reply=new String(\"Empty\");\n  }\n  if (retval.type == Const.ReplyError)   throw new OracleExtractException(\"Error from C Oracle Extractor\");\n  msgCount++;\n  return retval;\n}\n",
+        "text": " Send message to dslisten - typically an extract next change message",
+        "id": 36
+    },
+    {
+        "code": "private float interpolate(){\n  long currTime=System.currentTimeMillis();\n  float elapsed=(currTime - startTime) / ZOOM_TIME;\n  elapsed=Math.min(1f,elapsed);\n  return interpolator.getInterpolation(elapsed);\n}\n",
+        "text": " Use interpolator to get t",
+        "id": 37
+    },
+    {
+        "code": "private void attachPlot(SVGPlot newplot){\n  this.plot=newplot;\n  if (newplot == null) {\n    super.setSVGDocument(null);\n    return;\n  }\n  newplot.synchronizeWith(synchronizer);\n  super.setSVGDocument(newplot.getDocument());\n  super.setDisableInteractions(newplot.getDisableInteractions());\n}\n",
+        "text": " Attach to a new plot, and display.",
+        "id": 38
+    },
+    {
+        "code": "void seek(int position) throws IOException {\n  mDexFile.seek(position);\n}\n",
+        "text": " Seeks the DEX file to the specified absolute position.",
+        "id": 39
+    },
+    {
+        "code": "public E take() throws InterruptedException {\n  final ReentrantLock lock=this.lock;\n  lock.lockInterruptibly();\n  try {\n    for (; ; ) {\n      E first=q.peek();\n      if (first == null)       available.await();\n else {\n        long delay=first.getDelay(NANOSECONDS);\n        if (delay <= 0)         return q.poll();\n        first=null;\n        if (leader != null)         available.await();\n else {\n          Thread thisThread=Thread.currentThread();\n          leader=thisThread;\n          try {\n            available.awaitNanos(delay);\n          }\n  finally {\n            if (leader == thisThread)             leader=null;\n          }\n        }\n      }\n    }\n  }\n  finally {\n    if (leader == null && q.peek() != null)     available.signal();\n    lock.unlock();\n  }\n}\n",
+        "text": " Retrieves and removes the head of this queue, waiting if necessary until an element with an expired delay is available on this queue.",
+        "id": 40
+    },
+    {
+        "code": "public void shutdown() throws Exception {\n  try {\n    if (solrClient != null)     solrClient.close();\n    List<Callable<JettySolrRunner>> shutdowns=new ArrayList<>(jettys.size());\n    for (    final JettySolrRunner jetty : jettys) {\n      shutdowns.add(null);\n    }\n    jettys.clear();\n    Collection<Future<JettySolrRunner>> futures=executor.invokeAll(shutdowns);\n    Exception shutdownError=checkForExceptions(\"Error shutting down MiniSolrCloudCluster\",futures);\n    if (shutdownError != null) {\n      throw shutdownError;\n    }\n  }\n  finally {\n    executor.shutdown();\n    executor.awaitTermination(2,TimeUnit.SECONDS);\n    try {\n      if (!externalZkServer) {\n        zkServer.shutdown();\n      }\n    }\n  finally {\n      System.clearProperty(\"zkHost\");\n    }\n  }\n}\n",
+        "text": " Shut down the cluster, including all Solr nodes and ZooKeeper",
+        "id": 41
+    },
+    {
+        "code": "private static Control createRequestControl(final Class clazz,final Class[] paramTypes,final Object[] params){\n  Constructor constructor=ClassUtils.getConstructorIfAvailable(clazz,paramTypes);\n  if (constructor == null) {\n    LdapExceptionUtils.generateErrorException(LdapErrorCodes.ERR_10005_CONTROL_CONTRUCTOR_NOT_FOUND,new String[]{clazz.toString(),StringUtils.arrayToCommaDelimitedString(paramTypes)},LOGGER);\n  }\n  Control result=null;\n  try {\n    result=(Control)constructor.newInstance(params);\n  }\n catch (  Exception e) {\n    LdapExceptionUtils.generateErrorException(LdapErrorCodes.ERR_10006_CONTROL_INSTANCE_FAILED,new String[]{clazz.toString(),StringUtils.arrayToCommaDelimitedString(paramTypes),StringUtils.arrayToCommaDelimitedString(params)},LOGGER,e);\n  }\n  return result;\n}\n",
+        "text": " Permite crear una instancia de la clase pasada como parametro.",
+        "id": 42
+    },
+    {
+        "code": "private static boolean isInCornerTargetZone(float x,float y,float handleX,float handleY,float targetRadius){\n  return Math.abs(x - handleX) <= targetRadius && Math.abs(y - handleY) <= targetRadius;\n}\n",
+        "text": " Determines if the specified coordinate is in the target touch zone for a corner handle.",
+        "id": 43
+    },
+    {
+        "code": "public boolean isNewState(){\n  return fileName.equals(\"\");\n}\n",
+        "text": " Tells whether this session is in a new state or not. A session is in a new state if it was never saved or it was not loaded from an existing session.",
+        "id": 44
+    },
+    {
+        "code": "public boolean offer(E e){\n  final ReentrantLock lock=this.lock;\n  lock.lock();\n  try {\n    q.offer(e);\n    if (q.peek() == e) {\n      leader=null;\n      available.signal();\n    }\n    return true;\n  }\n  finally {\n    lock.unlock();\n  }\n}\n",
+        "text": " Inserts the specified element into this delay queue.",
+        "id": 45
+    },
+    {
+        "code": "public void updateLeagueHistory(){\n  Collections.sort(teamList,new TeamCompPoll());\n  String[] yearTop10=new String[10];\n  Team tt;\n  for (int i=0; i < 10; ++i) {\n    tt=teamList.get(i);\n    yearTop10[i]=tt.abbr + \" (\" + tt.wins+ \"-\"+ tt.losses+ \")\";\n  }\n  leagueHistory.add(yearTop10);\n}\n",
+        "text": " At the end of the year, record the top 10 teams for the League's History.",
+        "id": 46
+    },
+    {
+        "code": "public SuffixFileFilter(String[] suffixes,IOCase caseSensitivity){\n  if (suffixes == null) {\n    throw new IllegalArgumentException(\"The array of suffixes must not be null\");\n  }\n  this.suffixes=new String[suffixes.length];\n  System.arraycopy(suffixes,0,this.suffixes,0,suffixes.length);\n  this.caseSensitivity=caseSensitivity == null ? IOCase.SENSITIVE : caseSensitivity;\n}\n",
+        "text": " Constructs a new Suffix file filter for an array of suffixs specifying case-sensitivity.   The array is not cloned, so could be changed after constructing the instance. This would be inadvisable however.",
+        "id": 47
+    },
+    {
+        "code": "private void updateFont(){\n  String fontName=fontList.getValue();\n  Integer fontSize=FALLBACK_FONT_SIZE;\n  try {\n    fontSize=Integer.parseInt(fontSizeList.getValue());\n  }\n catch (  NumberFormatException ex) {\n  }\n  font=new Font(fontName,Font.PLAIN,fontSize);\n  preview.setFont(font);\n}\n",
+        "text": " Creates a new Font based on the current settings and also updates the preview. The created Font is not only used for the preview, but also to return it when requested from the caller.",
+        "id": 48
+    },
+    {
+        "code": "public static Properties readPropertyFileFromFileSystem(final File propertyFileLocation) throws ConfigurationException {\n  final Properties fileProperties=new Properties();\n  try {\n    final InputStream inputStream=new FileInputStream(propertyFileLocation);\n    fileProperties.load(inputStream);\n    inputStream.close();\n  }\n catch (  IOException e) {\n    throw new ConfigurationException(\"Cannot load the properties file\",e);\n  }\n  return fileProperties;\n}\n",
+        "text": " Reads a property file into a Properties object.",
+        "id": 49
+    },
+    {
+        "code": "public void addTranslator(ClassPool cp,Translator t) throws NotFoundException, CannotCompileException {\n  source=cp;\n  translator=t;\n  t.start(cp);\n}\n",
+        "text": " Adds a translator, which is called whenever a class is loaded.",
+        "id": 50
+    },
+    {
+        "code": "public void test_GetCurve(){\n  assertEquals(\"wrong elliptic curve\",curve,ecps.getCurve());\n}\n",
+        "text": " test for getCurve() method",
+        "id": 51
+    },
+    {
+        "code": "@Override public void close() throws IOException {\n  fInputStream.close();\n}\n",
+        "text": " Close the stream.  Once a stream has been closed, further read(), ready(), mark(), or reset() invocations will throw an IOException. Closing a previously-closed stream, however, has no effect.",
+        "id": 52
+    },
+    {
+        "code": "public static void sleep(){\n  try {\n    Thread.sleep(TestSettings.RESPONSE_WAIT);\n  }\n catch (  InterruptedException e) {\n  }\n}\n",
+        "text": " Current thread sleeps for a predefined amount of time. If it has been interrupted, the method would be finished and no exception is thrown.",
+        "id": 53
+    },
+    {
+        "code": "public void add(URI uri,HttpCookie cookie){\n  if (cookie == null) {\n    throw new NullPointerException(\"cookie is null\");\n  }\n  lock.lock();\n  try {\n    cookieJar.remove(cookie);\n    if (cookie.getMaxAge() != 0) {\n      cookieJar.add(cookie);\n      if (cookie.getDomain() != null) {\n        addIndex(domainIndex,cookie.getDomain(),cookie);\n      }\n      if (uri != null) {\n        addIndex(uriIndex,getEffectiveURI(uri),cookie);\n      }\n    }\n  }\n  finally {\n    lock.unlock();\n  }\n}\n",
+        "text": " Add one cookie into cookie store.",
+        "id": 54
+    },
+    {
+        "code": "public void delete(RandomAccessFile raf,RandomAccessFile tempRaf) throws IOException, CannotWriteException {\n  FlacTag emptyTag=new FlacTag(null,new ArrayList<MetadataBlockDataPicture>());\n  raf.seek(0);\n  tempRaf.seek(0);\n  write(emptyTag,raf,tempRaf);\n}\n",
+        "text": " Delete Tag from file",
+        "id": 55
+    },
+    {
+        "code": "void show(Rectangle bounds){\n  if (!isCreated()) {\n    return;\n  }\n  if (log.isLoggable(PlatformLogger.Level.FINER)) {\n    log.finer(\"showing menu window + \" + getWindow() + \" at \"+ bounds);\n  }\n  XToolkit.awtLock();\n  try {\n    reshape(bounds.x,bounds.y,bounds.width,bounds.height);\n    xSetVisible(true);\n    toFront();\n    selectItem(getFirstSelectableItem(),false);\n  }\n  finally {\n    XToolkit.awtUnlock();\n  }\n}\n",
+        "text": " Init window if it's not inited yet and show it at specified coordinates",
+        "id": 56
+    },
+    {
+        "code": "void downcase(final StringBuffer text,final int leng){\n  for (int i=0; i < leng; i++) {\n    if (Character.isUpperCase(text.charAt(i))) {\n      text.setCharAt(i,Character.toLowerCase(text.charAt(i)));\n    }\n  }\n}\n",
+        "text": " lowercase the characters up to the given length",
+        "id": 57
+    },
+    {
+        "code": "public int indexOfKey(Object key){\n  return key == null ? indexOfNull() : indexOf(key,key.hashCode());\n}\n",
+        "text": " Returns the index of a key in the set.",
+        "id": 58
+    },
+    {
+        "code": "public void releaseExternalResources(){\n  if (!isClosed.get()) {\n    logger.info(\"Releasing all ParallelClient resources... \");\n    ActorConfig.shutDownActorSystemForce();\n    httpClientStore.shutdown();\n    tcpSshPingResourceStore.shutdown();\n    taskManager.cleanWaitTaskQueue();\n    taskManager.cleanInprogressJobMap();\n    isClosed.set(true);\n    logger.info(\"Have released all ParallelClient resources \" + \"(actor system + async+sync http client + task queue)\" + \"\\nNow safe to stop your application.\");\n  }\n else {\n    logger.debug(\"NO OP. ParallelClient resources have already been released.\");\n  }\n}\n",
+        "text": " Releases the external resources that this object depends on. You should not call this method if you still want to use the external resources (e.g. akka system, async http client store, thread pool for SSH/TCP) are in use by other objects.",
+        "id": 59
+    },
+    {
+        "code": "@Override public Enumeration<Option> listOptions(){\n  Vector<Option> newVector=new Vector<Option>(4);\n  newVector.addElement(new Option(\"\\tSpecify the random number seed (default 1)\",\"S\",1,\"-S <num>\"));\n  newVector.addElement(new Option(\"\\tThe maximum class distribution spread.\\n\" + \"\\t0 = no maximum spread, 1 = uniform distribution, 10 = allow at most\\n\" + \"\\ta 10:1 ratio between the classes (default 0)\",\"M\",1,\"-M <num>\"));\n  newVector.addElement(new Option(\"\\tAdjust weights so that total weight per class is maintained.\\n\" + \"\\tIndividual instance weighting is not preserved. (default no\\n\" + \"\\tweights adjustment\",\"W\",0,\"-W\"));\n  newVector.addElement(new Option(\"\\tThe maximum count for any class value (default 0 = unlimited).\\n\",\"X\",0,\"-X <num>\"));\n  return newVector.elements();\n}\n",
+        "text": " Returns an enumeration describing the available options.",
+        "id": 60
+    },
+    {
+        "code": "public BatchedImageRequest(Request<?> request,ImageContainer container){\n  mRequest=request;\n  mContainers.add(container);\n}\n",
+        "text": " Constructs a new BatchedImageRequest object",
+        "id": 61
+    },
+    {
+        "code": "@Override public IScanListIterator<IEntryCacheInfo> establishScan(K startPos,short relation,K endPos,boolean endPosInclusive,boolean ordered){\n  ordered|=FORCE_ORDERED_SCAN;\n  long startTime=_recentExtendedIndexUpdates != null ? System.currentTimeMillis() : 0;\n  IScanListIterator<IEntryCacheInfo> res=ordered ? establishScanOrdered(startPos,relation,endPos,endPosInclusive) : establishScanUnOrdered(startPos,relation,endPos,endPosInclusive);\n  if (_recentExtendedIndexUpdates != null && !_recentExtendedIndexUpdates.isEmpty()) {\n    MultiStoredList<IEntryCacheInfo> msl=new MultiStoredList<IEntryCacheInfo>();\n    msl.add(res);\n    msl.add(_recentExtendedIndexUpdates.iterator(startTime,(ExtendedIndexIterator)res));\n    return msl;\n  }\n else   return res;\n}\n",
+        "text": " establish a scan according to the relation given and startPos : the start-scan object ,  null means scan all values. The relation is from com.j_spaces.client.TemplateMatchCodes: LT, LE, GT, GE (other codes are not relevant) endPos- key up to (or null if no limit in  index) endPosInclusive : is the endPos up to (or down to) and including ? ordered - according to the condition. GT, GE ==> ascending, LT, LE =====> descending. returns an IOrderedIndexScan object which enables scanning the ordered index, Null if no relevant elements to scan",
+        "id": 62
+    },
+    {
+        "code": "public static BytesToNameCanonicalizer createRoot(){\n  long now=System.currentTimeMillis();\n  int seed=(((int)now) + ((int)now >>> 32)) | 1;\n  return createRoot(seed);\n}\n",
+        "text": " Factory method to call to create a symbol table instance with a randomized seed value.",
+        "id": 63
+    },
+    {
+        "code": "public void fillFieldValues(List<SynapseUpdateRule> ruleList){\n  HebbianRule synapseRef=(HebbianRule)ruleList.get(0);\n  if (!NetworkUtils.isConsistent(ruleList,HebbianRule.class,\"getLearningRate\")) {\n    tfLearningRate.setText(SimbrainConstants.NULL_STRING);\n  }\n else {\n    tfLearningRate.setText(Double.toString(synapseRef.getLearningRate()));\n  }\n}\n",
+        "text": " Populate fields with current data.",
+        "id": 64
+    },
+    {
+        "code": "public static int countArgumentPlaceholders(final String messagePattern){\n  if (messagePattern == null) {\n    return 0;\n  }\n  final int delim=messagePattern.indexOf(DELIM_START);\n  if (delim == -1) {\n    return 0;\n  }\n  int result=0;\n  boolean isEscaped=false;\n  for (int i=0; i < messagePattern.length(); i++) {\n    final char curChar=messagePattern.charAt(i);\n    if (curChar == ESCAPE_CHAR) {\n      isEscaped=!isEscaped;\n    }\n else     if (curChar == DELIM_START) {\n      if (!isEscaped && i < messagePattern.length() - 1 && messagePattern.charAt(i + 1) == DELIM_STOP) {\n        result++;\n        i++;\n      }\n      isEscaped=false;\n    }\n else {\n      isEscaped=false;\n    }\n  }\n  return result;\n}\n",
+        "text": " Counts the number of unescaped placeholders in the given messagePattern.",
+        "id": 65
+    },
+    {
+        "code": "protected abstract boolean isEndOfChunk(char currPrefix,String currLabel,char nextPrefix,String nextLabel);\n",
+        "text": " Determines whether the current outcome represents the end of a chunk. Both the current outcome and the following outcome are provided for making this decision.",
+        "id": 66
+    },
+    {
+        "code": "public void clear(){\n  set.clear();\n  fireContentsChanged(this,0,0);\n}\n",
+        "text": " Clears this list model.",
+        "id": 67
+    },
+    {
+        "code": "static String toString(@NotNull final Bytes buffer,long position,long len) throws BufferUnderflowException {\n  final long pos=buffer.readPosition();\n  final long limit=buffer.readLimit();\n  buffer.readPositionRemaining(position,len);\n  try {\n    final StringBuilder builder=new StringBuilder();\n    while (buffer.readRemaining() > 0) {\n      builder.append((char)buffer.readByte());\n    }\n    return builder.toString();\n  }\n  finally {\n    buffer.readLimit(limit);\n    buffer.readPosition(pos);\n  }\n}\n",
+        "text": " The buffer is not modified by this call",
+        "id": 68
+    },
+    {
+        "code": "void collectUnresponsiveMembers(Set s){\n  if (stillWaiting()) {\n    InternalDistributedMember[] memberList=getMembers();\nsynchronized (memberList) {\n      for (int i=0; i < memberList.length; i++) {\n        InternalDistributedMember m=memberList[i];\n        if (m != null) {\n          s.add(m);\n        }\n      }\n    }\n  }\n}\n",
+        "text": " Adds any unresponsive members to s",
+        "id": 69
+    },
+    {
+        "code": "private void initFromAuthHeader(String authHeader){\n  this.authHeader=authHeader;\n  if (authHeader == null)   throw new NullPointerException(\"No authentication header information\");\n  Matcher authMatcher=SCHEME_PATTERN.matcher(authHeader);\n  if (!authMatcher.matches()) {\n    throw new IllegalStateException(\"Unable to parse auth header: \" + authHeader);\n  }\n  scheme=authMatcher.group(1);\n  if (authMatcher.groupCount() > 1) {\n    Matcher paramMatcher=PARAM_PATTERN.matcher(authMatcher.group(2));\n    while (paramMatcher.find()) {\n      String value=paramMatcher.group(2);\n      if (value == null) {\n        value=paramMatcher.group(3);\n      }\n      parameters.put(paramMatcher.group(1),value);\n    }\n  }\n}\n",
+        "text": " Initializes internal state from the contents of a WWW-Authenticate header.",
+        "id": 70
+    },
+    {
+        "code": "public String toString(){\n  String s=\"KeyIdentifier [\\n\";\n  HexDumpEncoder encoder=new HexDumpEncoder();\n  s+=encoder.encodeBuffer(octetString);\n  s+=\"]\\n\";\n  return (s);\n}\n",
+        "text": " Returns a printable representation of the KeyUsage.",
+        "id": 71
+    },
+    {
+        "code": "public static void addStartupListener(StartUpListener s){\n  s_startupListeners.add(s);\n}\n",
+        "text": " Add a listener to be notified when startup is complete",
+        "id": 72
+    },
+    {
+        "code": "public void testWrite2() throws Exception {\n  byte[] data=new byte[]{-127,-100,-50,-10,-1,0,1,10,50,127};\n  TestOutputStream tos=new TestOutputStream();\n  CipherOutputStream cos=new CipherOutputStream(tos,new NullCipher());\n  cos.write(data);\n  cos.flush();\n  byte[] result=tos.toByteArray();\n  if (!Arrays.equals(result,data)) {\n    fail(\"CipherOutputStream wrote incorrect data.\");\n  }\n  try {\n    cos.write(null);\n    fail(\"NullPointerException expected\");\n  }\n catch (  NullPointerException e) {\n  }\n}\n",
+        "text": " write(byte[] b) method testing. Tests that method writes correct values to the underlying output stream.",
+        "id": 73
+    },
+    {
+        "code": "@VisibleForTesting static boolean shouldOpenAfterDownload(DownloadInfo downloadInfo){\n  String type=downloadInfo.getMimeType();\n  return downloadInfo.hasUserGesture() && !isAttachment(downloadInfo.getContentDisposition()) && MIME_TYPES_TO_OPEN.contains(type);\n}\n",
+        "text": " Determines if the download should be immediately opened after downloading.",
+        "id": 74
+    },
+    {
+        "code": "@Transactional public void save(final List<WorkFlowMatrix> actualWorkFlowMatrixDetails,final String[] departments){\n  for (  final String dept : departments) {\n    for (    final WorkFlowMatrix workFlowMatrix : actualWorkFlowMatrixDetails) {\n      final WorkFlowMatrix wfObj=workFlowMatrix.clone();\n      if (dept.equals(DEFAULT)) {\n        wfObj.setDepartment(\"ANY\");\n      }\n else {\n        wfObj.setDepartment(dept);\n      }\n      workflowMatrixRepository.save(wfObj);\n    }\n  }\n}\n",
+        "text": " This method saves the workflow matrix details for every department selected",
+        "id": 75
+    },
+    {
+        "code": "public void write(String file) throws Exception {\n  write(new File(file));\n}\n",
+        "text": " writes the current DOM document into the given file.",
+        "id": 76
+    },
+    {
+        "code": "private static boolean fieldsEqual(Object a,Object b){\n  return a == b || (a != null && a.equals(b));\n}\n",
+        "text": " Checks to see if two objects are equal either as nulls or through their comparator",
+        "id": 77
+    },
+    {
+        "code": "private boolean extraEntity(String outputString,int charToMap){\n  boolean extra=false;\n  if (charToMap < ASCII_MAX) {\nswitch (charToMap) {\ncase '\"':\n      if (!outputString.equals(\"&quot;\"))       extra=true;\n    break;\ncase '&':\n  if (!outputString.equals(\"&amp;\"))   extra=true;\nbreak;\ncase '<':\nif (!outputString.equals(\"&lt;\")) extra=true;\nbreak;\ncase '>':\nif (!outputString.equals(\"&gt;\")) extra=true;\nbreak;\ndefault :\nextra=true;\n}\n}\nreturn extra;\n}\n",
+        "text": " This method returns true if there are some non-standard mappings to entities other than quot, amp, lt, gt, and its only purpose is for performance.",
+        "id": 78
+    },
+    {
+        "code": "public static String quoteIfNeeded(String s,String delim){\n  if (s == null)   return null;\n  if (s.length() == 0)   return \"\\\"\\\"\";\n  for (int i=0; i < s.length(); i++) {\n    char c=s.charAt(i);\n    if (c == '\\\\' || c == '\"' || c == '\\'' || Character.isWhitespace(c) || delim.indexOf(c) >= 0) {\n      StringBuffer b=new StringBuffer(s.length() + 8);\n      quote(b,s);\n      return b.toString();\n    }\n  }\n  return s;\n}\n",
+        "text": " Quote a string. The string is quoted only if quoting is required due to embedded delimiters, quote characters or the empty string.",
+        "id": 79
+    },
+    {
+        "code": "public static void report(){\n  if (License.isDeveloper()) {\n    for (    final Object obj : SPIES) {\n      Diagnostic.developerLog(obj.toString());\n    }\n  }\n}\n",
+        "text": " Generate a report to the log from all the current spies.",
+        "id": 80
+    },
+    {
+        "code": "@Deprecated public void write(byte b[],int off,int len){\n  if (len < 0)   throw new ArrayIndexOutOfBoundsException(len);\n  for (int i=0; i < len; ++i)   write(b[off + i]);\n}\n",
+        "text": " Write a subarray of bytes.  Pass each through write byte method.",
+        "id": 81
+    },
+    {
+        "code": "public void or(Criteria criteria){\n  oredCriteria.add(criteria);\n}\n",
+        "text": " This method was generated by MyBatis Generator. This method corresponds to the database table todolist",
+        "id": 82
+    },
+    {
+        "code": "public final void testNextBytesbyteArray03() throws NoSuchAlgorithmException, NoSuchProviderException {\n  SecureRandom sr1;\n  SecureRandom sr2;\n  byte[] myBytes1;\n  byte[] myBytes2;\n  for (int i=1; i < LENGTH / 2; i+=INCR) {\n    sr1=SecureRandom.getInstance(algorithm,provider);\n    sr2=SecureRandom.getInstance(algorithm,provider);\n    boolean flag=true;\n    myBytes1=new byte[i];\n    myBytes2=new byte[i];\n    sr1.nextBytes(myBytes1);\n    sr2.nextBytes(myBytes2);\n    for (int j=0; j < i; j++) {\n      flag&=myBytes1[j] == myBytes2[j];\n    }\n    sr1.nextBytes(myBytes1);\n    sr2.nextBytes(myBytes2);\n    for (int j=0; j < i; j++) {\n      flag&=myBytes1[j] == myBytes2[j];\n    }\n    if (flag) {\n      fail(\"TESTING RANDOM NUMBER GENERATOR QUALITY: IGNORE THIS FAILURE IF INTERMITTENT :: i=\" + i);\n    }\n  }\n}\n",
+        "text": " test against the void nextBytes(byte[]) method; it checks out that different SecureRandom objects being supplied with seed by themselves return different sequencies of bytes as results of their nextBytes(byte[]) methods",
+        "id": 83
+    },
+    {
+        "code": "public Cursor query(SQLiteDatabase db,String[] projectionIn,String selection,String[] selectionArgs,String groupBy,String having,String sortOrder,String limit){\n  if (mTables == null) {\n    return null;\n  }\n  if (mStrict && selection != null && selection.length() > 0) {\n    String sqlForValidation=buildQuery(projectionIn,\"(\" + selection + \")\",groupBy,having,sortOrder,limit);\n    validateSql(db,sqlForValidation);\n  }\n  String sql=buildQuery(projectionIn,selection,groupBy,having,sortOrder,limit);\n  return db.rawQueryWithFactory(mFactory,sql,selectionArgs,SQLiteDatabase.findEditTable(mTables));\n}\n",
+        "text": " Perform a query by combining all current settings and the information passed into this method.",
+        "id": 84
+    },
+    {
+        "code": "private static String replaceChars(String str){\n  StringBuffer buf=new StringBuffer(str);\n  int length=buf.length();\n  for (int i=0; i < length; i++) {\n    char currentChar=buf.charAt(i);\n    if (currentChar == ' ') {\n      buf.setCharAt(i,'%');\n      buf.insert(i + 1,\"20\");\n      length=length + 2;\n      i=i + 2;\n    }\n else     if (currentChar == '\\\\') {\n      buf.setCharAt(i,'/');\n    }\n  }\n  return buf.toString();\n}\n",
+        "text": " Replace spaces with %20 and backslashes with forward slashes in  the input string to generate a well-formed URI string.",
+        "id": 85
+    },
+    {
+        "code": "public boolean isPaused(){\n  return false;\n}\n",
+        "text": " Whether or not the game is paused.",
+        "id": 86
+    },
+    {
+        "code": "public Builder trustCertificates(KeyStore trustStore) throws GeneralSecurityException {\n  SSLContext sslContext=SslUtils.getTlsSslContext();\n  SslUtils.initSslContext(sslContext,trustStore,SslUtils.getPkixTrustManagerFactory());\n  return setSslSocketFactory(sslContext.getSocketFactory());\n}\n",
+        "text": " Sets the SSL socket factory based on a root certificate trust store.",
+        "id": 87
+    },
+    {
+        "code": "public void rejectReInvite(int code){\n  if (sLogger.isActivated()) {\n    sLogger.debug(\"ReInvite  has been rejected\");\n  }\nsynchronized (mWaitUserAnswer) {\n    mReInviteStatus=InvitationStatus.INVITATION_REJECTED;\n    mWaitUserAnswer.notifyAll();\n  }\n}\n",
+        "text": " Reject the session invitation",
+        "id": 88
+    },
+    {
+        "code": "public static Point parsePoint(String str,SpatialContext ctx) throws InvalidShapeException {\n  try {\n    double x, y;\n    str=str.trim();\n    int commaIdx=str.indexOf(',');\n    if (commaIdx == -1) {\n      int spaceIdx=str.indexOf(' ');\n      if (spaceIdx == -1)       throw new InvalidShapeException(\"Point must be in 'lat, lon' or 'x y' format: \" + str);\n      int middleEndIdx=findIndexNotSpace(str,spaceIdx + 1,+1);\n      x=Double.parseDouble(str.substring(0,spaceIdx));\n      y=Double.parseDouble(str.substring(middleEndIdx));\n    }\n else {\n      int middleStartIdx=findIndexNotSpace(str,commaIdx - 1,-1);\n      int middleEndIdx=findIndexNotSpace(str,commaIdx + 1,+1);\n      y=Double.parseDouble(str.substring(0,middleStartIdx + 1));\n      x=Double.parseDouble(str.substring(middleEndIdx));\n    }\n    x=ctx.normX(x);\n    y=ctx.normY(y);\n    return ctx.makePoint(x,y);\n  }\n catch (  InvalidShapeException e) {\n    throw e;\n  }\ncatch (  Exception e) {\n    throw new InvalidShapeException(e.toString(),e);\n  }\n}\n",
+        "text": " Parses either lat, lon (spaces optional on either comma side) or x y style formats. Spaces can be basically anywhere.  And not any whitespace, just the space char.",
+        "id": 89
+    },
+    {
+        "code": "public boolean isPrune(){\n  return prune;\n}\n",
+        "text": " Returns the value of the prune attribute.",
+        "id": 90
+    },
+    {
+        "code": "public void enqueueNormal(String methodName,int count){\n  Deque<InvocationHandler> handlers=getHandlers(methodName);\n  for (int i=0; i < count; i++) {\n    handlers.add(delegateHandler);\n  }\n}\n",
+        "text": " Enqueues the specified number of normal operations. Useful to delay faults.",
+        "id": 91
+    },
+    {
+        "code": "@SuppressWarnings(\"unchecked\") @Override protected Object readPostProcess(Object o) throws Exception {\n  Enumeration<Object> enm;\n  Vector<Vector<?>> deserialized;\n  Object key;\n  deserialized=(Vector<Vector<?>>)super.readPostProcess(o);\n  rebuildBeanConnections(deserialized,REGULAR_CONNECTION);\n  enm=m_BeanConnectionRelation.keys();\n  while (enm.hasMoreElements()) {\n    key=enm.nextElement();\n    if (!(key instanceof MetaBean)) {\n      continue;\n    }\n    rebuildBeanConnections(deserialized,key);\n  }\n  if (getDataType() == DATATYPE_USERCOMPONENTS) {\n    removeUserToolBarBeans(deserialized);\n  }\n  return deserialized;\n}\n",
+        "text": " additional post-processing can happen in derived classes after reading from XML. re-builds the BeanConnections.",
+        "id": 92
+    },
+    {
+        "code": "public static boolean canSee(IGame game,Entity ae,Targetable target){\n  return canSee(game,ae,target,true,null,null);\n}\n",
+        "text": " Checks to see if the target is visible to the unit, always considering sensors.",
+        "id": 93
+    },
+    {
+        "code": "@Override void toXML(StringBuilder xml,int level){\n  indent(xml,level);\n  xml.append(\"<string>\");\n  for (int i=0; i < bytes.length; i++) {\n    byte b=bytes[i];\n    if (b < 16)     xml.append('0');\n    xml.append(Integer.toHexString(b));\n  }\n  xml.append(\"</string>\");\n}\n",
+        "text": " There is no XML representation specified for UIDs. In this implementation UIDs are represented as strings in the XML output.",
+        "id": 94
+    },
+    {
+        "code": "public final int readLine(char[] buf,int length,boolean isChop) throws IOException {\n  byte[] readBuffer=_readBuffer;\n  int offset=0;\n  while (true) {\n    int readOffset=_readOffset;\n    int sublen=Math.min(length,_readLength - readOffset);\n    for (; sublen > 0; sublen--) {\n      int ch=readBuffer[readOffset++] & 0xff;\n      if (ch != '\\n') {\n      }\n else       if (isChop) {\n        _readOffset=readOffset;\n        if (offset > 0 && buf[offset - 1] == '\\r')         return offset - 1;\n else         return offset;\n      }\n else {\n        buf[offset++]=(char)ch;\n        _readOffset=readOffset;\n        return offset + 1;\n      }\n      buf[offset++]=(char)ch;\n    }\n    _readOffset=readOffset;\n    if (readOffset <= _readLength) {\n      if (!readBuffer()) {\n        return offset;\n      }\n    }\n    if (length <= offset)     return length + 1;\n  }\n}\n",
+        "text": " Reads a line into the character buffer.  \\r\\n is converted to \\n.",
+        "id": 95
+    },
+    {
+        "code": "public static void gotoOffset(final CDebugPerspectiveModel model,final IAddress offset,final boolean focusMemoryWindow){\n  model.setActiveMemoryAddress(offset,focusMemoryWindow);\n}\n",
+        "text": " Sets the caret of a hex control to a given offset.",
+        "id": 96
+    },
+    {
+        "code": "public List<AbstractCondition> toConditionsList(){\n  List<AbstractCondition> list=new ArrayList<>();\n  for (  Node<AbstractCondition> node : toList()) {\n    list.add(node.getData());\n  }\n  return list;\n}\n",
+        "text": " Get all conditions as a plain list.",
+        "id": 97
+    },
+    {
+        "code": "protected void initBatchBuffer(){\n  try {\n    if (!isIncremental()) {\n      m_BatchBuffer=m_Loader.getDataSet();\n    }\n else {\n      m_BatchBuffer=null;\n    }\n  }\n catch (  Exception e) {\n    e.printStackTrace();\n  }\n}\n",
+        "text": " initializes the batch buffer if necessary, i.e., for non-incremental loaders.",
+        "id": 98
+    },
+    {
+        "code": "public BigdataSailRepositoryConnection cxn(){\n  return tlTx.get();\n}\n",
+        "text": " Direct access to the unisolated connection.  May return null if the connection has not been opened yet by this thread.",
+        "id": 99
+    },
+    {
+        "code": "public void processConnection(DataInputStream dis,DataOutputStream dosParam) throws IOException, Exception {\n  GZIPOutputStream gzip=new GZIPOutputStream(new BufferedOutputStream(dosParam));\n  DataOutputStream dos=new DataOutputStream(gzip);\n  byte responseStatus=ResponseStatus.STATUS_ERROR;\n  try {\n    ByteArrayOutputStream baos=new ByteArrayOutputStream();\n    String name=dis.readUTF();\n    String pw=dis.readUTF();\n    String serializer=dis.readUTF();\n    @SuppressWarnings(\"unused\") String locale=dis.readUTF();\n    byte action=dis.readByte();\n    Context.openSession();\n    try {\n      Context.authenticate(name,pw);\n    }\n catch (    ContextAuthenticationException ex) {\n      responseStatus=ResponseStatus.STATUS_ACCESS_DENIED;\n    }\n    if (responseStatus != ResponseStatus.STATUS_ACCESS_DENIED) {\n      DataOutputStream dosTemp=new DataOutputStream(baos);\n      if (action == ACTION_DOWNLOAD_PATIENTS)       downloadPatients(String.valueOf(dis.readInt()),dosTemp,serializer,false);\n else       if (action == ACTION_DOWNLOAD_SS_PATIENTS)       downloadPatients(String.valueOf(dis.readInt()),dosTemp,serializer,true);\n else       if (action == ACTION_DOWNLOAD_COHORTS)       PatientDownloadManager.downloadCohorts(dosTemp,serializer);\n else       if (action == ACTION_DOWNLOAD_SAVED_SEARCHES)       PatientDownloadManager.downloadSavesSearches(dosTemp,serializer);\n else       if (action == ACTION_DOWNLOAD_FORMS)       XformDownloadManager.downloadXforms(dosTemp,serializer);\n else       if (action == ACTION_UPLOAD_FORMS)       submitXforms(dis,dosTemp,serializer);\n else       if (action == ACTION_DOWNLOAD_USERS)       UserDownloadManager.downloadUsers(dosTemp,serializer);\n else       if (action == ACTION_DOWNLOAD_USERS_AND_FORMS)       downloadUsersAndForms(dosTemp,serializer);\n else       if (action == ACTION_DOWNLOAD_FILTERED_PATIENTS)       downloadPatients(dis.readUTF(),dis.readUTF(),dosTemp,serializer);\n      responseStatus=ResponseStatus.STATUS_SUCCESS;\n    }\n    dos.writeByte(responseStatus);\n    if (responseStatus == ResponseStatus.STATUS_SUCCESS)     dos.write(baos.toByteArray());\n    dos.close();\n    gzip.finish();\n  }\n catch (  Exception ex) {\n    log.error(ex.getMessage(),ex);\n    try {\n      dos.writeByte(responseStatus);\n      dos.flush();\n      gzip.finish();\n    }\n catch (    Exception e) {\n      e.printStackTrace();\n    }\n  }\n finally {\n    Context.closeSession();\n  }\n}\n",
+        "text": " Called when a new connection has been received. Failures are not handled in this class as different servers (BT,SMS, etc) may want to handle them differently.",
+        "id": 100
+    }
+]

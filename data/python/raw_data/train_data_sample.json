@@ -1,0 +1,502 @@
+[
+    {
+        "text": "pulls all flashed messages from the session and returns them .",
+        "code": "def get_flashed_messages(with_categories=False, category_filter=[]):\n flashes = _request_ctx_stack.top.flashes\n if (flashes is None):\n  _request_ctx_stack.top.flashes = flashes = (session.pop('_flashes') if ('_flashes' in session) else [])\n if category_filter:\n  flashes = list(filter((lambda f: (f[0] in category_filter)), flashes))\n if (not with_categories):\n  return [x[1] for x in flashes]\n return flashes\n",
+        "id": 0
+    },
+    {
+        "text": "install qt translator to the qapplication instance .",
+        "code": "def install_translator(qapp):\n global QT_TRANSLATOR\n if (QT_TRANSLATOR is None):\n  qt_translator = QTranslator()\n  if qt_translator.load(('qt_' + QLocale.system().name()), QLibraryInfo.location(QLibraryInfo.TranslationsPath)):\n   QT_TRANSLATOR = qt_translator\n if (QT_TRANSLATOR is not None):\n  qapp.installTranslator(QT_TRANSLATOR)\n",
+        "id": 1
+    },
+    {
+        "text": "delete dhcp options by id or name .",
+        "code": "def delete_dhcp_options(dhcp_options_id=None, dhcp_options_name=None, region=None, key=None, keyid=None, profile=None):\n return _delete_resource(resource='dhcp_options', name=dhcp_options_name, resource_id=dhcp_options_id, region=region, key=key, keyid=keyid, profile=profile)\n",
+        "id": 2
+    },
+    {
+        "text": "import module by name .",
+        "code": "def import_module(name, required=True):\n try:\n  __import__(name, globals(), locals(), [])\n except ImportError:\n  if ((not required) and module_not_found()):\n   return None\n  raise\n return sys.modules[name]\n",
+        "id": 3
+    },
+    {
+        "text": "w/o old-style .",
+        "code": "def test_depth_first_mro():\n class A(object, ):\n  pass\n class B(A, ):\n  pass\n class C(A, ):\n  pass\n class D(B, C, ):\n  pass\n class E(D, object, ):\n  pass\n class G(object, ):\n  pass\n class H(G, ):\n  pass\n class I(G, ):\n  pass\n class K(H, I, object, ):\n  pass\n class L(K, E, ):\n  pass\n AreEqual(L.__mro__, (L, K, H, I, G, E, D, B, C, A, object))\n",
+        "id": 4
+    },
+    {
+        "text": "given a datasource .",
+        "code": "def mapping(data_source, geom_name='geom', layer_key=0, multi_geom=False):\n if isinstance(data_source, str):\n  data_source = DataSource(data_source)\n elif isinstance(data_source, DataSource):\n  pass\n else:\n  raise TypeError('Data source parameter must be a string or a DataSource object.')\n _mapping = {}\n for field in data_source[layer_key].fields:\n  mfield = field.lower()\n  if (mfield[(-1):] == '_'):\n   mfield += 'field'\n  _mapping[mfield] = field\n gtype = data_source[layer_key].geom_type\n if multi_geom:\n  gtype.to_multi()\n _mapping[geom_name] = str(gtype).upper()\n return _mapping\n",
+        "id": 5
+    },
+    {
+        "text": "return the subset of the list names that match pat .",
+        "code": "def patfilter(names, pat):\n if (pat not in _pat_cache):\n  _pat_cache[pat] = re.compile(_translate_pattern(pat))\n match = _pat_cache[pat].match\n return filter(match, names)\n",
+        "id": 6
+    },
+    {
+        "text": "test for #148 .",
+        "code": "def test_pprint_npfloat32():\n dat = np.array([1.0, 2.0], dtype=np.float32)\n t = Table([dat], names=['a'])\n t['a'].format = '5.2f'\n assert (str(t['a']) == '  a  \\n-----\\n 1.00\\n 2.00')\n",
+        "id": 7
+    },
+    {
+        "text": "test interpolation option .",
+        "code": "def test_interpolation(Chart):\n chart = Chart(interpolate='cubic')\n chart.add('1', [1, 3, 12, 3, 4])\n chart.add('2', [7, (-4), 10, None, 8, 3, 1])\n q = chart.render_pyquery()\n assert (len(q('.legend')) == 2)\n",
+        "id": 8
+    },
+    {
+        "text": "helper function to save and remove a module from sys .",
+        "code": "def _save_and_remove_module(name, orig_modules):\n if (name not in sys.modules):\n  __import__(name)\n  del sys.modules[name]\n for modname in list(sys.modules):\n  if ((modname == name) or modname.startswith((name + '.'))):\n   orig_modules[modname] = sys.modules[modname]\n   del sys.modules[modname]\n",
+        "id": 9
+    },
+    {
+        "text": "return a list of minions .",
+        "code": "def get_minions():\n conn = _get_conn(ret=None)\n cur = conn.cursor()\n sql = 'SELECT DISTINCT id FROM salt_returns'\n cur.execute(sql)\n data = cur.fetchall()\n ret = []\n for minion in data:\n  ret.append(minion[0])\n _close_conn(conn)\n return ret\n",
+        "id": 10
+    },
+    {
+        "text": "run migrations in offline mode .",
+        "code": "def run_migrations_offline():\n engine_manager = EngineManager(config.get_required('DATABASE_HOSTS'), config.get_required('DATABASE_USERS'), include_disabled=True)\n engine = engine_manager.engines[shard_id]\n context.configure(engine=engine, url=engine.url)\n with context.begin_transaction():\n  context.run_migrations()\n",
+        "id": 11
+    },
+    {
+        "text": "works like turning URL => 180 .",
+        "code": "def url2ip(url):\n iport = urlsplit(url)[1].split(':')\n if (len(iport) > 1):\n  return (gethostbyname(iport[0]), iport[1])\n return gethostbyname(iport[0])\n",
+        "id": 12
+    },
+    {
+        "text": "wait until a instance is running .",
+        "code": "def _wait_until_running(instance):\n with start_action(action_type=u'flocker:provision:aws:wait_until_running', instance_id=instance.id) as context:\n  _poll_while((lambda : _node_is_booting(instance)), repeat(1, INSTANCE_TIMEOUT))\n  context.add_success_fields(instance_state=instance.state)\n  context.add_success_fields(instance_state_reason=instance.state_reason)\n if (instance.state != u'running'):\n  raise FailedToRun(instance.state_reason)\n",
+        "id": 13
+    },
+    {
+        "text": "convert a dictionary of dictionaries to a numpy array with optional mapping .",
+        "code": "def dict_to_numpy_array(d, mapping=None):\n try:\n  return dict_to_numpy_array2(d, mapping)\n except (AttributeError, TypeError):\n  return dict_to_numpy_array1(d, mapping)\n",
+        "id": 14
+    },
+    {
+        "text": "checks if the current suggestion has already been accepted/rejected .",
+        "code": "def _is_suggestion_handled(thread_id, exploration_id):\n thread = feedback_models.FeedbackThreadModel.get_by_exp_and_thread_id(exploration_id, thread_id)\n return (thread.status in [feedback_models.STATUS_CHOICES_FIXED, feedback_models.STATUS_CHOICES_IGNORED])\n",
+        "id": 15
+    },
+    {
+        "text": "calculate the default directory to use for temporary files .",
+        "code": "def _get_default_tempdir():\n namer = _RandomNameSequence()\n dirlist = _candidate_tempdir_list()\n for dir in dirlist:\n  if (dir != _os.curdir):\n   dir = _os.path.abspath(dir)\n  for seq in range(100):\n   name = next(namer)\n   filename = _os.path.join(dir, name)\n   try:\n    fd = _os.open(filename, _bin_openflags, 384)\n    try:\n     try:\n      with _io.open(fd, 'wb', closefd=False) as fp:\n       fp.write('blat')\n     finally:\n      _os.close(fd)\n    finally:\n     _os.unlink(filename)\n    return dir\n   except FileExistsError:\n    pass\n   except PermissionError:\n    if ((_os.name == 'nt') and _os.path.isdir(dir) and _os.access(dir, _os.W_OK)):\n     continue\n    break\n   except OSError:\n    break\n raise FileNotFoundError(_errno.ENOENT, ('No usable temporary directory found in %s' % dirlist))\n",
+        "id": 16
+    },
+    {
+        "text": "returns the default site .",
+        "code": "def get_default_site(app_name='filebrowser'):\n resolver = get_resolver(get_urlconf())\n name = 'filebrowser'\n app_list = resolver.app_dict[app_name]\n if (name not in app_list):\n  name = app_list[0]\n return get_site_dict()[name]\n",
+        "id": 17
+    },
+    {
+        "text": "crosscovariance for 1d parameters x .",
+        "code": "def ccovf(x, y, unbiased=True, demean=True):\n n = len(x)\n if demean:\n  xo = (x - x.mean())\n  yo = (y - y.mean())\n else:\n  xo = x\n  yo = y\n if unbiased:\n  xi = np.ones(n)\n  d = np.correlate(xi, xi, 'full')\n else:\n  d = n\n return (np.correlate(xo, yo, 'full') / d)[(n - 1):]\n",
+        "id": 18
+    },
+    {
+        "text": "load the plugins specified in the configuration .",
+        "code": "def _load_plugins(config):\n paths = config['pluginpath'].get(confit.StrSeq(split=False))\n paths = map(util.normpath, paths)\n import beetsplug\n beetsplug.__path__ = (paths + beetsplug.__path__)\n sys.path += paths\n plugins.load_plugins(config['plugins'].as_str_seq())\n plugins.send('pluginload')\n return plugins\n",
+        "id": 19
+    },
+    {
+        "text": "returns the serializers modules .",
+        "code": "def serializers(opts):\n return LazyLoader(_module_dirs(opts, 'serializers'), opts, tag='serializers')\n",
+        "id": 20
+    },
+    {
+        "text": "rgb to short .",
+        "code": "def rgb2short(r, g, b):\n dist = (lambda s, d: ((((s[0] - d[0]) ** 2) + ((s[1] - d[1]) ** 2)) + ((s[2] - d[2]) ** 2)))\n ary = [hex_to_rgb(hex) for hex in RGB2SHORT_DICT]\n m = min(ary, key=partial(dist, (r, g, b)))\n return RGB2SHORT_DICT[rgb_to_hex(m)]\n",
+        "id": 21
+    },
+    {
+        "text": "output -> html string either return the result of a function or a sparse htmlized error message and a message in the server log .",
+        "code": "@deprecated(Version('Twisted', 15, 3, 0), replacement='twisted.web.template')\ndef output(func, *args, **kw):\n try:\n  return func(*args, **kw)\n except:\n  log.msg(('Error calling %r:' % (func,)))\n  log.err()\n  return PRE('An error occurred.')\n",
+        "id": 22
+    },
+    {
+        "text": "a wrapper around pprint .",
+        "code": "@register.filter(is_safe=True)\ndef pprint(value):\n try:\n  return pformat(value)\n except Exception as e:\n  return (u'Error in formatting: %s' % force_text(e, errors=u'replace'))\n",
+        "id": 23
+    },
+    {
+        "text": "factor a square-free polynomial f in gf(p)[x] .",
+        "code": "def gf_factor_sqf(f, p, K, method=None):\n (lc, f) = gf_monic(f, p, K)\n if (gf_degree(f) < 1):\n  return (lc, [])\n method = (method or query('GF_FACTOR_METHOD'))\n if (method is not None):\n  factors = _factor_methods[method](f, p, K)\n else:\n  factors = gf_zassenhaus(f, p, K)\n return (lc, factors)\n",
+        "id": 24
+    },
+    {
+        "text": "from URL :codeauthor: tim pietzcker URL licensed under cc-wiki with attribution required .",
+        "code": "def all(iterable):\n for element in iterable:\n  if (not element):\n   return False\n return True\n",
+        "id": 25
+    },
+    {
+        "text": "for backward compatibility; use draw or draw_networkx .",
+        "code": "def draw_nx(G, pos, **kwds):\n draw(G, pos, **kwds)\n",
+        "id": 26
+    },
+    {
+        "text": "start the browser client mode .",
+        "code": "def start_clientbrowser(config, args):\n logger.info('Start client mode (browser)')\n global client\n from glances.client_browser import GlancesClientBrowser\n client = GlancesClientBrowser(config=config, args=args)\n client.serve_forever()\n client.end()\n",
+        "id": 27
+    },
+    {
+        "text": "test that different length args raise valueerror .",
+        "code": "@raises(ValueError)\ndef test_bootstrap_arglength():\n algo.bootstrap(np.arange(5), np.arange(10))\n",
+        "id": 28
+    },
+    {
+        "text": "runs a wsgi-compatible function using fcgi .",
+        "code": "def runwsgi(func):\n if os.environ.has_key('SERVER_SOFTWARE'):\n  os.environ['FCGI_FORCE_CGI'] = 'Y'\n if (os.environ.has_key('PHP_FCGI_CHILDREN') or os.environ.has_key('SERVER_SOFTWARE')):\n  return runfcgi(func)\n if ('scgi' in sys.argv):\n  return runscgi(func)\n return runsimple(func, listget(sys.argv, 1, 8080))\n",
+        "id": 29
+    },
+    {
+        "text": "generate a random s3 bucket name .",
+        "code": "def random_bucket_name(prefix='awscli-s3integ-', num_random=10):\n return (prefix + random_chars(num_random))\n",
+        "id": 30
+    },
+    {
+        "text": "check and execute proxy process .",
+        "code": "def _proxy_process(proxyname, test):\n changes_old = []\n changes_new = []\n if (not _is_proxy_running(proxyname)):\n  if (not test):\n   __salt__['cmd.run_all']('salt-proxy --proxyid={0} -l info -d'.format(salt.ext.six.moves.shlex_quote(proxyname)), timeout=5)\n   changes_new.append('Salt Proxy: Started proxy process for {0}'.format(proxyname))\n  else:\n   changes_new.append('Salt Proxy: process {0} will be started'.format(proxyname))\n else:\n  changes_old.append('Salt Proxy: already running for {0}'.format(proxyname))\n return (True, changes_new, changes_old)\n",
+        "id": 31
+    },
+    {
+        "text": "convert the given value to an offset or limit clause .",
+        "code": "def _offset_or_limit_clause(element, name=None, type_=None):\n if (element is None):\n  return None\n elif hasattr(element, '__clause_element__'):\n  return element.__clause_element__()\n elif isinstance(element, Visitable):\n  return element\n else:\n  value = util.asint(element)\n  return _OffsetLimitParam(name, value, type_=type_, unique=True)\n",
+        "id": 32
+    },
+    {
+        "text": "returns the proper group owner and path to the incron directory .",
+        "code": "def _get_cron_info():\n owner = 'root'\n if (__grains__['os'] == 'FreeBSD'):\n  group = 'wheel'\n  crontab_dir = '/var/spool/incron'\n elif (__grains__['os'] == 'OpenBSD'):\n  group = 'crontab'\n  crontab_dir = '/var/spool/incron'\n elif (__grains__.get('os_family') == 'Solaris'):\n  group = 'root'\n  crontab_dir = '/var/spool/incron'\n else:\n  group = 'root'\n  crontab_dir = '/var/spool/incron'\n return (owner, group, crontab_dir)\n",
+        "id": 33
+    },
+    {
+        "text": "retrieves the snmp config from the device .",
+        "code": "def _retrieve_device_config():\n return __salt__['snmp.config']()\n",
+        "id": 34
+    },
+    {
+        "text": "normalize_formset_dict -> a list of dictionary of .",
+        "code": "def normalize_formset_dict(formset, attr_list):\n assert isinstance(formset, BaseSimpleFormSet)\n res = []\n for form in formset.forms:\n  res.append(normalize_form_dict(form, attr_list))\n return res\n",
+        "id": 35
+    },
+    {
+        "text": "turn a formatted time back into a datetime .",
+        "code": "def parse_strtime(timestr, fmt=PERFECT_TIME_FORMAT):\n return datetime.datetime.strptime(timestr, fmt)\n",
+        "id": 36
+    },
+    {
+        "text": "returns the ed2k hash of a given file .",
+        "code": "def hash_filehash(filename):\n md4 = hashlib.new(u'md4').copy\n def gen(f):\n  while True:\n   x = f.read(9728000)\n   if x:\n    (yield x)\n   else:\n    return\n def md4_hash(data):\n  m = md4()\n  m.update(data)\n  return m\n with open(filename, u'rb') as f:\n  a = gen(f)\n  hashes = [md4_hash(data).digest() for data in a]\n  if (len(hashes) == 1):\n   return to_hex(hashes[0])\n  else:\n   return md4_hash(reduce((lambda a, d: (a + d)), hashes, u'')).hexd\n",
+        "id": 37
+    },
+    {
+        "text": "creates a flat list of all all items in structured output : .",
+        "code": "def flatten(struct):\n if (struct is None):\n  return []\n flat = []\n if isinstance(struct, dict):\n  for (_, result) in six.iteritems(struct):\n   flat += flatten(result)\n  return flat\n if isinstance(struct, six.string_types):\n  return [struct]\n try:\n  iterator = iter(struct)\n except TypeError:\n  return [struct]\n for result in iterator:\n  flat += flatten(result)\n return flat\n",
+        "id": 38
+    },
+    {
+        "text": "handler to log when logins have occurred successfully .",
+        "code": "@receiver(user_logged_in)\ndef log_successful_login(sender, request, user, **kwargs):\n if settings.FEATURES['SQUELCH_PII_IN_LOGS']:\n  AUDIT_LOG.info(u'Login success - user.id: {0}'.format(user.id))\n else:\n  AUDIT_LOG.info(u'Login success - {0} ({1})'.format(user.username, user.email))\n",
+        "id": 39
+    },
+    {
+        "text": "create_connection -> socket object like socket .",
+        "code": "def create_connection(dest_pair, proxy_type=None, proxy_addr=None, proxy_port=None, proxy_username=None, proxy_password=None, timeout=None):\n sock = socksocket()\n if isinstance(timeout, (int, float)):\n  sock.settimeout(timeout)\n sock.set_proxy(proxy_type, proxy_addr, proxy_port, proxy_username, proxy_password)\n sock.connect(dest_pair)\n return sock\n",
+        "id": 40
+    },
+    {
+        "text": "creates local settings .",
+        "code": "@task\ndef setup(ctx):\n copy_settings(ctx, addons=True)\n packages(ctx)\n requirements(ctx, addons=True, dev=True)\n build_js_config_files(ctx)\n assets(ctx, dev=True, watch=False)\n",
+        "id": 41
+    },
+    {
+        "text": "returns the name attribute of name_or_obj if present; if not .",
+        "code": "def get_name(name_or_obj):\n if isinstance(name_or_obj, six.string_types):\n  return name_or_obj\n try:\n  return name_or_obj.name\n except AttributeError:\n  raise exc.MissingName(name_or_obj)\n",
+        "id": 42
+    },
+    {
+        "text": "ax1 : the main axes ax1 : the zoomed axes similar to zoom_effect01 .",
+        "code": "def zoom_effect02(ax1, ax2, **kwargs):\n tt = (ax1.transScale + (ax1.transLimits + ax2.transAxes))\n trans = blended_transform_factory(ax2.transData, tt)\n mybbox1 = ax1.bbox\n mybbox2 = TransformedBbox(ax1.viewLim, trans)\n prop_patches = kwargs.copy()\n prop_patches['ec'] = 'none'\n prop_patches['alpha'] = 0.2\n (c1, c2, bbox_patch1, bbox_patch2, p) = connect_bbox(mybbox1, mybbox2, loc1a=3, loc2a=2, loc1b=4, loc2b=1, prop_lines=kwargs, prop_patches=prop_patches)\n ax1.add_patch(bbox_patch1)\n ax2.add_patch(bbox_patch2)\n ax2.add_patch(c1)\n ax2.add_patch(c2)\n ax2.add_patch(p)\n return (c1, c2, bbox_patch1, bbox_patch2, p)\n",
+        "id": 43
+    },
+    {
+        "text": "expand a 2 by 2 contingency table to observations .",
+        "code": "def _expand_table(table):\n return np.repeat([[1, 1], [1, 0], [0, 1], [0, 0]], table.ravel(), axis=0)\n",
+        "id": 44
+    },
+    {
+        "text": "load extra data from provider and store it on current usersocialauth extra_data field .",
+        "code": "def load_extra_data(backend, details, response, uid, user, social_user=None, *args, **kwargs):\n social_user = (social_user or UserSocialAuth.get_social_auth(backend.name, uid, user))\n if social_user:\n  extra_data = backend.extra_data(user, uid, response, details)\n  if (kwargs.get('original_email') and ('email' not in extra_data)):\n   extra_data['email'] = kwargs.get('original_email')\n  if (extra_data and (social_user.extra_data != extra_data)):\n   if social_user.extra_data:\n    social_user.extra_data.update(extra_data)\n   else:\n    social_user.extra_data = extra_data\n   social_user.save()\n  return {'social_user': social_user}\n",
+        "id": 45
+    },
+    {
+        "text": "an entry point that allows arbitrary functions to be run in a parallel process .",
+        "code": "def arbitrary(module_name, func_name, args, kwargs={}):\n if module_name.startswith('calibre_plugins'):\n  from calibre.customize.ui import find_plugin\n  find_plugin\n module = importlib.import_module(module_name)\n func = getattr(module, func_name)\n return func(*args, **kwargs)\n",
+        "id": 46
+    },
+    {
+        "text": "disables learning in the cla models temporal pooler .",
+        "code": "def claModelControlDisableTPLearningCb(claModel):\n assert isinstance(claModel, CLAModel)\n claModel._getTPRegion().setParameter('learningMode', False)\n return\n",
+        "id": 47
+    },
+    {
+        "text": "creates a new api deployment .",
+        "code": "def create_api_deployment(restApiId, stageName, stageDescription='', description='', cacheClusterEnabled=False, cacheClusterSize='0.5', variables=None, region=None, key=None, keyid=None, profile=None):\n try:\n  variables = (dict() if (variables is None) else variables)\n  conn = _get_conn(region=region, key=key, keyid=keyid, profile=profile)\n  deployment = conn.create_deployment(restApiId=restApiId, stageName=stageName, stageDescription=stageDescription, description=description, cacheClusterEnabled=cacheClusterEnabled, cacheClusterSize=cacheClusterSize, variables=variables)\n  return {'created': True, 'deployment': _convert_datetime_str(deployment)}\n except ClientError as e:\n  return {'created': False, 'error': salt.utils.boto3.get_error(e)}\n",
+        "id": 48
+    },
+    {
+        "text": "find a point along a line connecting -- whose distance from is d .",
+        "code": "def _point_along_a_line(x0, y0, x1, y1, d):\n (dx, dy) = ((x0 - x1), (y0 - y1))\n ff = (d / (((dx * dx) + (dy * dy)) ** 0.5))\n (x2, y2) = ((x0 - (ff * dx)), (y0 - (ff * dy)))\n return (x2, y2)\n",
+        "id": 49
+    },
+    {
+        "text": "list of roles permitted to access a resource - used by cms .",
+        "code": "def s3_roles_permitted(name='roles_permitted', **attr):\n T = current.T\n represent = S3Represent(lookup='auth_group', fields=['role'])\n if ('label' not in attr):\n  attr['label'] = T('Roles Permitted')\n if ('sortby' not in attr):\n  attr['sortby'] = 'role'\n if ('represent' not in attr):\n  attr['represent'] = represent\n if ('requires' not in attr):\n  attr['requires'] = IS_EMPTY_OR(IS_ONE_OF(current.db, 'auth_group.id', represent, multiple=True))\n if ('comment' not in attr):\n  attr['comment'] = DIV(_class='tooltip', _title=('%s|%s' % (T('Roles Permitted'), T('If this record should be restricted then select which role(s) are permitted to access the record here.'))))\n if ('ondelete' not in attr):\n  attr['ondelete'] = 'RESTRICT'\n f = S3ReusableField(name, 'list:reference auth_group', **attr)\n return f()\n",
+        "id": 50
+    },
+    {
+        "text": "get all x509 certs from a keyinfo instance .",
+        "code": "def cert_from_key_info(key_info, ignore_age=False):\n res = []\n for x509_data in key_info.x509_data:\n  x509_certificate = x509_data.x509_certificate\n  cert = x509_certificate.text.strip()\n  cert = '\\n'.join(split_len(''.join([s.strip() for s in cert.split()]), 64))\n  if (ignore_age or active_cert(cert)):\n   res.append(cert)\n  else:\n   logger.info('Inactive cert')\n return res\n",
+        "id": 51
+    },
+    {
+        "text": "update the attributes of an group .",
+        "code": "def instance_group_update(context, group_uuid, values):\n return IMPL.instance_group_update(context, group_uuid, values)\n",
+        "id": 52
+    },
+    {
+        "text": "create a dict of a trees clades to corresponding bitstrings .",
+        "code": "def _tree_to_bitstrs(tree):\n clades_bitstrs = {}\n term_names = [term.name for term in tree.find_clades(terminal=True)]\n for clade in tree.find_clades(terminal=False):\n  bitstr = _clade_to_bitstr(clade, term_names)\n  clades_bitstrs[clade] = bitstr\n return clades_bitstrs\n",
+        "id": 53
+    },
+    {
+        "text": "formats a date as the time until that date .",
+        "code": "def timeuntil(value, arg=None):\n from django.utils.timesince import timesince\n from datetime import datetime\n if (not value):\n  return ''\n if arg:\n  return timesince(arg, value)\n return timesince(datetime.now(), value)\n",
+        "id": 54
+    },
+    {
+        "text": "entry point for ansible module .",
+        "code": "def main():\n module = AnsibleModule(argument_spec={'table': {'required': True}, 'record': {'required': True}, 'col': {'required': True}, 'key': {'required': True}, 'value': {'required': True}, 'timeout': {'default': 5, 'type': 'int'}}, supports_check_mode=True)\n params_set(module)\n",
+        "id": 55
+    },
+    {
+        "text": "ensure we can escape things .",
+        "code": "def test_hashbang():\n entry = tokenize('#!this is a comment\\n')\n assert (entry == [])\n",
+        "id": 56
+    },
+    {
+        "text": "add the begin xml tag .",
+        "code": "def addBeginXMLTag(attributes, depth, localName, output, text=''):\n depthStart = (' DCTB ' * depth)\n output.write(('%s<%s%s>%s\\n' % (depthStart, localName, getAttributesString(attributes), text)))\n",
+        "id": 57
+    },
+    {
+        "text": "only run if properly configured .",
+        "code": "def __virtual__():\n if __opts__['master_tops'].get('ext_nodes'):\n  return True\n return False\n",
+        "id": 58
+    },
+    {
+        "text": "check if a user exists .",
+        "code": "def exists(name):\n with settings(hide('running', 'stdout', 'warnings'), warn_only=True):\n  return run(('getent passwd %(name)s' % locals())).succeeded\n",
+        "id": 59
+    },
+    {
+        "text": "disassociate the given stagekeyslist to the given apikey .",
+        "code": "def disassociate_api_key_stagekeys(apiKey, stagekeyslist, region=None, key=None, keyid=None, profile=None):\n try:\n  conn = _get_conn(region=region, key=key, keyid=keyid, profile=profile)\n  pvlist = [('/stages', stagekey) for stagekey in stagekeyslist]\n  response = _api_key_patch_remove(conn, apiKey, pvlist)\n  return {'disassociated': True}\n except ClientError as e:\n  return {'disassociated': False, 'error': salt.utils.boto3.get_error(e)}\n",
+        "id": 60
+    },
+    {
+        "text": "wait to see drop database output .",
+        "code": "@then(u'we see database dropped')\ndef step_see_db_dropped(context):\n _expect_exact(context, u'DROP DATABASE', timeout=2)\n",
+        "id": 61
+    },
+    {
+        "text": "make sure the given message was logged via javascript .",
+        "code": "@bdd.when(bdd.parsers.parse('I wait for the javascript message \"{message}\"'))\ndef javascript_message_when(quteproc, message):\n quteproc.wait_for_js(message)\n",
+        "id": 62
+    },
+    {
+        "text": "check for git on command-line .",
+        "code": "def _gitPresent():\n try:\n  gitvers = subprocess.check_output('git --version'.split(), stderr=subprocess.PIPE)\n except (CalledProcessError, OSError):\n  gitvers = ''\n return bool(gitvers.startswith('git version'))\n",
+        "id": 63
+    },
+    {
+        "text": "creates a mount target for a file system .",
+        "code": "def create_mount_target(filesystemid, subnetid, ipaddress=None, securitygroups=None, keyid=None, key=None, profile=None, region=None, **kwargs):\n client = _get_conn(key=key, keyid=keyid, profile=profile, region=region)\n return client.create_mount_point(FileSystemId=filesystemid, SubnetId=subnetid, IpAddress=ipaddress, SecurityGroups=securitygroups)\n",
+        "id": 64
+    },
+    {
+        "text": "test if the given datastore-indexes .",
+        "code": "def IsAutoGenerated(xml_str):\n try:\n  xml_root = ElementTree.fromstring(xml_str)\n  return ((xml_root.tag == 'datastore-indexes') and _BooleanAttribute(xml_root.attrib.get('autoGenerate', 'false')))\n except ElementTree.ParseError:\n  return False\n",
+        "id": 65
+    },
+    {
+        "text": "compute zeros of integer-order bessel function derivative jn(x) .",
+        "code": "def jnp_zeros(n, nt):\n return jnyn_zeros(n, nt)[1]\n",
+        "id": 66
+    },
+    {
+        "text": "get profile for one rack tooth .",
+        "code": "def getToothProfileRack(derivation):\n addendumSide = (derivation.quarterWavelength - (derivation.addendum * derivation.tanPressure))\n addendumComplex = complex(addendumSide, derivation.addendum)\n dedendumSide = (derivation.quarterWavelength + (derivation.dedendum * derivation.tanPressure))\n dedendumComplex = complex(dedendumSide, (- derivation.dedendum))\n toothProfile = [dedendumComplex]\n if (derivation.rootBevel > 0.0):\n  mirrorPoint = complex((derivation.wavelength - dedendumSide), (- derivation.dedendum))\n  toothProfile = getBevelPath(addendumComplex, derivation.rootBevel, dedendumComplex, mirrorPoint)\n if (derivation.tipBevel > 0.0):\n  mirrorPoint = complex((- addendumComplex.real), addendumComplex.imag)\n  bevelPath = getBevelPath(dedendumComplex, derivation.tipBevel, addendumComplex, mirrorPoint)\n  bevelPath.reverse()\n  toothProfile += bevelPath\n else:\n  toothProfile.append(addendumComplex)\n return euclidean.getMirrorPath(getThicknessMultipliedPath(toothProfile, derivation.toothThicknessMultiplier))\n",
+        "id": 67
+    },
+    {
+        "text": "sets the current time .",
+        "code": "def set_time(time):\n time_format = _get_date_time_format(time)\n dt_obj = datetime.strptime(time, time_format)\n cmd = 'systemsetup -settime {0}'.format(dt_obj.strftime('%H:%M:%S'))\n return salt.utils.mac_utils.execute_return_success(cmd)\n",
+        "id": 68
+    },
+    {
+        "text": "remove files of each path in the list .",
+        "code": "def del_job_files(job_paths):\n for path in job_paths:\n  if (path and clip_path(path).lower().startswith(cfg.download_dir.get_path().lower())):\n   remove_all(path, recursive=True)\n",
+        "id": 69
+    },
+    {
+        "text": "get a list of configured discount module instances .",
+        "code": "def get_discount_modules():\n return load_module_instances('SHUUP_DISCOUNT_MODULES', 'discount_module')\n",
+        "id": 70
+    },
+    {
+        "text": "hook to write a warning to a file; replace if you like .",
+        "code": "def showwarning(message, category, filename, lineno, file=None):\n if (file is None):\n  file = sys.stderr\n try:\n  file.write(formatwarning(message, category, filename, lineno))\n except IOError:\n  pass\n",
+        "id": 71
+    },
+    {
+        "text": "test either if an error is raised when x is different at fitting and sampling .",
+        "code": "def test_sample_wrong_X():\n sm = SMOTEENN(random_state=RND_SEED)\n sm.fit(X, Y)\n assert_raises(RuntimeError, sm.sample, np.random.random((100, 40)), np.array((([0] * 50) + ([1] * 50))))\n",
+        "id": 72
+    },
+    {
+        "text": "initializes log data .",
+        "code": "def initialize_log_data(ids_bcs_added_field):\n log_data = {}\n for curr_key in ids_bcs_added_field.keys():\n  base_key = ''\n  if curr_key[0]:\n   base_key += (curr_key[0] + ',')\n  if curr_key[1]:\n   base_key += (curr_key[1] + ',')\n  base_key += ids_bcs_added_field[curr_key]\n  log_data[base_key] = 0\n return log_data\n",
+        "id": 73
+    },
+    {
+        "text": "reads a motif from a handle using a specified file-format .",
+        "code": "def read(handle, format):\n format = format.lower()\n motifs = parse(handle, format)\n if (len(motifs) == 0):\n  raise ValueError('No motifs found in handle')\n if (len(motifs) > 1):\n  raise ValueError('More than one motif found in handle')\n motif = motifs[0]\n return motif\n",
+        "id": 74
+    },
+    {
+        "text": "tell worker(s) to modify the rate limit for a task by type .",
+        "code": "@control_command(args=[(u'task_name', text_t), (u'rate_limit', text_t)], signature=u'<task_name> <rate_limit (e.g., 5/s | 5/m | 5/h)>')\ndef rate_limit(state, task_name, rate_limit, **kwargs):\n try:\n  rate(rate_limit)\n except ValueError as exc:\n  return nok(u'Invalid rate limit string: {0!r}'.format(exc))\n try:\n  state.app.tasks[task_name].rate_limit = rate_limit\n except KeyError:\n  logger.error(u'Rate limit attempt for unknown task %s', task_name, exc_info=True)\n  return nok(u'unknown task')\n state.consumer.reset_rate_limits()\n if (not rate_limit):\n  logger.info(u'Rate limits disabled for tasks of type %s', task_name)\n  return ok(u'rate limit disabled successfully')\n logger.info(u'New rate limit for tasks of type %s: %s.', task_name, rate_limit)\n return ok(u'new rate limit set successfully')\n",
+        "id": 75
+    },
+    {
+        "text": "returns true if *obj  is iterable and contains strings .",
+        "code": "def is_sequence_of_strings(obj):\n if (not iterable(obj)):\n  return False\n if is_string_like(obj):\n  return False\n for o in obj:\n  if (not is_string_like(o)):\n   return False\n return True\n",
+        "id": 76
+    },
+    {
+        "text": "highlight only the tag name .",
+        "code": "def highlighting(view, name, style, left, right):\n tag_settings = sublime.load_settings('bh_tag.sublime-settings')\n match_style = tag_settings.get('tag_style', {}).get(last_mode, None)\n if ((match_style is not None) and (style == match_style)):\n  tag_name = tag_settings.get('tag_name', {}).get(last_mode, '[\\\\w\\\\:\\\\.\\\\-]+')\n  if (left is not None):\n   region = view.find(tag_name, left.begin)\n   left = left.move(region.begin(), region.end())\n  if (right is not None):\n   region = view.find(tag_name, right.begin)\n   right = right.move(region.begin(), region.end())\n return (left, right)\n",
+        "id": 77
+    },
+    {
+        "text": "determine whether the given unix socket path is in a filesystem namespace .",
+        "code": "def _inFilesystemNamespace(path):\n return (path[:1] != '\\x00')\n",
+        "id": 78
+    },
+    {
+        "text": "set the current policy for the specified table/chain cli example: .",
+        "code": "def set_policy(table='filter', chain=None, policy=None, family='ipv4'):\n if (not chain):\n  return 'Error: Chain needs to be specified'\n if (not policy):\n  return 'Error: Policy needs to be specified'\n wait = ('--wait' if _has_option('--wait', family) else '')\n cmd = '{0} {1} -t {2} -P {3} {4}'.format(_iptables_cmd(family), wait, table, chain, policy)\n out = __salt__['cmd.run'](cmd)\n return out\n",
+        "id": 79
+    },
+    {
+        "text": "test custom formatters .",
+        "code": "def test_formatters(Chart):\n if (Chart._dual or (Chart == Box)):\n  return\n chart = Chart(formatter=(lambda x, chart, serie: ('%s%s$' % (x, serie.title))))\n chart.add('_a', [1, 2, {'value': 3, 'formatter': (lambda x: (u('%s\\xc2\\xa5') % x))}])\n chart.add('_b', [4, 5, 6], formatter=(lambda x: (u('%s\\xe2\\x82\\xac') % x)))\n chart.x_labels = [2, 4, 6]\n chart.x_labels_major = [4]\n q = chart.render_pyquery()\n assert (set([v.text for v in q('.value')]) == set(((u('4\\xe2\\x82\\xac'), u('5\\xe2\\x82\\xac'), u('6\\xe2\\x82\\xac'), '1_a$', '2_a$', u('3\\xc2\\xa5')) + (('6_a$', u('15\\xe2\\x82\\xac')) if (Chart in (Pie, SolidGauge)) else ()))))\n",
+        "id": 80
+    },
+    {
+        "text": "ensure that a sort argument passed to sort overrides dumb_sort .",
+        "code": "def test_sort():\n model = _create_model([[('B', '', '', 1), ('C', '', '', 2), ('A', '', '', 0)]])\n filter_model = sortfilter.CompletionFilterModel(model)\n filter_model.sort(0, Qt.AscendingOrder)\n actual = _extract_model_data(filter_model)\n assert (actual == [[('A', '', ''), ('B', '', ''), ('C', '', '')]])\n filter_model.sort(0, Qt.DescendingOrder)\n actual = _extract_model_data(filter_model)\n assert (actual == [[('C', '', ''), ('B', '', ''), ('A', '', '')]])\n",
+        "id": 81
+    },
+    {
+        "text": "beta function that returns a dendrogram plotly figure object .",
+        "code": "def create_dendrogram(X, orientation='bottom', labels=None, colorscale=None, distfun=None, linkagefun=(lambda x: sch.linkage(x, 'complete'))):\n if ((not scp) or (not scs) or (not sch)):\n  raise ImportError('FigureFactory.create_dendrogram requires scipy,                             scipy.spatial and scipy.hierarchy')\n s = X.shape\n if (len(s) != 2):\n  exceptions.PlotlyError('X should be 2-dimensional array.')\n if (distfun is None):\n  distfun = scs.distance.pdist\n dendrogram = _Dendrogram(X, orientation, labels, colorscale, distfun=distfun, linkagefun=linkagefun)\n return {'layout': dendrogram.layout, 'data': dendrogram.data}\n",
+        "id": 82
+    },
+    {
+        "text": "this function is used to properly write unicode to a file .",
+        "code": "def uni_print(statement, out_file=None):\n if (out_file is None):\n  out_file = sys.stdout\n try:\n  out_file.write(statement)\n except UnicodeEncodeError:\n  new_encoding = getattr(out_file, 'encoding', 'ascii')\n  if (new_encoding is None):\n   new_encoding = 'ascii'\n  new_statement = statement.encode(new_encoding, 'replace').decode(new_encoding)\n  out_file.write(new_statement)\n out_file.flush()\n",
+        "id": 83
+    },
+    {
+        "text": "converts first_name to first name .",
+        "code": "def pretty_name(name):\n name = (name[0].upper() + name[1:])\n return name.replace('_', ' ')\n",
+        "id": 84
+    },
+    {
+        "text": "list available snapshots for certain vm or for all .",
+        "code": "def list_snapshots(domain=None):\n ret = dict()\n for vm_domain in _get_domain(iterable=True, *((domain and [domain]) or list())):\n  ret[vm_domain.name()] = ([_parse_snapshot_description(snap) for snap in vm_domain.listAllSnapshots()] or 'N/A')\n return ret\n",
+        "id": 85
+    },
+    {
+        "text": "return a list of local or remote branches this explicitly removes head from the list of remote branches .",
+        "code": "def branch_list(remote=False):\n if remote:\n  return for_each_ref_basename(u'refs/remotes')\n else:\n  return for_each_ref_basename(u'refs/heads')\n",
+        "id": 86
+    },
+    {
+        "text": "get the ntp configuration information for a given host or list of host_names .",
+        "code": "@depends(HAS_PYVMOMI)\ndef get_ntp_config(host, username, password, protocol=None, port=None, host_names=None):\n service_instance = salt.utils.vmware.get_service_instance(host=host, username=username, password=password, protocol=protocol, port=port)\n host_names = _check_hosts(service_instance, host, host_names)\n ret = {}\n for host_name in host_names:\n  host_ref = _get_host_ref(service_instance, host, host_name=host_name)\n  ntp_config = host_ref.configManager.dateTimeSystem.dateTimeInfo.ntpConfig.server\n  ret.update({host_name: ntp_config})\n return ret\n",
+        "id": 87
+    },
+    {
+        "text": "return a dict of environment proxies .",
+        "code": "def get_environ_proxies(url):\n if should_bypass_proxies(url):\n  return {}\n else:\n  return getproxies()\n",
+        "id": 88
+    },
+    {
+        "text": "list floating ips .",
+        "code": "def floating_ip_list(call=None):\n if (call != 'function'):\n  raise SaltCloudSystemExit('The floating_ip_list action must be called with -f or --function')\n conn = get_conn()\n return conn.floating_ip_list()\n",
+        "id": 89
+    },
+    {
+        "text": "run a sql query and return query result as list of tuples .",
+        "code": "def tsql_query(query, **kwargs):\n try:\n  cur = _get_connection(**kwargs).cursor()\n  cur.execute(query)\n  return loads(_MssqlEncoder().encode({'resultset': cur.fetchall()}))['resultset']\n except Exception as e:\n  return (('Could not run the query',), (str(e),))\n",
+        "id": 90
+    },
+    {
+        "text": "given a valid region name .",
+        "code": "def connect_to_region(region_name, **kw_params):\n for region in regions():\n  if (region.name == region_name):\n   return region.connect(**kw_params)\n return None\n",
+        "id": 91
+    },
+    {
+        "text": "return system per-cpu times as a list of named tuples .",
+        "code": "def per_cpu_times():\n ret = []\n for (user, system, idle, interrupt, dpc) in cext.per_cpu_times():\n  item = scputimes(user, system, idle, interrupt, dpc)\n  ret.append(item)\n return ret\n",
+        "id": 92
+    },
+    {
+        "text": "runs the given command against aws .",
+        "code": "def _run_aws(cmd, region, opts, user, **kwargs):\n receipthandle = kwargs.pop('receipthandle', None)\n if receipthandle:\n  kwargs['receipt-handle'] = receipthandle\n num = kwargs.pop('num', None)\n if num:\n  kwargs['max-number-of-messages'] = num\n _formatted_args = ['--{0} \"{1}\"'.format(k, v) for (k, v) in six.iteritems(kwargs)]\n cmd = 'aws sqs {cmd} {args} {region} {out}'.format(cmd=cmd, args=' '.join(_formatted_args), region=_region(region), out=_OUTPUT)\n rtn = __salt__['cmd.run'](cmd, runas=user, python_shell=False)\n return (json.loads(rtn) if rtn else '')\n",
+        "id": 93
+    },
+    {
+        "text": "computes the trimmed mean of a sequence of numbers .",
+        "code": "def TrimmedMean(t, p=0.01):\n t = Trim(t, p)\n return Mean(t)\n",
+        "id": 94
+    },
+    {
+        "text": "put one value to the labjack device eput is equivilent to an addrequest followed by a goone .",
+        "code": "def ePut(Handle, IOType, Channel, Value, x1):\n if (os.name == 'nt'):\n  staticLib = ctypes.windll.LoadLibrary('labjackud')\n  pv = ctypes.c_double(Value)\n  ec = staticLib.ePut(Handle, IOType, Channel, pv, x1)\n  if (ec != 0):\n   raise LabJackException(ec)\n else:\n  raise LabJackException(0, 'Function only supported for Windows')\n",
+        "id": 95
+    },
+    {
+        "text": "make an initial pass across a set of states for delete .",
+        "code": "def _organize_states_for_delete(base_mapper, states, uowtransaction):\n states_to_delete = []\n for (state, dict_, mapper, connection) in _connections_for_states(base_mapper, uowtransaction, states):\n  mapper.dispatch.before_delete(mapper, connection, state)\n  states_to_delete.append((state, dict_, mapper, bool(state.key), connection))\n return states_to_delete\n",
+        "id": 96
+    },
+    {
+        "text": "gray scale and rotation invariant lbp .",
+        "code": "def local_binary_pattern(image, P, R, method='default'):\n assert_nD(image, 2)\n methods = {'default': ord('D'), 'ror': ord('R'), 'uniform': ord('U'), 'nri_uniform': ord('N'), 'var': ord('V')}\n image = np.ascontiguousarray(image, dtype=np.double)\n output = _local_binary_pattern(image, P, R, methods[method.lower()])\n return output\n",
+        "id": 97
+    },
+    {
+        "text": "gets the newest 5 messages .",
+        "code": "def handleNewest(qry):\n try:\n  getUserName()\n except:\n  return _skypeError()\n qry = qry.decode('utf8')\n try:\n  if ((':' in qry) and (qry.partition(':')[0] in map((lambda s: s[0]), _readFriends()))):\n   return _sendMessageWait(qry)\n  else:\n   return _findNewest()\n except EnvironmentError:\n  return PyFred('ch.xtin.skypingalfred.error', False).addItem('skypeupdate', 'skype update', 'No Skype Friends Found', 'Use skype update to cache friends!', True, 'update').toXML()\n except:\n  return PyFred.GenericError()\n",
+        "id": 98
+    },
+    {
+        "text": "children of tree view must be field or button .",
+        "code": "@validate('tree')\ndef valid_field_in_tree(arch):\n return all(((child.tag in ('field', 'button')) for child in arch.xpath('/tree/*')))\n",
+        "id": 99
+    }
+]
